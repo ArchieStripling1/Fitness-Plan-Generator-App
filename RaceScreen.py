@@ -5,11 +5,12 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen
 from kivy.uix.togglebutton import ToggleButton
-from SportSelection import selected
 from kivy.app import App
 from Theme import *
 from kivy.graphics import Color, RoundedRectangle
 
+
+selected = []
 
 class RaceScreen(Screen):
     def __init__(self, **kwargs):
@@ -69,8 +70,8 @@ class RaceScreen(Screen):
 
         for text, value in [
             ("1000m", "swim_1000"),
-            ("2000m", "swim_2000"),
-            ("4000m", "swim_4000"),
+            ("2500m", "swim_2500"),
+            ("5000m", "swim_5000"),
         ]:
             content.add_widget(self.create_button(text, value))
 
@@ -135,6 +136,17 @@ class RaceScreen(Screen):
 
     def select_race(self, race_value):
         self.selected_race = race_value
+        if race_value in ["5k", "10k", "half", "marathon"]:
+            self.select_running()
+        elif race_value in ["cycle_20", "cycle_50", "cycle_100"]:
+            self.select_cycle()
+        elif race_value in ["swim_1000", "swim_2500", "swim_5000"]:
+            self.select_swim()
+        elif race_value in ["ironman_70.3", "ironman_140.6"]:
+            self.select_running()
+            self.select_cycle()
+            self.select_swim()
+
         App.get_running_app().data["race"] = race_value
         print("Selected race:", race_value)
 
@@ -149,3 +161,34 @@ class RaceScreen(Screen):
     def update_rect(self, *args):
         self.rect.pos = self.pos
         self.rect.size = self.size
+
+        # If running is not in selected add it to selected, if it is in selected remove it.
+
+    @staticmethod
+    def select_running():
+        if "running" not in selected:
+            selected.append("running")
+            print("Selected:", selected)
+        else:
+            selected.remove("running")
+            print("Selected:", selected)
+
+    # If cycle is not in selected add it to selected, if it is in selected remove it.
+    @staticmethod
+    def select_cycle():
+        if "cycle" not in selected:
+            selected.append("cycle")
+            print("Selected:", selected)
+        else:
+            selected.remove("cycle")
+            print("Selected:", selected)
+
+    # If swim is not in selected add it to selected, if it is in selected remove it.
+    @staticmethod
+    def select_swim():
+        if "swim" not in selected:
+            selected.append("swim")
+            print("Selected:", selected)
+        else:
+            selected.remove("swim")
+            print("Selected:", selected)

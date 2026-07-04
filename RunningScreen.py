@@ -5,7 +5,7 @@ from kivy.uix.label import Label
 from kivy.uix.slider import Slider
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen
-from SportSelection import selected
+from RaceScreen import selected
 from Theme import *
 
 

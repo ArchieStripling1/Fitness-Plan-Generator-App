@@ -8,7 +8,6 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen
 from kivy.uix.togglebutton import ToggleButton
 
-from SportSelection import selected
 from kivy.app import App
 from Theme import *
 

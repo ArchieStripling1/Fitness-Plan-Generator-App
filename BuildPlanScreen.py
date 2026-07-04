@@ -7,8 +7,6 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen
 from kivy.uix.togglebutton import ToggleButton
-
-from SportSelection import selected
 from kivy.app import App
 from Theme import *
 
@@ -54,8 +52,8 @@ class BuildPlan(Screen):
         self.currentPB_label = Label(font_size=20, size_hint_y=None, height=30, color = TEXT)
 
         # Level Section for basing workout off of how much experience you have running.
-        expertise = Label(
-            text="What level Runner are you: ",
+        self.expertise = Label(
+            text="What level Athlete are you: ",
             font_size=20
         )
         # Creates Dropdown
@@ -95,7 +93,7 @@ class BuildPlan(Screen):
         self.dropdown.bind(on_select=lambda instance, x: self.set_level(x))
 
         #Length of Plan
-        length = Label(
+        self.length = Label(
             text="How many weeks do you want this plan to be: ",
             font_size=20,
             size_hint_y=None,
@@ -119,12 +117,12 @@ class BuildPlan(Screen):
 
 
         # Days Available
-        activityDays = Label(
-            text="What days do you want to run: ",
+        self.activityDays = Label(
+            text="What days do you want to do a workout: ",
             font_size=20,
             color = TEXT
         )
-        days = ["Monday", "Tuesday", "Wednesday","Thursday", "Friday","Saturday","Sunday"]
+        days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
         grid = GridLayout(
             rows=1,
             cols=7,
@@ -138,8 +136,8 @@ class BuildPlan(Screen):
             grid.add_widget(self.create_button(day))
 
         # Long Distance Effort Day
-        longRunDay = Label(
-            text="What day do you want to do your long run: ",
+        self.longActivityDay = Label(
+            text="What day do you want to do your long workout: ",
             font_size=20,
             color = TEXT
         )
@@ -163,7 +161,7 @@ class BuildPlan(Screen):
 
             self.dropdown2.add_widget(btn)
 
-        self.longRunBtn = Button(
+        self.longActivityBtn = Button(
             text="Select Day",
             size_hint=(1, None),
             height=50,
@@ -174,9 +172,9 @@ class BuildPlan(Screen):
             border=(0, 0, 0, 0)
         )
 
-        self.longRunBtn.bind(on_release=self.dropdown2.open)
+        self.longActivityBtn.bind(on_release=self.dropdown2.open)
         #Dropdown uses x as the day and sets the long run day variable.
-        self.dropdown2.bind(on_select=lambda instance, x: self.set_long_run_day(x))
+        self.dropdown2.bind(on_select=lambda instance, x: self.set_long_Activty_day(x))
 
         # Build Plan Button
         buildPlanBtn = Button(
@@ -195,14 +193,14 @@ class BuildPlan(Screen):
         content.add_widget(self.weekly_label)
         content.add_widget(self.longest_label)
         content.add_widget(self.currentPB_label)
-        content.add_widget(expertise)
+        content.add_widget(self.expertise)
         content.add_widget(self.levelBtn)
-        content.add_widget(length)
+        content.add_widget(self.length)
         content.add_widget(self.planLength)
-        content.add_widget(activityDays)
+        content.add_widget(self.activityDays)
         content.add_widget(grid)
-        content.add_widget(longRunDay)
-        content.add_widget(self.longRunBtn)
+        content.add_widget(self.longActivityDay)
+        content.add_widget(self.longActivityBtn)
         content.add_widget((buildPlanBtn))
         scroll.add_widget(content)
         layout.add_widget(scroll)
@@ -215,7 +213,7 @@ class BuildPlan(Screen):
         # Race Types
         raceRun = ['5k', '10k', 'half', 'marathon']
         raceCycle = ['cycle_20', 'cycle_50', 'cycle_100']
-        raceSwim = ['swim_1000', 'swim_2000', 'swim_4000']
+        raceSwim = ['swim_1000', 'swim_2500', 'swim_5000']
         raceTriathlon = ['ironman_70.3', 'ironman_140.6']
 
         weeklyRunDistance = data.get("Weekly_Distance")
@@ -226,45 +224,51 @@ class BuildPlan(Screen):
         longestCycle = data.get("Longest_Cycle")
         #Find out what their race pb is.
         currentRunPB = data.get(f"{race}_pb")
-        currentSwimPB = data.get("CurrentSwimPB")
-        currentCyclePB = data.get("CurrentCyclePB")
+        currentSwimPB = data.get(f"{race}_pb")
+        currentCyclePB = data.get(f"{race}_pb")
 
         # if Race is a Running Race
         if race in raceRun:
-
-            self.race_label.text = f"🏁 Race: {race.upper()}"
-            self.longest_label.text = f"🏁 Longest Run: {longestRun} KM"
-            self.weekly_label.text = f"🏁 Current Weekly Running Distance: {weeklyRunDistance} KM"
-            self.currentPB_label.text = f"🏁 Your Current {race.upper()} PB is: {currentRunPB}"
+            self.expertise.text = "What level Runner are you: "
+            self.activityDays.text = "What days do you want to Run: "
+            self.longActivityDay.text = "What day do you want to do your long Run: "
+            self.race_label.text = f"Race: {race.upper()}"
+            self.longest_label.text = f"Longest Run: {longestRun} KM"
+            self.weekly_label.text = f"Current Weekly Running Distance: {weeklyRunDistance} KM"
+            self.currentPB_label.text = f"Your Current {race.upper()} PB is: {currentRunPB}"
 
         # if Race is a Swimming Race
         elif race in raceSwim:
-
-            self.race_label.text = f"🏁 Race: {race.upper()}"
-            self.longest_label.text = f"🏁 Longest Swim: {longestSwim} M"
-            self.weekly_label.text = f"🏁 Current Weekly Swimming Distance: {weeklySwimDistance} M"
-            self.currentPB_label.text = f"🏁 Your Current {race.upper()} PB is: {currentSwimPB}"
+            self.expertise.text = "What level Swimmer are you: "
+            self.activityDays.text = "What days do you want to Swim: "
+            self.longActivityDay.text = "What day do you want to do your long Swim: "
+            self.race_label.text = f"Race: {race.upper()}"
+            self.longest_label.text = f"Longest Swim: {longestSwim} M"
+            self.weekly_label.text = f"Current Weekly Swimming Distance: {weeklySwimDistance} M"
+            self.currentPB_label.text = f"Your Current {race.upper()} PB is: {currentSwimPB}"
 
         # if Race is a Cycling Race
         elif race in raceCycle:
-
-            self.race_label.text = f"🏁 Race: {race.upper()}"
-            self.longest_label.text = f"🏁 Longest Cycle: {longestCycle} KM"
-            self.weekly_label.text = f"🏁 Current Weekly Cycling Distance: {weeklyCycleDistance} KM"
-            self.currentPB_label.text = f"🏁 Your Current {race.upper()} Average is: {currentCyclePB} KMH"
+            self.expertise.text = "What level Cyclist are you: "
+            self.activityDays.text = "What days do you want to Cycle: "
+            self.longActivityDay.text = "What day do you want to do your long Ride: "
+            self.race_label.text = f"Race: {race.upper()}"
+            self.longest_label.text = f"Longest Cycle: {longestCycle} KM"
+            self.weekly_label.text = f"Current Weekly Cycling Distance: {weeklyCycleDistance} KM"
+            self.currentPB_label.text = f"Your Current {race.upper()} Average is: {currentCyclePB} KMH"
 
         # if Race is a Triathlon Race
         elif race in raceTriathlon:
 
             # Needs changing so it outputs all of this data
-            self.race_label.text = f"🏁 Race: {race.upper()}"
-            self.longest_label.text = f"🏁 Longest Run: {longestRun} KM"
-            self.longest_label.text = f"🏁 Longest Run: {longestCycle} KM"
-            self.longest_label.text = f"🏁 Longest Run: {longestSwim} M"
+            self.race_label.text = f"Race: {race.upper()}"
+            self.longest_label.text = f"Longest Run: {longestRun} KM"
+            self.longest_label.text = f"Longest Cycle: {longestCycle} KM"
+            self.longest_label.text = f"Longest Swim: {longestSwim} M"
 
-            self.weekly_label.text = f"🏁 Current Weekly Running Distance: {weeklyRunDistance} KM"
-            self.weekly_label.text = f"🏁 Current Weekly Cycling Distance: {weeklyCycleDistance} KM"
-            self.weekly_label.text = f"🏁 Current Weekly Swimming Distance: {weeklySwimDistance} M"
+            self.weekly_label.text = f"Current Weekly Running Distance: {weeklyRunDistance} KM"
+            self.weekly_label.text = f"Current Weekly Cycling Distance: {weeklyCycleDistance} KM"
+            self.weekly_label.text = f"Current Weekly Swimming Distance: {weeklySwimDistance} M"
 
     def update_length(self, instance):
         App.get_running_app().data["CurrentPlanLength"] = self.planLength.text
@@ -302,8 +306,8 @@ class BuildPlan(Screen):
         # Save globally
         App.get_running_app().data["ActivityDays"] = self.daysSelected
 
-    def set_long_run_day(self, day):
-        self.longRunBtn.text = day
+    def set_long_Activty_day(self, day):
+        self.longActivityBtn.text = day
         App.get_running_app().data["LongRunDay"] = day
         print("Long run day:", day)
 

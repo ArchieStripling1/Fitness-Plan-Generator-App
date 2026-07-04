@@ -5,7 +5,8 @@ from kivy.uix.label import Label
 from kivy.uix.slider import Slider
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen
-from SportSelection import selected
+from RaceScreen import selected
+from Theme import *
 
 
 class SwimmingScreen(Screen):
@@ -20,13 +21,14 @@ class SwimmingScreen(Screen):
             text="Swimming Profile",
             font_size=24,
             size_hint=(1, 0.15),
-            bold=True
+            bold=True,
+            color=TEXT
         )
         layout.add_widget(title)
 
         # Longest Swim
         longest_box = BoxLayout(orientation='vertical', spacing=10)
-        longest_label = Label(text="Longest Swim (Meters)", font_size=24)
+        longest_label = Label(text="Longest Swim (Meters)", font_size=24, color=TEXT)
 
         self.longest_value = Label(text="0 m", font_size=26)
 
@@ -43,7 +45,7 @@ class SwimmingScreen(Screen):
         # Weekly Distance
         weekly_box = BoxLayout(orientation='vertical', spacing=10)
 
-        weekly_label = Label(text="Weekly Distance (Meters)", font_size=20)
+        weekly_label = Label(text="Weekly Distance (Meters)", font_size=20, color=TEXT)
 
         self.weekly_value = Label(text="0 m", font_size=26)
 
@@ -60,8 +62,22 @@ class SwimmingScreen(Screen):
         # Buttons
         btn_box = BoxLayout(size_hint=(1, 0.2), spacing=20)
 
-        back_btn = Button(text="Previous", font_size=20)
-        next_btn = Button(text="Next", font_size=20)
+        back_btn = Button(
+            text="Previous",
+            font_size=22,
+            background_normal="",
+            background_color=PRIMARY,
+            color=TEXT,
+            bold=True
+        )
+        next_btn = Button(
+            text="Next",
+            font_size=22,
+            background_normal="",
+            background_color=PRIMARY,
+            color=TEXT,
+            bold=True
+        )
 
         # Bind Buttons
         back_btn.bind(on_press=self.go_back)
@@ -89,12 +105,12 @@ class SwimmingScreen(Screen):
         App.get_running_app().data["Longest_Swim"] = SwimmingDistance
         App.get_running_app().data["Weekly_Swimming"] = weeklySwimming
 
-        if 100 <= SwimmingDistance <= 500:
-            self.manager.current = "Pace100M"
-        elif 500 <= SwimmingDistance <= 1000:
-            self.manager.current = "Pace400M"
-        elif 1000 <= SwimmingDistance:
+        if 1000 <= SwimmingDistance < 2500:
             self.manager.current = "Pace1000M"
+        elif 2500 <= SwimmingDistance < 5000:
+            self.manager.current = "Pace2500M"
+        elif 5000 <= SwimmingDistance:
+            self.manager.current = "Pace5000M"
 
 
     def go_back(self, instance):
@@ -104,27 +120,63 @@ class SwimmingPace(Screen):
     def __init__(self, distance, **kwargs):
         super().__init__(**kwargs)  # setup Kivy screen
 
+        self.inputs = {}
+
         layout = BoxLayout(orientation='vertical', padding=30, spacing=30)
 
-        #Enter Longest Distance Time
-        title = Label(
-            text=f"Enter your {distance} time",
-            font_size=30
-        )
+        # Create list of all the PBs they will have depending on their furthest run.
+        lst = []
+        if distance == "5000M":
+            lst = ["swim_5000", "swim_2500", "swim_1000"]
+        elif distance == "2500M":
+            lst = ["swim_2500", "swim_1000"]
+        elif distance == "1000M":
+            lst = ["swim_1000"]
 
-        self.input = TextInput(
-            hint_text="HH:MM:SS",
-            font_size=24,
-            size_hint=(1, 0.2),
-            multiline = False
-        )
-        self.input.bind(on_text_validate=self.update_input)
+        for dist in lst:
+            # Enter Longest Distance Time
+            title = Label(
+                text=f"Enter your {dist} time",
+                font_size=30,
+                color=TEXT,
+                bold=True
+            )
+
+            pb_input = TextInput(
+                hint_text="HH:MM:SS",
+                font_size=24,
+                height=30,
+                size_hint=(1, 0.3),
+                multiline=False
+            )
+
+            self.inputs[dist] = pb_input
+
+            pb_input.bind(on_text_validate=self.update_input)
+
+            layout.add_widget(title)
+            layout.add_widget(pb_input)
+
 
         #Buttons
         btn_box = BoxLayout(size_hint=(1, 0.2), spacing=20)
 
-        back_btn = Button(text="Previous")
-        next_btn = Button(text="Next")
+        back_btn = Button(
+            text="Previous",
+            font_size=22,
+            background_normal="",
+            background_color=PRIMARY,
+            color=TEXT,
+            bold=True
+        )
+        next_btn = Button(
+            text="Next",
+            font_size=22,
+            background_normal="",
+            background_color=PRIMARY,
+            color=TEXT,
+            bold=True
+        )
 
         # Bind Buttons
         back_btn.bind(on_press=self.go_back)
@@ -133,15 +185,18 @@ class SwimmingPace(Screen):
         btn_box.add_widget(back_btn)
         btn_box.add_widget(next_btn)
 
-        layout.add_widget(title)
-        layout.add_widget(self.input)
         layout.add_widget(btn_box)
 
         self.add_widget(layout)
 
     def update_input(self, instance):
-        PB = self.input.text
-        App.get_running_app().data["CurrentSwimPB"] = PB
+        for dist, pb_input in self.inputs.items():
+            text = pb_input.text
+
+            try:
+                App.get_running_app().data[f"{dist}_pb"] = text
+            except:
+                print(f"Invalid time for {dist}")
 
     def go_next(self, instance):
         selected.remove('swim')

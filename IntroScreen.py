@@ -63,7 +63,7 @@ class IntroScreen(Screen):
         # Use fade ONLY for intro to sport
         self.manager.transition = FadeTransition(duration=0.4)
 
-        self.manager.current = "sport"
+        self.manager.current = "race"
 
         # Restore normal transition
         self.manager.transition = old_transition

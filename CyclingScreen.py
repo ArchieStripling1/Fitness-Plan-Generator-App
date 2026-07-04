@@ -5,9 +5,8 @@ from kivy.uix.label import Label
 from kivy.uix.slider import Slider
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen
-
-from SportSelection import selected
-
+from RaceScreen import selected
+from Theme import *
 
 class CyclingScreen(Screen):
     def __init__(self, **kwargs):
@@ -20,13 +19,14 @@ class CyclingScreen(Screen):
             text="Cycling Profile",
             font_size=24,
             size_hint=(1, 0.15),
-            bold=True
+            bold=True,
+            color=TEXT
         )
         layout.add_widget(title)
 
         # Longest Swim
         longest_box = BoxLayout(orientation='vertical', spacing=10)
-        longest_label = Label(text="Longest Cycle (km)", font_size=24)
+        longest_label = Label(text="Longest Cycle (km)", color=TEXT, font_size=24)
 
         self.longest_value = Label(text="0 km", font_size=26)
 
@@ -43,7 +43,7 @@ class CyclingScreen(Screen):
         # Weekly Distance
         weekly_box = BoxLayout(orientation='vertical', spacing=10)
 
-        weekly_label = Label(text="Weekly Distance (km)", font_size=20)
+        weekly_label = Label(text="Weekly Distance (km)", color=TEXT, font_size=20)
 
         self.weekly_value = Label(text="0 km", font_size=26)
 
@@ -60,8 +60,22 @@ class CyclingScreen(Screen):
         # Buttons
         btn_box = BoxLayout(size_hint=(1, 0.2), spacing=20)
 
-        back_btn = Button(text="Previous", font_size=20)
-        next_btn = Button(text="Next", font_size=20)
+        back_btn = Button(
+            text="Previous",
+            font_size=22,
+            background_normal="",
+            background_color=PRIMARY,
+            color=TEXT,
+            bold=True
+        )
+        next_btn = Button(
+            text="Next",
+            font_size=22,
+            background_normal="",
+            background_color=PRIMARY,
+            color=TEXT,
+            bold=True
+        )
 
         # Button Binds
         back_btn.bind(on_press=self.go_back)
@@ -74,7 +88,7 @@ class CyclingScreen(Screen):
 
         self.add_widget(layout)
 
-    # Updage Slider value
+    # Update Slider value
     def update_longest(self, instance, value):
         self.longest_value.text = f"{int(value)} km"
 
@@ -104,27 +118,66 @@ class CyclingTimeScreen(Screen):
     def __init__(self, distance, **kwargs):
         super().__init__(**kwargs)  # setup Kivy screen
 
+        # reachable dictionary of PBs for distances
+        self.inputs = {}
+
         layout = BoxLayout(orientation='vertical', padding=30, spacing=30)
 
-        #Enter your Average Time
-        title = Label(
-            text=f"What is your average pace per {distance} (KMH)",
-            font_size=30
-        )
+        # Create list of all the PBs they will have depending on their furthest run.
+        lst = []
+        if distance == "100K":
+            lst = ["cycle_100", "cycle_50", "cycle_10"]
+        elif distance == "50K":
+            lst = ["cycle_50", "cycle_10"]
+        elif distance == "10K":
+            lst = ["cycle_10"]
 
-        self.input = TextInput(
-            hint_text="HH:MM:SS",
-            font_size=24,
-            size_hint=(1, 0.2),
-            multiline = False
-        )
-        self.input.bind(on_text_validate=self.update_input)
+
+        #Enter your Average Time
+        for dist in lst:
+            # Enter Longest Distance Time
+            title = Label(
+                text=f"What is your average pace per {dist} (KMH)",
+                font_size=30,
+                color=TEXT,
+                bold=True
+            )
+
+            pb_input = TextInput(
+                hint_text="KMH",
+                font_size=24,
+                height=30,
+                size_hint=(1, 0.3),
+                multiline=False
+            )
+
+            self.inputs[dist] = pb_input
+
+            pb_input.bind(on_text_validate=self.update_input)
+
+            layout.add_widget(title)
+            layout.add_widget(pb_input)
+
 
         #Buttons
         btn_box = BoxLayout(size_hint=(1, 0.2), spacing=20)
 
-        back_btn = Button(text="Previous")
-        next_btn = Button(text="Next")
+        back_btn = Button(
+            text="Previous",
+            font_size=22,
+            background_normal="",
+            background_color=PRIMARY,
+            color=TEXT,
+            bold=True
+        )
+        next_btn = Button(
+            text="Next",
+            font_size=22,
+            background_normal="",
+            background_color=PRIMARY,
+            color=TEXT,
+            bold=True
+        )
 
         # Bind Buttons
         back_btn.bind(on_press=self.go_back)
@@ -133,15 +186,19 @@ class CyclingTimeScreen(Screen):
         btn_box.add_widget(back_btn)
         btn_box.add_widget(next_btn)
 
-        layout.add_widget(title)
-        layout.add_widget(self.input)
         layout.add_widget(btn_box)
 
         self.add_widget(layout)
 
     def update_input(self, instance):
-        PB = self.input.text
-        App.get_running_app().data["CurrentCyclePB"] = PB
+        for dist, pb_input in self.inputs.items():
+            text = pb_input.text
+
+            try:
+                App.get_running_app().data[f"{dist}_pb"] = text
+            except:
+                print(f"Invalid time for {dist}")
+
 
     def go_next(self, instance):
         selected.remove('cycle')
