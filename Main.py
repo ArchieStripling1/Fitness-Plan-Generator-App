@@ -45,11 +45,16 @@ class MainApp(App):
 
         # Swimming Screens
         sm.add_widget(SwimmingPace(
-            name="Pace1000M",
-            distance="1000M"))
+            name="Pace400M",
+            distance="400M"
+        ))
         sm.add_widget(SwimmingPace(
-            name="Pace2500M",
-            distance="2500M"
+            name="Pace1500M",
+            distance="1500M"
+        ))
+        sm.add_widget(SwimmingPace(
+            name="Pace3000M",
+            distance="3000M"
         ))
         sm.add_widget(SwimmingPace(
             name="Pace5000M",
@@ -58,8 +63,8 @@ class MainApp(App):
 
         # Cycling Screens
         sm.add_widget(CyclingTimeScreen(
-            name="Cycling10K",
-            distance="10K"
+            name="Cycling20K",
+            distance="20K"
         ))
         sm.add_widget(CyclingTimeScreen(
             name="Cycling50K",
@@ -68,6 +73,10 @@ class MainApp(App):
         sm.add_widget(CyclingTimeScreen(
             name="Cycling100K",
             distance="100K"
+        ))
+        sm.add_widget(CyclingTimeScreen(
+            name="Cycling160K",
+            distance="160K"
         ))
 
         sm.add_widget(BuildPlan(name="BuildPlan"))

@@ -27,12 +27,12 @@ class RunningScreen(Screen):
 
         # Longest Run
         longest_box = BoxLayout(orientation='vertical', spacing=10)
-        longest_label = Label(text="Longest Run (km)", font_size=20, color=TEXT, bold=True)
+        longest_label = Label(text="Longest Recent Run (km)", font_size=20, color=TEXT, bold=True)
 
-        self.longest_value = Label(text="0 km", font_size=26)
+        self.longest_value = Label(text="1 km", font_size=26)
 
         # Slider
-        self.longest_slider = Slider(min=1, max=60, value=0)
+        self.longest_slider = Slider(min=1, max=60, value=1, step=1)
         self.longest_slider.bind(value=self.update_longest)
 
         longest_box.add_widget(longest_label)
@@ -44,12 +44,12 @@ class RunningScreen(Screen):
         # Weekly Distance
         weekly_box = BoxLayout(orientation='vertical', spacing=10)
 
-        weekly_label = Label(text="Weekly Distance (km)", font_size=20, color=TEXT, bold=True)
+        weekly_label = Label(text="Current Weekly Distance (km)", font_size=20, color=TEXT, bold=True)
 
-        self.weekly_value = Label(text="0 km", font_size=26)
+        self.weekly_value = Label(text="1 km", font_size=26)
 
         # Slider
-        self.weekly_slider = Slider(min=1, max=150, value=0)
+        self.weekly_slider = Slider(min=1, max=150, value=1, step=1)
         self.weekly_slider.bind(value=self.update_weekly)
 
         weekly_box.add_widget(weekly_label)
@@ -57,6 +57,17 @@ class RunningScreen(Screen):
         weekly_box.add_widget(self.weekly_slider)
 
         layout.add_widget(weekly_box)
+
+        # ERROR MESSAGE
+        self.error_label = Label(
+            text="",
+            font_size=18,
+            color=(1, 0.3, 0.3, 1),
+            size_hint_y=None,
+            height=30
+        )
+
+        layout.add_widget(self.error_label)
 
         # Buttons
         btn_box = BoxLayout(size_hint=(1, 0.2), spacing=20)
@@ -91,19 +102,62 @@ class RunningScreen(Screen):
 
     # Update Slider Value
     def update_longest(self, instance, value):
-        self.longest_value.text = f"{int(value)} km"
+        longest_distance = int(value)
+
+        self.longest_value.text = f"{longest_distance} km"
+
+        self.validate_distances()
 
     # Update Slider Value
 
     def update_weekly(self, instance, value):
-        self.weekly_value.text = f"{int(value)} km"
+        weekly_distance = int(value)
+
+        self.weekly_value.text = f"{weekly_distance} km"
+
+        self.validate_distances()
+
+
+    def validate_distances(self):
+
+        longest_distance = int(
+            self.longest_slider.value
+        )
+
+        weekly_distance = int(
+            self.weekly_slider.value
+        )
+
+        if weekly_distance < longest_distance:
+            self.error_label.text = (
+                "Weekly distance cannot be lower "
+                "than your longest run."
+            )
+
+            return False
+
+        self.error_label.text = ""
+
+        return True
 
     def go_next(self, instance):
         longestDistance = int(self.longest_slider.value)
         weeklyDistance = int(self.weekly_slider.value)
+
+        # Prevent invalid data
+        if not self.validate_distances():
+            return
+
+
         App.get_running_app().data["Longest_Run"] = longestDistance
         App.get_running_app().data["Weekly_Distance"] = weeklyDistance
 
+        if longestDistance < 5:
+            self.error_label.text = (
+                "Your longest run should be at least 5 km."
+            )
+
+            return
         if 5 <= longestDistance < 10:
             self.manager.current = "RunningTime5k"
         elif 10 <= longestDistance < 21:
@@ -114,7 +168,7 @@ class RunningScreen(Screen):
             self.manager.current = "RunningTimeMarathon"
 
     def go_back(self, instance):
-        self.manager.current = "sport"
+        self.manager.current = "race"
 
 
 class RunningTimeScreen(Screen):
@@ -139,7 +193,7 @@ class RunningTimeScreen(Screen):
         for dist in lst:
             # Enter Longest Distance Time
             title = Label(
-                text=f"Enter your {dist} time",
+                text=f"Enter your best recent {dist.upper()} time",
                 font_size=30,
                 color=TEXT,
                 bold=True
@@ -154,8 +208,6 @@ class RunningTimeScreen(Screen):
             )
 
             self.inputs[dist] = pb_input
-
-            pb_input.bind(on_text_validate=self.update_input)
 
             layout.add_widget(title)
             layout.add_widget(pb_input)
@@ -196,37 +248,76 @@ class RunningTimeScreen(Screen):
         self.add_widget(layout)
 
 
-    def update_input(self, instance):
-        #For each distance they do create a data slot with the PB
+    def convert_time_to_seconds(self, text):
+
+        try:
+
+            parts = text.strip().split(":")
+
+            if len(parts) != 3:
+
+                return None
+
+            hours = int(parts[0])
+            minutes = int(parts[1])
+            seconds = int(parts[2])
+
+            if minutes >= 60 or seconds >= 60:
+
+                return None
+
+            total_seconds = (
+                hours * 3600
+                + minutes * 60
+                + seconds
+            )
+
+            return total_seconds
+
+        except ValueError:
+
+            return None
+
+    # SAVE TIMES
+
+    def save_inputs(self):
+
+        data = App.get_running_app().data
+
         for dist, pb_input in self.inputs.items():
 
-            # Split text.
             text = pb_input.text.strip()
 
-            # If text is accepted try split it using ':' for hour minutes and seconds.
             if not text:
+
                 continue
 
-            try:
-                hours, minutes, seconds = map(int, text.split(":"))
+            total_seconds = (
+                self.convert_time_to_seconds(text)
+            )
 
-                # Sum for the amount of seconds.
-                total = (
-                        hours * 3600
-                        + minutes * 60
-                        + seconds
+            if total_seconds is None:
+
+                print(
+                    f"Invalid time entered for {dist}"
                 )
 
-                App.get_running_app().data[f"{dist}_pb"] = total
+                continue
 
-                print(dist, total)
+            data[f"{dist}_pb"] = total_seconds
 
-            except:
-                print(f"Invalid time for {dist}")
+            print(
+                f"{dist}: {total_seconds} seconds"
+            )
 
     def go_next(self, instance):
-        selected.remove('running')
-        print(selected)
+        # Save all inputs when Next is pressed
+        self.save_inputs()
+
+        if "running" in selected:
+            selected.remove("running")
+
+        print("Remaining sports:", selected)
 
         # For each sport go through process
 

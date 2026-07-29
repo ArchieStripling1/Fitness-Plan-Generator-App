@@ -102,12 +102,14 @@ class CyclingScreen(Screen):
         weeklyCycling = int(self.weekly_slider.value)
         App.get_running_app().data["Longest_Cycle"] = CyclingDistance
         App.get_running_app().data["Weekly_Cycle"] = weeklyCycling
-        if 0 <= CyclingDistance < 50:
-            self.manager.current = "Cycling10K"
+        if 20 <= CyclingDistance < 50:
+            self.manager.current = "Cycling20K"
         elif 50 <= CyclingDistance < 100:
             self.manager.current = "Cycling50K"
-        elif CyclingDistance >= 100:
+        elif 100 <= CyclingDistance < 160:
             self.manager.current = "Cycling100K"
+        elif CyclingDistance >= 160:
+            self.manager.current = "Cycling160K"
 
 
     def go_back(self, instance):
@@ -125,12 +127,14 @@ class CyclingTimeScreen(Screen):
 
         # Create list of all the PBs they will have depending on their furthest run.
         lst = []
-        if distance == "100K":
-            lst = ["cycle_100", "cycle_50", "cycle_10"]
+        if distance == "160K":
+            lst = ["cycle_160", "cycle_100"]
+        elif distance == "100K":
+            lst = ["cycle_100", "cycle_50"]
         elif distance == "50K":
-            lst = ["cycle_50", "cycle_10"]
-        elif distance == "10K":
-            lst = ["cycle_10"]
+            lst = ["cycle_50", "cycle_20"]
+        elif distance == "20K":
+            lst = ["cycle_20"]
 
 
         #Enter your Average Time

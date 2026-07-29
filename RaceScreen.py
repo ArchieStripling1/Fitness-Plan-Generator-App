@@ -62,6 +62,7 @@ class RaceScreen(Screen):
             ("20K Ride", "cycle_20"),
             ("50K Ride", "cycle_50"),
             ("100K Ride", "cycle_100"),
+            ("160K Ride", "cycle_160")
         ]:
             content.add_widget(self.create_button(text, value))
 
@@ -69,8 +70,9 @@ class RaceScreen(Screen):
         content.add_widget(self.section_label("Swimming"))
 
         for text, value in [
-            ("1000m", "swim_1000"),
-            ("2500m", "swim_2500"),
+            ("400m", "swim_400"),
+            ("1500m", "swim_1500"),
+            ("3000m", "swim_3000"),
             ("5000m", "swim_5000"),
         ]:
             content.add_widget(self.create_button(text, value))
@@ -79,6 +81,7 @@ class RaceScreen(Screen):
         content.add_widget(self.section_label("Triathlon"))
 
         for text, value in [
+            ("Olympic Triathlon", "olympic_triathlon"),
             ("Half-IronMan", "ironman_70.3"),
             ("Full-IronMan", "ironman_140.6"),
         ]:
@@ -138,11 +141,11 @@ class RaceScreen(Screen):
         self.selected_race = race_value
         if race_value in ["5k", "10k", "half", "marathon"]:
             self.select_running()
-        elif race_value in ["cycle_20", "cycle_50", "cycle_100"]:
+        elif race_value in ["cycle_20", "cycle_50", "cycle_100", "cycle_160"]:
             self.select_cycle()
-        elif race_value in ["swim_1000", "swim_2500", "swim_5000"]:
+        elif race_value in ["swim_400", "swim_1500", "swim_3000", "swim_5000"]:
             self.select_swim()
-        elif race_value in ["ironman_70.3", "ironman_140.6"]:
+        elif race_value in ["olympic_triathlon", "ironman_70.3", "ironman_140.6"]:
             self.select_running()
             self.select_cycle()
             self.select_swim()

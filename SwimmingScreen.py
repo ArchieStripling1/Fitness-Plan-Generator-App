@@ -105,10 +105,12 @@ class SwimmingScreen(Screen):
         App.get_running_app().data["Longest_Swim"] = SwimmingDistance
         App.get_running_app().data["Weekly_Swimming"] = weeklySwimming
 
-        if 1000 <= SwimmingDistance < 2500:
-            self.manager.current = "Pace1000M"
-        elif 2500 <= SwimmingDistance < 5000:
-            self.manager.current = "Pace2500M"
+        if 400 <= SwimmingDistance < 1500:
+            self.manager.current = "Pace400M"
+        elif 1500 <= SwimmingDistance < 3000:
+            self.manager.current = "Pace1500M"
+        elif 3000 <= SwimmingDistance < 5000:
+            self.manager.current = "Pace3000M"
         elif 5000 <= SwimmingDistance:
             self.manager.current = "Pace5000M"
 
@@ -127,11 +129,13 @@ class SwimmingPace(Screen):
         # Create list of all the PBs they will have depending on their furthest run.
         lst = []
         if distance == "5000M":
-            lst = ["swim_5000", "swim_2500", "swim_1000"]
-        elif distance == "2500M":
-            lst = ["swim_2500", "swim_1000"]
-        elif distance == "1000M":
-            lst = ["swim_1000"]
+            lst = ["swim_5000", "swim_3000"]
+        elif distance == "3000M":
+            lst = ["swim_3000", "swim_1500"]
+        elif distance == "1500M":
+            lst = ["swim_1500", "swim_400"]
+        elif distance == "400M":
+            lst = ["swim_400"]
 
         for dist in lst:
             # Enter Longest Distance Time
@@ -191,10 +195,26 @@ class SwimmingPace(Screen):
 
     def update_input(self, instance):
         for dist, pb_input in self.inputs.items():
-            text = pb_input.text
+            text = pb_input.text.strip()
+
+            # If text is accepted try split it using ':' for hour minutes and seconds.
+            if not text:
+                continue
 
             try:
-                App.get_running_app().data[f"{dist}_pb"] = text
+                hours, minutes, seconds = map(int, text.split(":"))
+
+                # Sum for the amount of seconds.
+                total = (
+                        hours * 3600
+                        + minutes * 60
+                        + seconds
+                )
+
+                App.get_running_app().data[f"{dist}_pb"] = total
+
+                print(dist, total)
+
             except:
                 print(f"Invalid time for {dist}")
 
