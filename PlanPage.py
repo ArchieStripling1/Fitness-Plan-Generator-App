@@ -1,3 +1,5 @@
+import random
+
 from kivy.graphics import Color, RoundedRectangle
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
@@ -182,27 +184,169 @@ class PlanPage(Screen):
 
             print(PB)
 
-            interval_types = [
 
-                "1KM Repeats x 5",
+            if level == "Beginner":
+                interval_types = {
+                    "6 x 200M": {
+                        "Warm-Up": "1.5km easy jog",
+                        "Pace": "5K pace or comfortably hard",
+                        "Recovery": "Walk 60/90 seconds",
+                        "Cooldown": "1km easy jog",
+                        "Distance": 3.7
+                    },
+                    "8 x 1 Minute": {
+                        "Warm-Up": "1.5km easy jog",
+                        "Pace": "Hard for 1 minute",
+                        "Recovery": "Easy jog for 90 seconds",
+                        "Cooldown": "1km easy jog",
+                        "Distance": 4
+                    },
+                    "5 x 400M": {
+                        "Warm-Up": "1.5km easy jog",
+                        "Pace": "Current 5K pace",
+                        "Recovery": "Walk for 90 seconds",
+                        "Cooldown": "1km easy jog",
+                        "Distance": 4.5
+                    }
+                }
 
-                "Mile Repeats x 3",
+                tempo_types = {
+                    "20 Minute Tempo": {
+                        "Warm-Up": "10 Minute Easy jog",
+                        "Pace": "Run 20 minutes at 'comfortably hard'",
+                        "Cooldown": "10 Minute Easy jog",
+                        "Distance": 6
+                    },
+                    "3 x 8 Minutes Tempo": {
+                        "Warm-Up": "10 Minute Easy jog",
+                        "Pace": "Run 8 minutes at 'comfortably hard'",
+                        "Recovery": "Walk for 2 minutes",
+                        "Cooldown": "10 Minute Easy jog",
+                        "Distance": 6.5
+                    }
 
-                "Pyramid Intervals"
+                }
+            elif level == "Intermediate":
+                interval_types = {
+                    "8 x 400M": {
+                        "Warm-Up": "2km easy jog",
+                        "Pace": "30 seconds faster then 5K pace",
+                        "Recovery": "Walk 90 seconds",
+                        "Cooldown": "2km easy jog",
+                        "Distance": 7.2
+                    },
+                    "6 x 800M": {
+                        "Warm-Up": "2km easy jog",
+                        "Pace": "10 seconds faster then 5K pace",
+                        "Recovery": "Walk 90 seconds",
+                        "Cooldown": "1.5km easy jog",
+                        "Distance": 10.7
+                    },
+                    "5 x 1km": {
+                        "Warm-Up": "2km easy jog",
+                        "Pace": "5K pace",
+                        "Recovery": "Walk 90 seconds",
+                        "Cooldown": "2km easy jog",
+                        "Distance": 9
+                    },
+                    "Hill Repeats x 10": {
+                        "Warm-Up": "3km easy jog",
+                        "Pace": "Hard for 60 seconds uphill",
+                        "Recovery": "Walk 90 seconds",
+                        "Cooldown": "2km easy jog",
+                        "Distance": 7
+                    }
+                }
 
-            ]
+                tempo_types = {
+                    "Tempo 3-2-1": {
+                        "Warm-Up": "2K Easy jog",
+                        "Pace": "3K Moderate, 2K Harder, 1K Hard",
+                        "Cooldown": "2K Easy jog",
+                        "Distance": 10
+                    },
+                    "Tempo 2-2-1": {
+                        "Warm-Up": "2K Easy jog",
+                        "Pace": "2K Hard, 2K Hard, 1K Hard",
+                        "Cooldown": "2K Easy jog",
+                        "Distance": 9
 
-            tempo_types = [
+                    },
+                    "Tempo 3K x 2": {
+                        "Warm-Up": "2K Easy jog",
+                        "Pace": "20 seconds faster then 10K pace",
+                        "Recovery": "Walk 120 seconds",
+                        "Cooldown": "2K Easy jog",
+                        "Distance": 10
+                    },
+                    "Over Under 1Ks ": {
+                        "Warm-Up": "2K Easy jog",
+                        "Pace": "Over: 5k pace, Under: 5k pace + 60 seconds",
+                        "Cooldown": "2K Easy jog",
+                        "Distance": 10
+                    }
+                }
+            elif level == "Advanced":
+                interval_types = {
+                    "12 x 400M": {
+                        "Warm-Up": "3km easy jog",
+                        "Pace": "30 seconds faster then 5K pace",
+                        "Recovery": "Walk 90 seconds",
+                        "Cooldown": "3km easy jog",
+                        "Distance": 11
+                    },
+                    "9 x 800M": {
+                        "Warm-Up": "2.5km easy jog",
+                        "Pace": "10 seconds faster then 5K pace",
+                        "Recovery": "Walk 90 seconds",
+                        "Cooldown": "2.5km easy jog",
+                        "Distance": 12.2
+                    },
+                    "8 x 1km": {
+                        "Warm-Up": "2.5km easy jog",
+                        "Pace": "5K pace",
+                        "Recovery": "Walk 90 seconds",
+                        "Cooldown": "2km easy jog",
+                        "Distance": 12.5
+                    },
+                    "Pyramid Intervals": {
+                        "Warm-Up": "2km easy jog",
+                        "Pace": "Current 5K pace",
+                        "Recovery": "Walk for 90 seconds",
+                        "Cooldown": "2km easy jog",
+                        "Distance": 10
+                    },
+                    "5 x mile": {
+                        "Warm-Up": "2.5km easy jog",
+                        "Pace": "5K pace",
+                        "Recovery": "Walk 90 seconds",
+                        "Cooldown": "2km easy jog",
+                        "Distance": 12.5
+                    },
+                }
 
-                "Tempo 3-2-1",
-
-                "Tempo 2KM Repeats",
-
-                "Over and Under 1KM",
-
-                "Tempo 5KM"
-
-            ]
+                tempo_types = {
+                    "Tempo 3K x 5": {
+                        "Warm-Up": "2K Easy jog",
+                        "Pace": "21.1K pace",
+                        "Recovery": "Walk 120 seconds",
+                        "Cooldown": "2K Easy jog",
+                        "Distance": 19
+                    },
+                    "Tempo 5K x 3": {
+                        "Warm-Up": "2K Easy jog",
+                        "Pace": "21.1K pace",
+                        "Recovery": "Walk 120 seconds",
+                        "Cooldown": "2K Easy jog",
+                        "Distance": 19
+                    },
+                    "Over Under 1Ks ": {
+                        "Warm-Up": "2K Easy jog",
+                        "Pace": "Over: 5k pace, Under: 5k pace + 60 seconds",
+                        "Cooldown": "2K Easy jog",
+                        "Distance": 12
+                    }
+                }
 
             #Dictionary for the plan.
             plan = {}
@@ -273,21 +417,18 @@ class PlanPage(Screen):
                             if week % 2 == 0:
                                 hard_type = "Tempo Run"
 
-                                session = tempo_types[
-                                    week % len(tempo_types)
-                                    ]
+                                session, data = random.choice(list(tempo_types.items()))
 
-                                workout_pace = tempo_pace
+                                workout_pace = data["Pace"]
 
                             else:
 
                                 hard_type = "Interval Run"
 
-                                session = interval_types[
-                                    week % len(interval_types)
-                                    ]
+                                session, data = random.choice(list(interval_types.items()))
+                                print(session)
 
-                                workout_pace = interval_pace
+                                workout_pace = data["Pace"]
 
                             # Create nested dict to store everything for the run
                             workout = {
@@ -296,7 +437,8 @@ class PlanPage(Screen):
                                 "pace": workout_pace
                             }
                             plan[week_name][day] = workout
-                            current_weekly_distance += 8
+
+                            current_weekly_distance += data["Distance"]
 
                         # Remaining = easy runs
                         else:
