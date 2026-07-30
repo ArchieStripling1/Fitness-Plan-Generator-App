@@ -209,12 +209,13 @@ class BuildPlan(Screen):
     def on_enter(self):
         data = App.get_running_app().data
         race = data.get("race")
+        print(race)
 
         # Race Types
         raceRun = ['5k', '10k', 'half', 'marathon']
-        raceCycle = ['cycle_20', 'cycle_50', 'cycle_100']
-        raceSwim = ['swim_1000', 'swim_2500', 'swim_5000']
-        raceTriathlon = ['ironman_70.3', 'ironman_140.6']
+        raceCycle = ['cycle_20', 'cycle_50', 'cycle_100', 'cycle_160']
+        raceSwim = ['swim_400', 'swim_1500', 'swim_3000', 'swim_5000']
+        raceTriathlon = ['olympic_triathlon','ironman_70.3', 'ironman_140.6']
 
         weeklyRunDistance = data.get("Weekly_Distance")
         weeklySwimDistance = data.get("Weekly_Swimming")
@@ -225,6 +226,7 @@ class BuildPlan(Screen):
         #Find out what their race pb is.
         currentRunPB = data.get(f"{race}_pb")
         currentSwimPB = data.get(f"{race}_pb")
+        print(currentSwimPB)
         currentCyclePB = data.get(f"{race}_pb")
 
         # if Race is a Running Race
@@ -308,8 +310,8 @@ class BuildPlan(Screen):
 
     def set_long_Activty_day(self, day):
         self.longActivityBtn.text = day
-        App.get_running_app().data["LongRunDay"] = day
-        print("Long run day:", day)
+        App.get_running_app().data["LongActivityDay"] = day
+        print("Long Activity day:", day)
 
     def set_level(self, level):
         self.levelBtn.text = level
