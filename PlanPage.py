@@ -834,6 +834,17 @@ class PlanPage(Screen):
                                 else:
                                     workout_pace = pace
 
+                                warmup = session_info["Warm-Up"]
+                                cooldown = session_info["Cooldown"]
+                                recovery = session_info["Recovery"]
+                                reps = session_info["Reps"]
+                                interval = session_info["Interval"]
+
+                                description = self.formatRunDescription(warmup, reps, recovery, workout_pace, interval,
+                                                                        cooldown)
+                                print(description)
+
+
                             else:
 
                                 hard_type = "Interval Run"
@@ -874,6 +885,15 @@ class PlanPage(Screen):
                                         workout_pace = pace
                                 else:
                                     workout_pace = pace
+
+                                warmup = session_info["Warm-Up"]
+                                cooldown = session_info["Cooldown"]
+                                recovery = session_info["Recovery"]
+                                reps = session_info["Reps"]
+                                interval = session_info["Interval"]
+
+                                description = self.formatRunDescription(warmup, reps, recovery, workout_pace, interval, cooldown)
+                                print(description)
 
                             # Create nested dict to store everything for the run
                             workout = {
@@ -1063,6 +1083,26 @@ class PlanPage(Screen):
 
         # Return the formated string.
         return f"{minutes}:{seconds:02d}/km"
+
+
+
+    def formatRunDescription(self, warmup, reps, recovery, pace, interval, cooldown):
+
+        if interval is not list:
+            return f"""\
+        • Warm up with {warmup} at a conversational pace.
+        
+        • Run {interval} at {pace}.
+
+        • {recovery} for recovery.
+
+        • Repeat {reps} times.
+
+        • Cool down with {cooldown} at a conversational pace.
+        """
+        else:
+            return "-"
+
 
 
 
