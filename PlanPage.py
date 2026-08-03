@@ -82,7 +82,7 @@ class PlanPage(Screen):
                 # Create different paces for different runs.
                 easy_pace = self.formatRunPace(race_pace + 120)
                 tempo_pace = self.formatRunPace(race_pace)
-                interval_pace = self.formatRunPace(race_pace - 15)
+
 
             elif race == "10k":
                 # if user has not run that far it will get the PB that they have,
@@ -101,7 +101,7 @@ class PlanPage(Screen):
                     # Create different paces for different runs.
                     easy_pace = self.formatRunPace(race_pace + 105)
                     tempo_pace = self.formatRunPace(race_pace)
-                    interval_pace = self.formatRunPace(race_pace - 15)
+
             elif race == "half":
                 raceDistance = 21.1
                 if PB == 2.0:
@@ -115,7 +115,7 @@ class PlanPage(Screen):
                     # Create different paces for different runs.
                     easy_pace = self.formatRunPace(race_pace + 90)
                     tempo_pace = self.formatRunPace(race_pace)
-                    interval_pace = self.formatRunPace(race_pace - 15)
+
             elif race == "marathon":
                 raceDistance = 42.2
                 if PB == 2.0:
@@ -129,7 +129,6 @@ class PlanPage(Screen):
                     # Create different paces for different runs.
                     easy_pace = self.formatRunPace(race_pace + 75)
                     tempo_pace = self.formatRunPace(race_pace)
-                    interval_pace = self.formatRunPace(race_pace - 15)
 
             print(PB)
 
@@ -186,17 +185,26 @@ class PlanPage(Screen):
 
             print(PB)
 
-
+            # If Level beginner these are the interval and tempo types of runs.
             if level == "Beginner":
                 interval_types = {
+                    # Name of the Interval Type.
                     "6 x 200M": {
+                        # How long the Warm-up is before the intervals start.
                         "Warm-Up": "1.5K",
+                        # How many reps there is in the intervals.
                         "Reps": 6,
+                        # What pace they will run the interval at.
                         "Pace": "5k",
+                        # Whether there is any change to the pace.
                         "PaceOffset": 0,
+                        # What the interval is.
                         "Interval": "200M",
+                        # What the recovery is inbetween each interval.
                         "Recovery": "Walk 60/90 seconds",
+                        # What the cooldown is after the intervals are complete.
                         "Cooldown": "1K",
+                        # Probable distance of the run.
                         "Distance": 3.7
                     },
                     "8 x 1 Minute": {
@@ -221,6 +229,7 @@ class PlanPage(Screen):
                     }
                 }
 
+                # Name of the Tempo Type
                 tempo_types = {
                     "20 Minute Tempo": {
                         "Warm-Up": "10 Minutes",
@@ -244,6 +253,8 @@ class PlanPage(Screen):
                     }
 
                 }
+
+            # Interval/Tempo types for Intermediate runners which have a 5k or 10k race
             elif level == "Intermediate" and race in ["5k", "10k"]:
                 interval_types = {
                     "1K-2K-1K Pyramid": {
@@ -380,6 +391,8 @@ class PlanPage(Screen):
                         "Distance": 13
                     }
                 }
+
+            # Interval/Tempo types for Intermediate runners which have a Half-Marathon or Marathon race
             elif level == "Intermediate" and race in ["half", "marathon"]:
                 interval_types = {
                     "4 x 2km": {
@@ -476,6 +489,8 @@ class PlanPage(Screen):
                     }
 
                 }
+
+            # Interval/Tempo types for Advanced runners which have a 5k or 10k race
             elif level == "Advanced" and race in ["5k", "10k"]:
                 interval_types = {
                     "10 x 600M": {
@@ -592,6 +607,8 @@ class PlanPage(Screen):
                     }
 
                 }
+
+            # Interval/Tempo types for Advanced runners which have a Half-Marathon or Marathon race
             elif level == "Advanced" and race in ["half", "marathon"]:
                 interval_types = {
                     "8 x 1km": {
@@ -796,33 +813,47 @@ class PlanPage(Screen):
 
                             # Select actual session
                             if week % 2 == 0:
+                                # Session type is Tempo Run.
                                 hard_type = "Tempo Run"
 
+                                # Get Session name and session info from tempo types.
                                 session, session_info = random.choice(list(tempo_types.items()))
 
+                                # Get Pace from Session info.
                                 pace = session_info["Pace"]
 
+                                # If there is a PaceOffset then get that from session info.
                                 if "PaceOffset" in session_info:
                                     paceoffset = session_info["PaceOffset"]
 
-
+                                    # If the pace is in list of races
                                     if pace in ["5k", "10k", "half", "marathon"]:
+
+                                        # Get that race PB
                                         P = float(data.get(f"{pace}_pb", 2))
+
+                                        # RacePace = Race PB + or - paceoffset
                                         racePace = P + paceoffset
 
-
+                                        # If race is a 5k divide it by 5 and formatRunPace for the interval pace
                                         if pace == "5k":
                                             new_race_pace = racePace / 5
                                             interval_pace = self.formatRunPace(new_race_pace)
                                             workout_pace = interval_pace
+
+                                        # If race is a 10k divide it by 10 and formatRunPace for the interval pace
                                         elif pace == "10k":
                                             new_race_pace = racePace / 10
                                             interval_pace = self.formatRunPace(new_race_pace)
                                             workout_pace = interval_pace
+
+                                        # If race is a Half-Marathon divide it by 21 and formatRunPace for the interval pace
                                         elif pace == "half":
                                             new_race_pace = racePace / 21
                                             interval_pace = self.formatRunPace(new_race_pace)
                                             workout_pace = interval_pace
+
+                                        # If race is a Marathon divide it by 42 and formatRunPace for the interval pace
                                         elif pace == "marathon":
                                             new_race_pace = racePace / 42
                                             interval_pace = self.formatRunPace(new_race_pace)
@@ -834,21 +865,24 @@ class PlanPage(Screen):
                                 else:
                                     workout_pace = pace
 
+                                # Get all variables of session info.
                                 warmup = session_info["Warm-Up"]
                                 cooldown = session_info["Cooldown"]
                                 recovery = session_info["Recovery"]
                                 reps = session_info["Reps"]
                                 interval = session_info["Interval"]
 
+                                # Format them using function into Description.
                                 description = self.formatRunDescription(warmup, reps, recovery, workout_pace, interval,
                                                                         cooldown)
                                 print(description)
 
 
                             else:
-
+                                # Session type is tempo run.
                                 hard_type = "Interval Run"
 
+                                # Get Session name and session info from tempo types.
                                 session, session_info = random.choice(list(interval_types.items()))
 
 
@@ -1085,7 +1119,7 @@ class PlanPage(Screen):
         return f"{minutes}:{seconds:02d}/km"
 
 
-
+    # Format the run Description.
     def formatRunDescription(self, warmup, reps, recovery, pace, interval, cooldown):
 
         if interval is not list:
