@@ -199,7 +199,7 @@ class RunningTimeScreen(Screen):
                 bold=True
             )
 
-            pb_input = TextInput(
+            self.pb_input = TextInput(
                 hint_text="HH:MM:SS",
                 font_size=24,
                 height=30,
@@ -207,10 +207,21 @@ class RunningTimeScreen(Screen):
                 multiline=False
             )
 
-            self.inputs[dist] = pb_input
+            self.inputs[dist] = self.pb_input
 
             layout.add_widget(title)
-            layout.add_widget(pb_input)
+            layout.add_widget(self.pb_input)
+
+            # ERROR MESSAGE
+            self.error_label = Label(
+                text="",
+                font_size=18,
+                color=(1, 0.3, 0.3, 1),
+                size_hint_y=None,
+                height=30
+            )
+
+            layout.add_widget(self.error_label)
 
 
         # Buttons
@@ -247,6 +258,59 @@ class RunningTimeScreen(Screen):
 
         self.add_widget(layout)
 
+    def validate_PBs(self):
+
+        self.error_label.text = ""
+
+        pb_times = {}
+
+        # Validate format
+        for dist, pb_input in self.inputs.items():
+
+            text = pb_input.text.strip()
+
+            # No blank entries
+            if not text:
+                self.error_label.text = (
+                    f"Please enter a {dist.upper()} time.\n"
+                    "Please use HH:MM:SS."
+                )
+                return False
+
+            total_seconds = self.convert_time_to_seconds(text)
+
+            if total_seconds is None:
+                self.error_label.text = (
+                    f"Invalid {dist.upper()} time.\n"
+                    "Please use HH:MM:SS."
+                )
+                return False
+
+            pb_times[dist] = total_seconds
+
+        # Check PB consistency
+        if "5k" in pb_times and "10k" in pb_times:
+            if pb_times["10k"] <= pb_times["5k"]:
+                self.error_label.text = (
+                    "Your 10K PB must be longer than your 5K PB."
+                )
+                return False
+
+        if "10k" in pb_times and "half" in pb_times:
+            if pb_times["half"] <= pb_times["10k"]:
+                self.error_label.text = (
+                    "Your Half Marathon PB must be longer than your 10K PB."
+                )
+                return False
+
+        if "half" in pb_times and "marathon" in pb_times:
+            if pb_times["marathon"] <= pb_times["half"]:
+                self.error_label.text = (
+                    "Your Marathon PB must be longer than your Half Marathon PB."
+                )
+                return False
+
+        return True
 
     def convert_time_to_seconds(self, text):
 
@@ -311,6 +375,11 @@ class RunningTimeScreen(Screen):
             )
 
     def go_next(self, instance):
+
+        # Validate all PB's
+        if not self.validate_PBs():
+            return
+
         # Save all inputs when Next is pressed
         self.save_inputs()
 

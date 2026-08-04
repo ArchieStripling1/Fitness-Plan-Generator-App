@@ -201,10 +201,108 @@ class BuildPlan(Screen):
         content.add_widget(grid)
         content.add_widget(self.longActivityDay)
         content.add_widget(self.longActivityBtn)
+
+        # ERROR MESSAGE
+        self.error_label = Label(
+            text="",
+            font_size=18,
+            color=(1, 0.3, 0.3, 1),
+            size_hint_y=None,
+            height=30
+        )
+
+        content.add_widget(self.error_label)
+
         content.add_widget((buildPlanBtn))
         scroll.add_widget(content)
         layout.add_widget(scroll)
         self.add_widget(layout)
+
+    def validate_level(self):
+
+        self.error_label.text = ""
+
+        level = self.levelBtn.text
+
+        # No blank entries
+        if level == "Select Level":
+            self.error_label.text = (
+                "You must select what level runner you are."
+            )
+            return False
+        return True
+
+
+    def validate_plan_length(self):
+
+        self.error_label.text = ""
+
+        planLength = self.planLength.text
+
+        # No blank entries
+        if not planLength:
+            self.error_label.text = (
+                "Please Input your plan length."
+            )
+            return False
+
+        # Validate format
+        if not planLength.isdigit():
+            self.error_label.text = (
+                "You must input a number"
+            )
+            return False
+
+        # Plan can be no less than 3 weeks
+        if int(planLength) < 3:
+            self.error_label.text = (
+                "The plan must be at least 3 weeks."
+            )
+            return False
+
+        # Plan can be no more than 20 weeks
+        if int(planLength) > 20:
+            self.error_label.text = (
+                "The plan length must be less than 30 weeks."
+            )
+            return False
+        return True
+
+
+    def validate_activity_days(self):
+
+        self.error_label.text = ""
+
+        days = self.daysSelected
+
+        # No blank entries
+        if not days:
+            self.error_label.text = (
+                "Please select your days."
+            )
+            return False
+
+        # At least 2 running days
+        if len(days) < 2:
+            self.error_label.text = (
+                "Please run at least 2 days."
+            )
+            return False
+        return True
+
+    def validate_longActivityDay(self):
+
+        self.error_label.text = ""
+
+        longActivityDay = self.longActivityBtn.text
+
+        # No blank entries
+        if longActivityDay == "Select Day":
+            self.error_label.text = (
+                "Please input your long activity day."
+            )
+            return False
+        return True
 
     def on_enter(self):
         data = App.get_running_app().data
@@ -320,4 +418,21 @@ class BuildPlan(Screen):
 
 
     def build_plan(self, instance):
+
+        # Validate Level
+        if not self.validate_level():
+            return
+
+        # Validate plan Length
+        if not self.validate_plan_length():
+            return
+
+        # Validate activity days
+        if not self.validate_activity_days():
+            return
+
+        # Validate long activity day
+        if not self.validate_longActivityDay():
+            return
+
         self.manager.current = "plan"
