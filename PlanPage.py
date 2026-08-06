@@ -2,7 +2,7 @@ import random
 from asyncio.windows_events import NULL
 
 from docutils.nodes import description
-from kivy.graphics import Color, RoundedRectangle
+from kivy.graphics import Color, RoundedRectangle, Line
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.gridlayout import GridLayout
@@ -752,10 +752,12 @@ class PlanPage(Screen):
 
             # For week in range 1 to the length of the current plan
             for week in range(1, plan_length + 1):
-
                 week_name = f"Week {week}"
 
-                plan[week_name] = {}
+                plan[week_name] = {
+                    "workouts": {},
+                    "distance": 0
+                }
 
                 # Created a recovery week every 4 weeks which decrease the load
                 recovery_week = False
@@ -771,7 +773,7 @@ class PlanPage(Screen):
                     workout = {
                         "type": "Rest"
                     }
-                    plan[week_name][day] = workout
+                    plan[week_name]["workouts"][day] = workout
 
                     # Long run
                     if day == long_run_day:
@@ -798,9 +800,9 @@ class PlanPage(Screen):
                         workout = {
                             "type": "Long Run",
                             "distance": int(long_run_distance),
-                            "pace": easy_pace
+                            "pace": "Conversational Pace"
                         }
-                        plan[week_name][day] = workout
+                        plan[week_name]["workouts"][day] = workout
 
                         # Keep track of how far they have run this week.
                         current_weekly_distance += long_run_distance
@@ -933,9 +935,10 @@ class PlanPage(Screen):
                             workout = {
                                 "type": hard_type,
                                 "session": session,
+                                "distance": session_info["Distance"],
                                 "pace": workout_pace
                             }
-                            plan[week_name][day] = workout
+                            plan[week_name]["workouts"][day] = workout
 
                             current_weekly_distance += session_info["Distance"]
 
@@ -958,7 +961,7 @@ class PlanPage(Screen):
                                 "distance": int(easy_distance),
                                 "pace": easy_pace
                             }
-                            plan[week_name][day] = workout
+                            plan[week_name]["workouts"][day] = workout
                             current_weekly_distance += easy_distance
 
                         # No more than one hard run a week right now.
@@ -969,23 +972,24 @@ class PlanPage(Screen):
                         workout = {
                             "type": "Rest"
                         }
-                        plan[week_name][day] = workout
+                        plan[week_name]["workouts"][day] = workout
                         if day == "Wednesday":
                             workout = {
                                 "type": "Race Practice Session!",
                                 "distance": "Race Pace Miles x 3",
                                 "pace": tempo_pace
                             }
-                            plan[week_name][day] = workout
+                            plan[week_name]["workouts"][day] = workout
                         if day == "Sunday":
                             workout = {
                                 "type": "Race Day!",
                                 "distance": race.capitalize(),
                                 "pace": self.formatRunPace(race_pace)
                             }
-                            plan[week_name][day] = workout
+                            plan[week_name]["workouts"][day] = workout
 
                 # Reset for next week
+                plan[week_name]["distance"] = round(current_weekly_distance)
                 weekly_hard_run = 0
                 weekly_miles = current_weekly_distance
                 current_weekly_distance = 0
@@ -993,7 +997,10 @@ class PlanPage(Screen):
             App.get_running_app().data["GeneratedPlan"] = plan
 
             # Get Week and workout in that week
-            for week, workouts in plan.items():
+            for week, week_data in plan.items():
+
+                workouts = week_data["workouts"]
+                weekly_distance = week_data["distance"]
 
                 # Initialize Card
                 card = BoxLayout(
@@ -1023,18 +1030,34 @@ class PlanPage(Screen):
                 # Bind Card with updated variables
                 card.bind(pos=update_rect, size=update_rect)
 
-                # Week Title
+                header = BoxLayout(
+                    orientation="vertical",
+                    size_hint_y=None,
+                    height=70,
+                    spacing=5
+                )
+
                 week_label = Label(
                     text=week,
-                    font_size=30,
+                    font_size=32,
                     bold=True,
                     color=TEXT,
                     size_hint_y=None,
-                    height=50
+                    height=40
                 )
 
-                # Add Week to Card
-                card.add_widget(week_label)
+                distance_label = Label(
+                    text=f"{weekly_distance} km planned",
+                    font_size=18,
+                    color=SUBTEXT,
+                    size_hint_y=None,
+                    height=25
+                )
+
+                header.add_widget(week_label)
+                header.add_widget(distance_label)
+
+                card.add_widget(header)
 
                 # Get the day and workout in workouts
                 for day, workout in workouts.items():
@@ -1057,26 +1080,58 @@ class PlanPage(Screen):
                         workout_text += f"Pace: {workout['pace']}"
 
                     # Workout Card
+                    colour = {
+                        "Easy Run": EASY,
+                        "Recovery Run": EASY,
+                        "Long Run": LONG,
+                        "Interval Run": INTERVAL,
+                        "Tempo Run": TEMPO,
+                        "Race Practice Session!": TEMPO,
+                        "Race Day!": RACE,
+                    }.get(workout["type"], SUBTEXT)
+
                     workout_card = BoxLayout(
                         orientation='vertical',
-                        padding=15,
+                        padding=20,
+                        spacing = 8,
                         size_hint_y=None,
-                        height=140
+                        height=140,
                     )
 
                     # Workout card background
                     with workout_card.canvas.before:
-                        Color(*SUBTEXT)
+
+                        Color(*CARD)
                         workout_card.rect = RoundedRectangle(
                             pos=workout_card.pos,
                             size=workout_card.size,
-                            radius=[18]
+                            radius=[24]
+                        )
+                        # Border
+                        Color(*colour)
+                        workout_card.border = Line(
+                            rounded_rectangle=(
+                                workout_card.x,
+                                workout_card.y,
+                                workout_card.width,
+                                workout_card.height,
+                                24
+                            ),
+                            width=2
                         )
 
                     # Keep Workout Updated
                     def update_workout_rect(instance, value):
                         instance.rect.pos = instance.pos
                         instance.rect.size = instance.size
+
+                        instance.border.rounded_rectangle = (
+                            instance.x,
+                            instance.y,
+                            instance.width,
+                            instance.height,
+                            24
+                        )
 
                     # Bind Card with updated variables
                     workout_card.bind(
