@@ -5,6 +5,8 @@ from kivy.uix.label import Label
 from kivy.uix.slider import Slider
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen
+from kivy.uix.togglebutton import ToggleButton
+
 from RaceScreen import selected
 from Theme import *
 
@@ -383,6 +385,165 @@ class RunningTimeScreen(Screen):
         # Save all inputs when Next is pressed
         self.save_inputs()
 
+        self.manager.current = "level"
+
+    def go_back(self, instance):
+        self.manager.current = "race"
+
+class LevelScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+        self.selected_level = None
+        self.level_buttons = {}
+
+        layout = BoxLayout(
+            orientation='vertical',
+            padding=15,
+            spacing=15
+        )
+
+        title = Label(
+            text="What Level Runner are you?",
+            font_size=30,
+            color=TEXT,
+            bold=True
+        )
+
+        layout.add_widget(title)
+
+        content = BoxLayout(
+            orientation='vertical',
+            spacing=20,
+            size_hint_y=None
+        )
+
+        content.bind(
+            minimum_height=content.setter("height")
+        )
+
+        level_descriptions = {
+            "Beginner": "A runner who has not completed a run longer than 10km and is building their running base.",
+            "Intermediate": "A runner who has completed a Half Marathon and has experience with consistent training.",
+            "Advanced": "A runner who regularly completes 30km+ runs or has completed Marathons or Ultras."
+        }
+
+        level_list = [
+            "Beginner",
+            "Intermediate",
+            "Advanced"
+        ]
+
+        for level in level_list:
+            level_box = BoxLayout(
+                orientation="vertical",
+                spacing=5,
+                size_hint_y=None,
+                height=90
+            )
+
+            btn = ToggleButton(
+                text=level,
+                size_hint_y=None,
+                height=44,
+                background_normal="",
+                background_color=PRIMARY,
+                color=TEXT,
+                bold=True,
+                border=(0, 0, 0, 0)
+            )
+
+            description = Label(
+                text=level_descriptions[level],
+                font_size=16,
+                color=SUBTEXT,
+                halign="center",
+                valign="middle",
+                size_hint_y=None,
+                height=40,
+                text_size=(500, None)
+            )
+
+            btn.bind(on_press=self.set_level)
+
+            self.level_buttons[level] = btn
+
+            level_box.add_widget(btn)
+            level_box.add_widget(description)
+
+            content.add_widget(level_box)
+
+        # ERROR MESSAGE (outside loop)
+        self.error_label = Label(
+            text="",
+            font_size=18,
+            color=(1, 0.3, 0.3, 1),
+            size_hint_y=None,
+            height=30
+        )
+
+        layout.add_widget(content)
+        layout.add_widget(self.error_label)
+
+        # BUTTONS (outside loop)
+        btn_box = BoxLayout(
+            size_hint=(1, 0.2),
+            spacing=20
+        )
+
+        back_btn = Button(
+            text="Previous",
+            font_size=22,
+            background_normal="",
+            background_color=PRIMARY,
+            color=TEXT,
+            bold=True
+        )
+
+        next_btn = Button(
+            text="Next",
+            font_size=22,
+            background_normal="",
+            background_color=PRIMARY,
+            color=TEXT,
+            bold=True
+        )
+
+        back_btn.bind(on_press=self.go_back)
+        next_btn.bind(on_press=self.go_next)
+
+        btn_box.add_widget(back_btn)
+        btn_box.add_widget(next_btn)
+
+        layout.add_widget(btn_box)
+
+        self.add_widget(layout)
+
+    def set_level(self, instance):
+
+        self.selected_level = instance.text
+
+    def validate_level(self):
+
+        self.error_label.text = ""
+
+        if self.selected_level is None:
+            self.error_label.text = (
+                "You must select what level runner you are."
+            )
+            return False
+
+        return True
+
+
+
+    def go_next(self, instance):
+
+        if not self.validate_level():
+            return
+
+        App.get_running_app().data["level"] = self.selected_level
+
         if "running" in selected:
             selected.remove("running")
 
@@ -399,3 +560,4 @@ class RunningTimeScreen(Screen):
 
     def go_back(self, instance):
         self.manager.current = "race"
+

@@ -51,46 +51,9 @@ class BuildPlan(Screen):
         # Current PB
         self.currentPB_label = Label(font_size=20, size_hint_y=None, height=30, color = TEXT)
 
-        # Level Section for basing workout off of how much experience you have running.
-        self.expertise = Label(
-            text="What level Athlete are you: ",
-            font_size=20
-        )
-        # Creates Dropdown
-        self.dropdown = DropDown()
+        # Level
+        self.level_label = Label(font_size=20, size_hint_y=None, height=30, color = TEXT)
 
-        level_list = ["Beginner", "Intermediate", "Advanced"]
-        # For each day in days
-        for level in level_list:
-            btn = Button(
-                text=level,
-                size_hint_y=None,
-                height=44,
-                background_normal="",
-                background_color=PRIMARY,
-                color = TEXT,
-                bold=True,
-                border=(0, 0, 0, 0)
-            )
-            # On button click it selects the text from the day and creates a button using an anonymous function
-            btn.bind(on_release=lambda btn: self.dropdown.select(btn.text))
-
-            self.dropdown.add_widget(btn)
-
-        self.levelBtn = Button(
-            text="Select Level",
-            size_hint=(1, None),
-            height=50,
-            background_normal="",
-            background_color=(0.22, 0.74, 0.97, 1),
-            color=(1, 1, 1, 1),
-            bold=True,
-            border=(0, 0, 0, 0)
-        )
-
-        self.levelBtn.bind(on_release=self.dropdown.open)
-        # Dropdown uses x as the day and sets the long run day variable.
-        self.dropdown.bind(on_select=lambda instance, x: self.set_level(x))
 
         #Length of Plan
         self.length = Label(
@@ -193,8 +156,7 @@ class BuildPlan(Screen):
         content.add_widget(self.weekly_label)
         content.add_widget(self.longest_label)
         content.add_widget(self.currentPB_label)
-        content.add_widget(self.expertise)
-        content.add_widget(self.levelBtn)
+        content.add_widget(self.level_label)
         content.add_widget(self.length)
         content.add_widget(self.planLength)
         content.add_widget(self.activityDays)
@@ -217,20 +179,6 @@ class BuildPlan(Screen):
         scroll.add_widget(content)
         layout.add_widget(scroll)
         self.add_widget(layout)
-
-    def validate_level(self):
-
-        self.error_label.text = ""
-
-        level = self.levelBtn.text
-
-        # No blank entries
-        if level == "Select Level":
-            self.error_label.text = (
-                "You must select what level runner you are."
-            )
-            return False
-        return True
 
 
     def validate_plan_length(self):
@@ -307,6 +255,7 @@ class BuildPlan(Screen):
     def on_enter(self):
         data = App.get_running_app().data
         race = data.get("race")
+        level = data.get("level")
         print(race)
 
         # Race Types
@@ -329,17 +278,16 @@ class BuildPlan(Screen):
 
         # if Race is a Running Race
         if race in raceRun:
-            self.expertise.text = "What level Runner are you: "
             self.activityDays.text = "What days do you want to Run: "
             self.longActivityDay.text = "What day do you want to do your long Run: "
             self.race_label.text = f"Race: {race.upper()}"
+            self.level_label.text = f"Level Runner: {level}"
             self.longest_label.text = f"Longest Run: {longestRun} KM"
             self.weekly_label.text = f"Current Weekly Running Distance: {weeklyRunDistance} KM"
             self.currentPB_label.text = f"Your Current {race.upper()} PB is: {currentRunPB}"
 
         # if Race is a Swimming Race
         elif race in raceSwim:
-            self.expertise.text = "What level Swimmer are you: "
             self.activityDays.text = "What days do you want to Swim: "
             self.longActivityDay.text = "What day do you want to do your long Swim: "
             self.race_label.text = f"Race: {race.upper()}"
@@ -349,7 +297,6 @@ class BuildPlan(Screen):
 
         # if Race is a Cycling Race
         elif race in raceCycle:
-            self.expertise.text = "What level Cyclist are you: "
             self.activityDays.text = "What days do you want to Cycle: "
             self.longActivityDay.text = "What day do you want to do your long Ride: "
             self.race_label.text = f"Race: {race.upper()}"
@@ -361,7 +308,6 @@ class BuildPlan(Screen):
         elif race in raceTriathlon:
 
             # Needs changing so it outputs all of this data
-            self.race_label.text = f"Race: {race.upper()}"
             self.longest_label.text = f"Longest Run: {longestRun} KM"
             self.longest_label.text = f"Longest Cycle: {longestCycle} KM"
             self.longest_label.text = f"Longest Swim: {longestSwim} M"
@@ -411,17 +357,7 @@ class BuildPlan(Screen):
         App.get_running_app().data["LongActivityDay"] = day
         print("Long Activity day:", day)
 
-    def set_level(self, level):
-        self.levelBtn.text = level
-        App.get_running_app().data["Level"] = level
-        print("Level:", level)
-
-
     def build_plan(self, instance):
-
-        # Validate Level
-        if not self.validate_level():
-            return
 
         # Validate plan Length
         if not self.validate_plan_length():

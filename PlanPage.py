@@ -49,7 +49,7 @@ class PlanPage(Screen):
         weekly_miles = int(data.get("Weekly_Distance"))
         activity_days = data.get("ActivityDays")
         long_run_day = data.get("LongActivityDay")
-        level = data.get("Level")
+        level = data.get("level")
         weekly_hard_run = 0
 
         #Days in the week
@@ -740,6 +740,7 @@ class PlanPage(Screen):
                         "Pace": "Start Easy, Finish at Marathon pace",
                         "PaceOffset": 0,
                         "Interval": ["4K", "4K", "4K", "4K"],
+                        "Recovery": None,
                         "Cooldown": "2km",
                         "Distance": 20
                     }
