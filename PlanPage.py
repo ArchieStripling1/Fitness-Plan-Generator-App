@@ -81,7 +81,6 @@ class PlanPage(Screen):
 
                 # Create different paces for different runs.
                 easy_pace = self.formatRunPace(race_pace + 120)
-                tempo_pace = self.formatRunPace(race_pace)
 
 
             elif race == "10k":
@@ -92,6 +91,8 @@ class PlanPage(Screen):
                 if PB == 2.0:
                     PB = float(data.get("5k_pb", 2))
                     race_pace = PB / 5
+                    # Create different paces for different runs.
+                    easy_pace = self.formatRunPace(race_pace + 120)
 
                 else:
                     # Work out what their race pace based off their last PB
@@ -100,13 +101,16 @@ class PlanPage(Screen):
 
                     # Create different paces for different runs.
                     easy_pace = self.formatRunPace(race_pace + 105)
-                    tempo_pace = self.formatRunPace(race_pace)
 
             elif race == "half":
+                print(PB)
                 raceDistance = 21.1
                 if PB == 2.0:
                     PB = float(data.get("10k_pb", 2))
                     race_pace = PB / 10
+
+                    # Create different paces for different runs.
+                    easy_pace = self.formatRunPace(race_pace + 105)
                 else:
                     # Work out what their race pace based off their last PB
                     predictedPace = PB - plan_length * 20
@@ -114,13 +118,16 @@ class PlanPage(Screen):
 
                     # Create different paces for different runs.
                     easy_pace = self.formatRunPace(race_pace + 90)
-                    tempo_pace = self.formatRunPace(race_pace)
 
             elif race == "marathon":
                 raceDistance = 42.2
                 if PB == 2.0:
                     PB = float(data.get("half_pb", 2))
                     race_pace = PB / 21.1
+
+                    # Create different paces for different runs.
+                    easy_pace = self.formatRunPace(race_pace + 90)
+
                 else:
                     # Work out what their race pace based off their last PB
                     predictedPace = PB - plan_length * 25
@@ -128,7 +135,7 @@ class PlanPage(Screen):
 
                     # Create different paces for different runs.
                     easy_pace = self.formatRunPace(race_pace + 75)
-                    tempo_pace = self.formatRunPace(race_pace)
+
 
             print(PB)
 
@@ -166,13 +173,13 @@ class PlanPage(Screen):
                         "speed": "fast"
                     },
                     "10k": {
-                        "max_long_run": 14,
+                        "max_long_run": 16,
                         "max_easy_run": 8,
                         "speed": "semi-fast"
 
                     },
                     "half": {
-                        "max_long_run": 23,
+                        "max_long_run": 26,
                         "max_easy_run": 13,
                         "speed": "medium"
                     },
@@ -778,17 +785,19 @@ class PlanPage(Screen):
 
                     # Long run
                     if day == long_run_day:
-                        distance_to_cover = (
-                                race_settings[race]["max_long_run"] - longest_run
-                        )
 
-                        weekly_increase = (
-                                distance_to_cover / max(plan_length - 2, 1)
-                        )
+                        # Create a Starting Distance Memory
+                        starting_distance = longest_run
+
+                        # What the target long run of the plan will be.
+                        target_long_run = race_settings[race]["max_long_run"]
+
+                        # Calculate gradual progression towards target
+                        long_run_progress = (target_long_run - starting_distance) / max(plan_length - 1, 1)
 
                         long_run_distance = (
-                                longest_run +
-                                (weekly_increase * week)
+                                starting_distance +
+                                long_run_progress * (week - 1)
                         )
 
                         # Prevent going over max
@@ -978,7 +987,7 @@ class PlanPage(Screen):
                             workout = {
                                 "type": "Race Practice Session!",
                                 "distance": "Race Pace Miles x 3",
-                                "pace": tempo_pace
+                                "pace": self.formatRunPace(race_pace)
                             }
                             plan[week_name]["workouts"][day] = workout
                         if day == "Sunday":
