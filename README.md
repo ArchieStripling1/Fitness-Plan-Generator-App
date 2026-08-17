@@ -86,11 +86,50 @@ Concepts used:
    - Plan length
 5. The application generates a structured weekly training schedule using dictionaries and workout rotation logic including planned distances.
 
-## Screenshots 
-(Add screenshots here later)
+## Recent Screenshots
+Intro Screen:
+
+<img width="788" height="931" alt="image" src="https://github.com/user-attachments/assets/993554a1-3e33-4ab9-9828-c9b6ffec43b6" />
+
+Select Race Screen:
+
+<img width="793" height="931" alt="image" src="https://github.com/user-attachments/assets/f8d498b1-9973-41dc-97a0-61256ca6bff6" />
+<img width="778" height="744" alt="image" src="https://github.com/user-attachments/assets/f2d8e169-0a07-4a8e-b185-14ad467c7a0a" />
+
+Running Profile Screen:
+
+<img width="788" height="934" alt="image" src="https://github.com/user-attachments/assets/22f256ad-a153-4615-a031-a72af662c68e" />
+
+Race PBs Screen:
+
+<img width="792" height="929" alt="image" src="https://github.com/user-attachments/assets/a890b216-394b-4b3b-929a-9abfe8c36dfc" />
+
+Runner Level Screen:
+
+<img width="791" height="766" alt="image" src="https://github.com/user-attachments/assets/77b105bc-2241-4917-ba3e-ac6c76e53872" />
+
+Build Plan Screen:
+
+<img width="792" height="936" alt="image" src="https://github.com/user-attachments/assets/b32ec87c-61ad-4a3f-b4a9-670d211d75fc" />
+
+Plan Screen:
+
+<img width="780" height="763" alt="image" src="https://github.com/user-attachments/assets/20df9f18-3847-4cae-94a9-90debeb15c45" />
+<img width="798" height="764" alt="image" src="https://github.com/user-attachments/assets/2e912d72-9999-4fe1-9686-85c06b718164" />
+<img width="798" height="751" alt="image" src="https://github.com/user-attachments/assets/8d901ddf-78c2-4e68-874d-54a8581d0c1a" />
+<img width="801" height="760" alt="image" src="https://github.com/user-attachments/assets/2ebb6dfe-1405-45da-b135-803caa6ee4e9" />
+<img width="796" height="759" alt="image" src="https://github.com/user-attachments/assets/8450a79a-3b16-46e1-9844-91f1b1fad6d3" />
+<img width="796" height="452" alt="image" src="https://github.com/user-attachments/assets/0a3a819f-73c3-44bb-a566-aa9aff461d77" />
+
+
+## Current imminent  Improvements
+- Final Week Distance Calculation correction
+- Include Taper Weeks leading up to race to get the user ready for race day.
+- Improve long run and easy run creation to really bring that side of the plan to life.
+- Correct Build Plan Screen PB Time from seconds to an actual time.
+- More appealing Build Plan Screen
 
 ## Future Improvements 
-- Generate pace targets automatically from PB time
 - Export training plans to PDF
 - Save user accounts and plans
 - Mobile deployment
