@@ -761,6 +761,7 @@ class PlanPage(Screen):
             # For week in range 1 to the length of the current plan
             for week in range(1, plan_length + 1):
                 week_name = f"Week {week}"
+                self.createPredictedTimes()
 
                 plan[week_name] = {
                     "workouts": {},
@@ -1174,6 +1175,72 @@ class PlanPage(Screen):
         self.data = {}
 
         # Format their paces
+
+    def createPredictedTimes(self):
+        data = App.get_running_app().data
+        pb_5k = float(data.get("5k_pb", 2))
+        pb_10k = float(data.get("10k_pb", 2))
+        pb_half = float(data.get("half_pb", 2))
+        pb_marathon = float(data.get("marathon_pb", 2))
+        active_pbs = {}
+        non_active_pbs = {}
+
+        pbs = {
+            "5k": pb_5k,
+            "10k": pb_10k,
+            "half": pb_half,
+            "marathon": pb_marathon
+
+        }
+
+        for distance, pb in pbs.items():
+            if pb == 2.0:
+                non_active_pbs[distance] = pb
+            else:
+                active_pbs[distance] = pb
+
+
+        if "10k" not in active_pbs:
+
+            if "5k" in active_pbs:
+                time_5k = active_pbs["5k"]
+
+                predicted_10k = int(
+                    time_5k * (10 / 5) * 1.08
+                )
+
+                active_pbs["10k"] = predicted_10k
+
+            # 10K -> Half Marathon
+        if "half" not in active_pbs:
+
+            if "10k" in active_pbs:
+                time_10k = active_pbs["10k"]
+
+                predicted_half = int(
+                    time_10k * (21.0975 / 10) * 1.08
+                )
+
+                active_pbs["half"] = predicted_half
+
+            # Half Marathon -> Marathon
+        if "marathon" not in active_pbs:
+
+            if "half" in active_pbs:
+                time_half = active_pbs["half"]
+
+                predicted_marathon = int(
+                    time_half * (42.195 / 21.0975) * 1.05
+                )
+
+                active_pbs["marathon"] = predicted_marathon
+
+
+        for distance, pb in active_pbs.items():
+            active_pbs[distance] = self.format_time(pb)
+
+        return print(active_pbs)
+
     def formatRunPace(self, PB):
 
         # Turn seconds into minutes and seconds rounded to the nearest division of 5.
@@ -1182,6 +1249,15 @@ class PlanPage(Screen):
 
         # Return the formated string.
         return f"{minutes}:{seconds:02d}/km"
+
+    def format_time(self, seconds):
+        seconds = int(seconds)
+
+        hours = seconds // 3600
+        minutes = (seconds % 3600) // 60
+        seconds = seconds % 60
+
+        return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
 
 
     # Format the run Description.
