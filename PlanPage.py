@@ -1007,6 +1007,66 @@ class PlanPage(Screen):
 
             App.get_running_app().data["GeneratedPlan"] = plan
 
+            # Initialize Card
+            header_card = BoxLayout(
+                orientation='vertical',
+                spacing=15,
+                padding=20,
+                size_hint_y=None
+            )
+
+            # Dynamic height
+            header_card.bind(minimum_height=header_card.setter("height"))
+
+            # Card background
+            with header_card.canvas.before:
+                Color(*CARD)
+                header_card.rect = RoundedRectangle(
+                    pos=header_card.pos,
+                    size=header_card.size,
+                    radius=[25]
+                )
+
+            # Keep card updated
+            def update_rect(instance, value):
+                instance.rect.pos = instance.pos
+                instance.rect.size = instance.size
+
+            # Bind Card with updated variables
+            header_card.bind(pos=update_rect, size=update_rect)
+
+            header = BoxLayout(
+                orientation="vertical",
+                size_hint_y=None,
+                height=70,
+                spacing=5
+            )
+
+            title_label = Label(
+                text=f"Your {race} Plan!",
+                font_size=32,
+                bold=True,
+                color=TEXT,
+                size_hint_y=None,
+                height=40
+            )
+
+            prediction_race = data.get(f"prediction_{race}")
+            prediction_label = Label(
+                text=f"Your predicted {race} time is : {prediction_race}!",
+                font_size=18,
+                color=SUBTEXT,
+                size_hint_y=None,
+                height=25
+            )
+
+            header.add_widget(title_label)
+            header.add_widget(prediction_label)
+
+            header_card.add_widget(header)
+
+            self.content.add_widget(header_card)
+
             # Get Week and workout in that week
             for week, week_data in plan.items():
 
@@ -1238,6 +1298,7 @@ class PlanPage(Screen):
 
         for distance, pb in active_pbs.items():
             active_pbs[distance] = self.format_time(pb)
+            App.get_running_app().data[f"prediction_{distance}"] = self.format_time(pb)
 
         return print(active_pbs)
 
