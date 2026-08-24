@@ -67,7 +67,7 @@ class PlanPage(Screen):
         if not activity_days:
             return
 
-
+        self.createPredictedTimes()
         if race in runlst:
 
             #Variable settings that change for each race.
@@ -89,52 +89,48 @@ class PlanPage(Screen):
                 raceDistance = 10
 
                 if PB == 2.0:
-                    PB = float(data.get("5k_pb", 2))
-                    race_pace = PB / 5
+                    PB = float(data.get("10k_pb", 2))
+                    race_pace = self.formatRunPace(PB / 10)
                     # Create different paces for different runs.
-                    easy_pace = self.formatRunPace(race_pace + 120)
+                    easy_pace = self.formatRunPace(PB/10 + 120)
 
                 else:
-                    # Work out what their race pace based off their last PB
-                    predictedPace = PB - plan_length * 15
-                    race_pace = predictedPace/ 10
+                    race_pace = self.formatRunPace(PB / 10)
 
                     # Create different paces for different runs.
-                    easy_pace = self.formatRunPace(race_pace + 105)
+                    easy_pace = self.formatRunPace(PB/10 + 105)
 
             elif race == "half":
                 print(PB)
                 raceDistance = 21.1
                 if PB == 2.0:
-                    PB = float(data.get("10k_pb", 2))
-                    race_pace = PB / 10
+                    PB = float(data.get("half_pb", 2))
+                    race_pace = self.formatRunPace(PB / 21.1)
 
                     # Create different paces for different runs.
-                    easy_pace = self.formatRunPace(race_pace + 105)
+                    easy_pace = self.formatRunPace(PB/21.1 + 105)
                 else:
                     # Work out what their race pace based off their last PB
-                    predictedPace = PB - plan_length * 20
-                    race_pace = predictedPace / 21.1
+                    race_pace = self.formatRunPace(PB / 21.1)
 
                     # Create different paces for different runs.
-                    easy_pace = self.formatRunPace(race_pace + 90)
+                    easy_pace = self.formatRunPace(PB/21.1 + 90)
 
             elif race == "marathon":
                 raceDistance = 42.2
                 if PB == 2.0:
-                    PB = float(data.get("half_pb", 2))
-                    race_pace = PB / 21.1
+                    PB = float(data.get("marathon_pb", 2))
+                    race_pace = self.formatRunPace(PB / 42.2)
 
                     # Create different paces for different runs.
-                    easy_pace = self.formatRunPace(race_pace + 90)
+                    easy_pace = self.formatRunPace(PB/42.2 + 90)
 
                 else:
                     # Work out what their race pace based off their last PB
-                    predictedPace = PB - plan_length * 25
-                    race_pace = predictedPace / 42.2
+                    race_pace = self.formatRunPace(PB / 42.2)
 
                     # Create different paces for different runs.
-                    easy_pace = self.formatRunPace(race_pace + 75)
+                    easy_pace = self.formatRunPace(PB/42.2 + 75)
 
 
             print(PB)
@@ -988,14 +984,14 @@ class PlanPage(Screen):
                             workout = {
                                 "type": "Race Practice Session!",
                                 "distance": "Race Pace Miles x 3",
-                                "pace": self.formatRunPace(race_pace)
+                                "pace": race_pace
                             }
                             plan[week_name]["workouts"][day] = workout
                         if day == "Sunday":
                             workout = {
                                 "type": "Race Day!",
                                 "distance": race.capitalize(),
-                                "pace": self.formatRunPace(race_pace)
+                                "pace": race_pace
                             }
                             plan[week_name]["workouts"][day] = workout
 
@@ -1298,6 +1294,7 @@ class PlanPage(Screen):
 
         for distance, pb in active_pbs.items():
             active_pbs[distance] = self.format_time(pb)
+            App.get_running_app().data[f"{distance}_pb"] = pb
             App.get_running_app().data[f"prediction_{distance}"] = self.format_time(pb)
 
         return print(active_pbs)
@@ -1316,9 +1313,8 @@ class PlanPage(Screen):
 
         hours = seconds // 3600
         minutes = (seconds % 3600) // 60
-        seconds = seconds % 60
 
-        return f"{hours:02d}:{minutes:02d}:{seconds:02d}"
+        return f"{hours:02d}:{minutes:02d}:00"
 
 
     # Format the run Description.
