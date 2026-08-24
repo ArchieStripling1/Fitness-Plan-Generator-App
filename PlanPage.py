@@ -38,7 +38,7 @@ class PlanPage(Screen):
 
         generator = RunningPlanGenerator(data)
 
-        plan = generator.generate_plan()
+        plan = generator.generate_running_plan()
 
         App.get_running_app().data["GeneratedPlan"] = plan
 

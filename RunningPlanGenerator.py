@@ -1,21 +1,15 @@
 import random
 
-from kivy.graphics import Color, RoundedRectangle, Line
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.label import Label
-
 from kivy.app import App
-from Theme import *
 
 class RunningPlanGenerator:
 
     def __init__(self, data):
         self.data = data
 
-    def generate_plan(self):
+    def generate_running_plan(self):
 
-
-        data = App.get_running_app().data
+        data = self.data
 
         race = data.get("race")
         plan_length = int(data.get("CurrentPlanLength", 0))
@@ -31,8 +25,6 @@ class RunningPlanGenerator:
         days = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
 
         runlst = ["5k", "10k", "half", "marathon"]
-        ridelst = ["cycle_20", "cycle_50", "cycle_100", "cycle_160"]
-        swimlst = ["swim_400", "swim_1500", "swim_3000", "swim_5000"]
 
         if race not in runlst:
             return
@@ -978,7 +970,7 @@ class RunningPlanGenerator:
         # Format their paces
 
     def createPredictedTimes(self):
-        data = App.get_running_app().data
+        data = self.data
         pb_5k = float(data.get("5k_pb", 2))
         pb_10k = float(data.get("10k_pb", 2))
         pb_half = float(data.get("half_pb", 2))
