@@ -1,6 +1,5 @@
 import unittest
 
-from RunningPlanGenerator import RunningPlanGenerator
 
 class TestRunningPlan(unittest.TestCase):
 
