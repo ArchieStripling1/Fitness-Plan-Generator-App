@@ -5,8 +5,8 @@ from kivy.uix.label import Label
 from kivy.uix.slider import Slider
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen
-from RaceScreen import selected
-from Theme import *
+from Dev.UI.Screens.RaceScreen import selected
+from Dev.UI.Theme import *
 
 class CyclingScreen(Screen):
     def __init__(self, **kwargs):

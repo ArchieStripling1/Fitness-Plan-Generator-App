@@ -7,7 +7,7 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen
 from kivy.uix.togglebutton import ToggleButton
 
-from RaceScreen import selected
+from Dev.UI.Screens.RaceScreen import selected
 from Dev.UI.Theme import *
 
 
