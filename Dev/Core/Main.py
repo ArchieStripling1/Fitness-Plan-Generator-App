@@ -3,13 +3,13 @@ from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager
 
 # Import all classes for each Screen.
-from IntroScreen import IntroScreen
-from RunningScreen import RunningScreen, RunningTimeScreen, LevelScreen
-from CyclingScreen import CyclingScreen, CyclingTimeScreen
-from SwimmingScreen import SwimmingScreen, SwimmingPace
-from RaceScreen import RaceScreen
-from BuildPlanScreen import BuildPlan
-from PlanPage import PlanPage
+from Dev.UI.Screens.IntroScreen import IntroScreen
+from Dev.UI.Screens.RunningScreen import RunningScreen, RunningTimeScreen, LevelScreen
+from Dev.UI.Screens.CyclingScreen import CyclingScreen, CyclingTimeScreen
+from Dev.UI.Screens.SwimmingScreen import SwimmingScreen, SwimmingPace
+from Dev.UI.Screens.RaceScreen import RaceScreen
+from Dev.UI.Screens.BuildPlanScreen import BuildPlan
+from Dev.UI.Screens.PlanPage import PlanPage
 
 from kivy.core.window import Window
 from kivy.utils import get_color_from_hex

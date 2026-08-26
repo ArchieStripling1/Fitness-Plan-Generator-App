@@ -8,7 +8,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.togglebutton import ToggleButton
 
 from RaceScreen import selected
-from Theme import *
+from Dev.UI.Theme import *
 
 
 class RunningScreen(Screen):

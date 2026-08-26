@@ -6,7 +6,7 @@ from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen, SlideTransition, FadeTransition
 from kivy.animation import Animation
 
-from Theme import *
+from Src.UI.Theme import *
 
 
 class IntroScreen(Screen):

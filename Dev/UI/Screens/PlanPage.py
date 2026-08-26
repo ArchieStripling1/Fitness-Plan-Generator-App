@@ -4,9 +4,9 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.screenmanager import Screen
-from RunningPlanGenerator import RunningPlanGenerator
+from Dev.Core.RunningPlanGenerator import RunningPlanGenerator
 from kivy.app import App
-from Theme import *
+from Dev.UI.Theme import *
 
 class PlanPage(Screen):
     def __init__(self, **kwargs):

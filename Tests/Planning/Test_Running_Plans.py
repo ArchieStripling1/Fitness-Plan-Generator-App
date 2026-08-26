@@ -1,6 +1,6 @@
 import unittest
 
-from Dev.RunningPlanGenerator import *
+from Dev.Core.RunningPlanGenerator import *
 
 class TestRunningPlan(unittest.TestCase):
 

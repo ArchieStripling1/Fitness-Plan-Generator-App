@@ -8,7 +8,7 @@ from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen
 from kivy.uix.togglebutton import ToggleButton
 from kivy.app import App
-from Theme import *
+from Dev.UI.Theme import *
 
 class BuildPlan(Screen):
     def __init__(self, **kwargs):
