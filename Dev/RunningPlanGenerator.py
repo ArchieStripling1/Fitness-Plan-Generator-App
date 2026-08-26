@@ -1,7 +1,5 @@
 import random
 
-from kivy.app import App
-
 class RunningPlanGenerator:
 
     def __init__(self, data):
@@ -963,7 +961,7 @@ class RunningPlanGenerator:
                 weekly_miles = current_weekly_distance
                 current_weekly_distance = 0
 
-            App.get_running_app().data["GeneratedPlan"] = plan
+            data["GeneratedPlan"] = plan
 
             return plan
 
@@ -1029,8 +1027,8 @@ class RunningPlanGenerator:
 
         for distance, pb in active_pbs.items():
             active_pbs[distance] = self.format_time(pb)
-            App.get_running_app().data[f"{distance}_pb"] = pb
-            App.get_running_app().data[f"prediction_{distance}"] = self.format_time(pb)
+            data[f"{distance}_pb"] = pb
+            data[f"prediction_{distance}"] = self.format_time(pb)
 
         return print(active_pbs)
 

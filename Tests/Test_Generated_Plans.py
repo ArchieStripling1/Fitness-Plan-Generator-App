@@ -1,11 +1,12 @@
 import unittest
 
+from Dev.RunningPlanGenerator import *
 
 class TestRunningPlan(unittest.TestCase):
 
-    def marathon_test_data(self):
+    def test_marathon_test_data(self):
 
-        return {
+        data = {
             "race": "marathon",
             "Longest_Run": 25,
             "Weekly_Distance": 55,
@@ -13,7 +14,7 @@ class TestRunningPlan(unittest.TestCase):
             "10k_pb": 44 * 60,
             "half_pb": 1 * 3600 + 40 * 60,
             "marathon_pb": 2.0,
-            "Level": "Intermediate",
+            "level": "Intermediate",
             "CurrentPlanLength": 10,
             "ActivityDays": [
                 "Tuesday",
@@ -22,9 +23,13 @@ class TestRunningPlan(unittest.TestCase):
             ],
             "LongActivityDay": "Sunday"
         }
-    def half_marathon_test_data(self):
+        generator = RunningPlanGenerator(data)
+        plan = generator.generate_running_plan()
 
-        return {
+        self.assertEqual(len(plan), 10)
+    def test_half_marathon_test_data(self):
+
+        data = {
             "race": "half",
             "Longest_Run": 16,
             "Weekly_Distance": 40,
@@ -32,7 +37,7 @@ class TestRunningPlan(unittest.TestCase):
             "10k_pb": 44 * 60,
             "half_pb": 2.0,
             "marathon_pb": 2.0,
-            "Level": "Intermediate",
+            "level": "Intermediate",
             "CurrentPlanLength": 10,
             "ActivityDays": [
                 "Tuesday",
@@ -41,10 +46,15 @@ class TestRunningPlan(unittest.TestCase):
             ],
             "LongActivityDay": "Sunday"
         }
+        generator = RunningPlanGenerator(data)
+        plan = generator.generate_running_plan()
 
-    def k10_test_data(self):
+        self.assertEqual(len(plan), 10)
 
-        return {
+
+    def test_10k_test_data(self):
+
+        data = {
             "race": "10k",
             "Longest_Run": 7,
             "Weekly_Distance": 25,
@@ -52,7 +62,7 @@ class TestRunningPlan(unittest.TestCase):
             "10k_pb": 2.0,
             "half_pb": 2.0,
             "marathon_pb": 2.0,
-            "Level": "Beginner",
+            "level": "Beginner",
             "CurrentPlanLength": 6,
             "ActivityDays": [
                 "Tuesday",
@@ -61,39 +71,10 @@ class TestRunningPlan(unittest.TestCase):
             ],
             "LongActivityDay": "Sunday"
         }
+        generator = RunningPlanGenerator(data)
+        plan = generator.generate_running_plan()
 
-
-    def test_marathon_data(self):
-
-        data = self.marathon_test_data()
-
-        self.assertEqual(data["race"], "marathon")
-        self.assertEqual(data["Longest_Run"], 25)
-        self.assertEqual(data["Weekly_Distance"], 55)
-        self.assertEqual(data["Level"], "Intermediate")
-        self.assertEqual(data["CurrentPlanLength"], 10)
-
-    def test_half_data(self):
-
-        data = self.half_marathon_test_data()
-
-        self.assertEqual(data["race"], "half")
-        self.assertEqual(data["Longest_Run"], 16)
-        self.assertEqual(data["Weekly_Distance"], 40)
-        self.assertEqual(data["Level"], "Intermediate")
-        self.assertEqual(data["CurrentPlanLength"], 10)
-
-    def test_10k_data(self):
-
-        data = self.k10_test_data()
-
-        self.assertEqual(data["race"], "10k")
-        self.assertEqual(data["Longest_Run"], 7)
-        self.assertEqual(data["Weekly_Distance"], 25)
-        self.assertEqual(data["Level"], "Beginner")
-        self.assertEqual(data["CurrentPlanLength"], 6)
-
-
+        self.assertEqual(len(plan), 6)
 
 if __name__ == '__main__':
     unittest.main()
