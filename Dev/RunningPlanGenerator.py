@@ -846,7 +846,7 @@ class RunningPlanGenerator:
                                 # Format them using function into Description.
                                 description = self.formatRunDescription(warmup, reps, recovery, workout_pace, interval,
                                                                         cooldown)
-                                print(description)
+
 
 
                             else:
@@ -896,8 +896,6 @@ class RunningPlanGenerator:
 
                                 description = self.formatRunDescription(warmup, reps, recovery, workout_pace, interval,
                                                                         cooldown)
-                                print(description)
-
                             # Create nested dict to store everything for the run
                             workout = {
                                 "type": hard_type,
