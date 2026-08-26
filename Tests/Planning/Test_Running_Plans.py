@@ -79,7 +79,7 @@ class TestRunningPlan(unittest.TestCase):
             "10k_pb": 44 * 60,
             "half_pb": 2.0,
             "marathon_pb": 2.0,
-            "level": "Intermediate",
+            "level": "Novice",
             "CurrentPlanLength": 10,
             "ActivityDays": [
                 "Monday",

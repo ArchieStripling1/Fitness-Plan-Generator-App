@@ -151,11 +151,29 @@ class RunningPlanGenerator:
 
             print(PB)
 
-            # If Level beginner these are the interval and tempo types of runs.
-            if level == "Beginner":
+            # Interval/Tempo types for Beginner runners which have a 5k or 10k race
+            if level == "Beginner" and race in ["5k", "10k"]:
 
-                interval_types = SpeedWorkoutData.Beginner_Interval_Types
-                tempo_types = SpeedWorkoutData.Beginner_Tempo_Types
+                interval_types = SpeedWorkoutData.Beginner_Short_Interval_Types
+                tempo_types = SpeedWorkoutData.Beginner_Short_Tempo_Types
+
+            # Interval/Tempo types for Beginner runners which have a Half-Marathon or Marathon race
+            elif level == "Beginner" and race in ["half", "marathon"]:
+
+                interval_types = SpeedWorkoutData.Beginner_Long_Interval_Types
+                tempo_types = SpeedWorkoutData.Beginner_Long_Tempo_Types
+
+            # Interval/Tempo types for Novice runners which have a 5k or 10k race
+            elif level == "Novice" and race in ["5k", "10k"]:
+
+                interval_types = SpeedWorkoutData.Novice_Short_Interval_Types
+                tempo_types = SpeedWorkoutData.Novice_Short_Tempo_Types
+
+            # Interval/Tempo types for Novice runners which have a Half-Marathon or Marathon race
+            elif level == "Novice" and race in ["half", "marathon"]:
+
+                interval_types = SpeedWorkoutData.Novice_Long_Interval_Types
+                tempo_types = SpeedWorkoutData.Novice_Long_Tempo_Types
 
             # Interval/Tempo types for Intermediate runners which have a 5k or 10k race
             elif level == "Intermediate" and race in ["5k", "10k"]:

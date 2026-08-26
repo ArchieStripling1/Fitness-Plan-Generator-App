@@ -423,13 +423,30 @@ class LevelScreen(Screen):
         )
 
         level_descriptions = {
-            "Beginner": "A runner who has not completed a run longer than 10km and is building their running base.",
-            "Intermediate": "A runner who has completed a Half Marathon and has experience with consistent training.",
-            "Advanced": "A runner who regularly completes 30km+ runs or has completed Marathons or Ultras."
+            "Beginner": (
+                "A runner who is new to structured training, "
+                "has not consistently run beyond 5km, and is building their running base."
+            ),
+
+            "Novice": (
+                "A runner who regularly runs 5-10km, has some experience with structured workouts, "
+                "and is beginning to build endurance and speed."
+            ),
+
+            "Intermediate": (
+                "A runner who consistently trains, can comfortably complete 10-20km runs, "
+                "and has experience racing distances up to the Half Marathon."
+            ),
+
+            "Advanced": (
+                "A highly experienced runner who regularly completes 30km+ runs "
+                "and has completed Marathons or Ultras."
+            )
         }
 
         level_list = [
             "Beginner",
+            "Novice",
             "Intermediate",
             "Advanced"
         ]

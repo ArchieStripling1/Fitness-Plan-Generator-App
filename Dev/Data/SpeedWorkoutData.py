@@ -2,69 +2,436 @@
 
 class SpeedWorkoutData:
 
-
-    Beginner_Interval_Types = {
-    # Name of the Interval Type.
+    Beginner_Short_Interval_Types = {
         "6 x 200M": {
-            # How long the Warm-up is before the intervals start.
-            "Warm-Up": "1.5K",
-            # How many reps there is in the intervals.
+            "Warm-Up": "1.5km",
             "Reps": 6,
-            # What pace they will run the interval at.
-            "Pace": "5k",
-            # Whether there is any change to the pace.
+            "Pace": "5K",
             "PaceOffset": 0,
-            # What the interval is.
             "Interval": "200M",
-            # What the recovery is inbetween each interval.
-            "Recovery": "Walk 60/90 seconds",
-            # What the cooldown is after the intervals are complete.
-            "Cooldown": "1K",
-            # Probable distance of the run.
+            "Recovery": "Walk 60-90 seconds",
+            "Cooldown": "1km",
             "Distance": 3.7
         },
+
         "8 x 1 Minute": {
-            "Warm-Up": "1.5K",
+            "Warm-Up": "1.5km",
             "Reps": 8,
             "Pace": "Hard",
             "PaceOffset": 0,
             "Interval": "1 Minute",
-            "Recovery": "Walk for 90 seconds",
-            "Cooldown": "1K",
+            "Recovery": "Walk 90 seconds",
+            "Cooldown": "1km",
             "Distance": 4
         },
+
         "5 x 400M": {
-            "Warm-Up": "1.5K",
+            "Warm-Up": "1.5km",
             "Reps": 5,
-            "Pace": "5k",
+            "Pace": "5K",
             "PaceOffset": 0,
             "Interval": "400M",
-            "Recovery": "Walk for 90 seconds",
-            "Cooldown": "1K",
+            "Recovery": "Walk 90 seconds",
+            "Cooldown": "1km",
+            "Distance": 4.5
+        },
+
+        "6 x 300M": {
+            "Warm-Up": "1.5km",
+            "Reps": 6,
+            "Pace": "5K",
+            "PaceOffset": 0,
+            "Interval": "300M",
+            "Recovery": "Walk 90 seconds",
+            "Cooldown": "1km",
+            "Distance": 4.3
+        },
+
+        "4 x 500M": {
+            "Warm-Up": "1.5km",
+            "Reps": 4,
+            "Pace": "10K",
+            "PaceOffset": 0,
+            "Interval": "500M",
+            "Recovery": "Walk 90 seconds",
+            "Cooldown": "1km",
             "Distance": 4.5
         }
     }
     # Name of the Tempo Type
-    Beginner_Tempo_Types = {
-        "20 Minute Tempo": {
-            "Warm-Up": "10 Minutes",
+    Beginner_Short_Tempo_Types = {
+        "10 Minute Tempo": {
+            "Warm-Up": "1.5km",
             "Reps": 1,
-            "Pace": "Run 20 minutes at 'comfortably hard'",
+            "Pace": "Comfortably hard",
+            "PaceOffset": 0,
+            "Interval": "10 Minutes",
+            "Recovery": "Walk 2 minutes",
+            "Cooldown": "1km",
+            "Distance": 4.5
+        },
+
+        "15 Minute Tempo": {
+            "Warm-Up": "1.5km",
+            "Reps": 1,
+            "Pace": "Comfortably hard",
+            "PaceOffset": 0,
+            "Interval": "15 Minutes",
+            "Recovery": "Walk 2 minutes",
+            "Cooldown": "1km",
+            "Distance": 5
+        },
+
+        "20 Minute Tempo": {
+            "Warm-Up": "1.5km",
+            "Reps": 1,
+            "Pace": "Comfortably hard",
             "PaceOffset": 0,
             "Interval": "20 Minutes",
-            "Recovery": "Walk for 2 minutes",
-            "Cooldown": "10 Minutes",
+            "Recovery": "Walk 2 minutes",
+            "Cooldown": "1km",
             "Distance": 6
         },
-        "3 x 8 Minutes Tempo": {
-            "Warm-Up": "10 Minutes",
-            "Reps": 3,
-            "Pace": "Run 8 minutes at 'comfortably hard'",
+
+        "2 x 8 Minute Tempo": {
+            "Warm-Up": "1.5km",
+            "Reps": 2,
+            "Pace": "Comfortably hard",
             "PaceOffset": 0,
             "Interval": "8 Minutes",
-            "Recovery": "Walk for 2 minutes",
-            "Cooldown": "10 Minute Easy jog",
+            "Recovery": "Walk 2 minutes",
+            "Cooldown": "1km",
+            "Distance": 5.5
+        }
+    }
+
+    Beginner_Long_Interval_Types = {
+        "3 x 800M": {
+            "Warm-Up": "1.5km",
+            "Reps": 3,
+            "Pace": "10K",
+            "PaceOffset": 0,
+            "Interval": "800M",
+            "Recovery": "Walk 2 minutes",
+            "Cooldown": "1.5km",
+            "Distance": 5.5
+        },
+
+        "4 x 800M": {
+            "Warm-Up": "2km",
+            "Reps": 4,
+            "Pace": "10K",
+            "PaceOffset": 0,
+            "Interval": "800M",
+            "Recovery": "Walk 2 minutes",
+            "Cooldown": "1.5km",
+            "Distance": 6.7
+        },
+
+        "2 x 1K": {
+            "Warm-Up": "2km",
+            "Reps": 2,
+            "Pace": "10K",
+            "PaceOffset": 0,
+            "Interval": "1.5K",
+            "Recovery": "Jog/Walk 2 minutes",
+            "Cooldown": "1.5km",
             "Distance": 6.5
+        },
+
+        "Hill Repeats x 6": {
+            "Warm-Up": "2km",
+            "Reps": 6,
+            "Pace": "Hard uphill",
+            "PaceOffset": 0,
+            "Interval": "1 Minute",
+            "Recovery": "Walk/Jog downhill",
+            "Cooldown": "1.5km",
+            "Distance": 5.5
+        }
+    }
+
+    Beginner_Long_Tempo_Types = {
+        "15 Minute Steady Tempo": {
+            "Warm-Up": "2km",
+            "Reps": 1,
+            "Pace": "Comfortably hard",
+            "PaceOffset": 0,
+            "Interval": "15 Minutes",
+            "Recovery": None,
+            "Cooldown": "1.5km",
+            "Distance": 5
+        },
+
+        "20 Minute Steady Tempo": {
+            "Warm-Up": "2km",
+            "Reps": 1,
+            "Pace": "Comfortably hard",
+            "PaceOffset": 0,
+            "Interval": "20 Minutes",
+            "Recovery": None,
+            "Cooldown": "1.5km",
+            "Distance": 6
+        },
+
+        "2 x 10 Minute Tempo": {
+            "Warm-Up": "2km",
+            "Reps": 2,
+            "Pace": "Comfortably hard",
+            "PaceOffset": 0,
+            "Interval": "10 Minutes",
+            "Recovery": "Walk 2 minutes",
+            "Cooldown": "1.5km",
+            "Distance": 6.5
+        },
+
+        "Progression 5K": {
+            "Warm-Up": "2km",
+            "Reps": 1,
+            "Pace": "Start Easy, Finish at 10K pace",
+            "PaceOffset": 0,
+            "Interval": "5K",
+            "Recovery": None,
+            "Cooldown": "1km",
+            "Distance": 8
+        }
+    }
+
+    Novice_Short_Interval_Types = {
+        "6 x 400M": {
+            "Warm-Up": "2km",
+            "Reps": 6,
+            "Pace": "5K",
+            "PaceOffset": 0,
+            "Interval": "400M",
+            "Recovery": "Jog 90 seconds",
+            "Cooldown": "1.5km",
+            "Distance": 6
+        },
+
+        "5 x 600M": {
+            "Warm-Up": "2km",
+            "Reps": 5,
+            "Pace": "5K",
+            "PaceOffset": 0,
+            "Interval": "600M",
+            "Recovery": "Jog 90 seconds",
+            "Cooldown": "1.5km",
+            "Distance": 6.5
+        },
+
+        "4 x 800M": {
+            "Warm-Up": "2km",
+            "Reps": 4,
+            "Pace": "5K",
+            "PaceOffset": 0,
+            "Interval": "800M",
+            "Recovery": "Jog 2 minutes",
+            "Cooldown": "1.5km",
+            "Distance": 6.7
+        },
+
+        "8 x 400M": {
+            "Warm-Up": "2km",
+            "Reps": 8,
+            "Pace": "5K",
+            "PaceOffset": -10,
+            "Interval": "400M",
+            "Recovery": "Jog 90 seconds",
+            "Cooldown": "1.5km",
+            "Distance": 7
+        },
+
+        "5 x 800M": {
+            "Warm-Up": "2km",
+            "Reps": 5,
+            "Pace": "5K",
+            "PaceOffset": 0,
+            "Interval": "800M",
+            "Recovery": "Jog 2 minutes",
+            "Cooldown": "1.5km",
+            "Distance": 7.5
+        },
+
+        "4 x 1K": {
+            "Warm-Up": "2km",
+            "Reps": 4,
+            "Pace": "10K",
+            "PaceOffset": 0,
+            "Interval": "1K",
+            "Recovery": "Jog 2 minutes",
+            "Cooldown": "1.5km",
+            "Distance": 7.5
+        }
+    }
+
+    Novice_Short_Tempo_Types = {
+        "15 Minute Tempo": {
+            "Warm-Up": "2km",
+            "Reps": 1,
+            "Pace": "Comfortably hard",
+            "PaceOffset": 0,
+            "Interval": "15 Minutes",
+            "Recovery": None,
+            "Cooldown": "1.5km",
+            "Distance": 5.5
+        },
+
+        "20 Minute Tempo": {
+            "Warm-Up": "2km",
+            "Reps": 1,
+            "Pace": "Comfortably hard",
+            "PaceOffset": 0,
+            "Interval": "20 Minutes",
+            "Recovery": None,
+            "Cooldown": "1.5km",
+            "Distance": 6
+        },
+
+        "2 x 10 Minute Tempo": {
+            "Warm-Up": "2km",
+            "Reps": 2,
+            "Pace": "Comfortably hard",
+            "PaceOffset": 0,
+            "Interval": "10 Minutes",
+            "Recovery": "Jog 2 minutes",
+            "Cooldown": "1.5km",
+            "Distance": 6.5
+        },
+
+        "3 x 8 Minute Tempo": {
+            "Warm-Up": "2km",
+            "Reps": 3,
+            "Pace": "Comfortably hard",
+            "PaceOffset": 0,
+            "Interval": "8 Minutes",
+            "Recovery": "Jog 2 minutes",
+            "Cooldown": "1.5km",
+            "Distance": 7
+        },
+
+        "Progression 6K": {
+            "Warm-Up": "2km",
+            "Reps": 1,
+            "Pace": "Start Easy, Finish at 10K pace",
+            "PaceOffset": 0,
+            "Interval": "6K",
+            "Recovery": None,
+            "Cooldown": "1km",
+            "Distance": 9
+        }
+    }
+    Novice_Long_Interval_Types = {
+        "4 x 1K": {
+            "Warm-Up": "2km",
+            "Reps": 4,
+            "Pace": "10K",
+            "PaceOffset": 0,
+            "Interval": "1K",
+            "Recovery": "Jog 2 minutes",
+            "Cooldown": "2km",
+            "Distance": 8
+        },
+
+        "3 x 1.5K": {
+            "Warm-Up": "2km",
+            "Reps": 3,
+            "Pace": "10K",
+            "PaceOffset": 0,
+            "Interval": "1.5K",
+            "Recovery": "Jog 2 minutes",
+            "Cooldown": "2km",
+            "Distance": 8.5
+        },
+
+        "3 x 2K": {
+            "Warm-Up": "2km",
+            "Reps": 3,
+            "Pace": "Half Marathon",
+            "PaceOffset": 0,
+            "Interval": "2K",
+            "Recovery": "Jog 2 minutes",
+            "Cooldown": "2km",
+            "Distance": 10
+        },
+
+        "2 x 3K": {
+            "Warm-Up": "2km",
+            "Reps": 2,
+            "Pace": "Half Marathon",
+            "PaceOffset": 0,
+            "Interval": "3K",
+            "Recovery": "Jog 3 minutes",
+            "Cooldown": "2km",
+            "Distance": 10
+        },
+
+        "Hill Repeats x 8": {
+            "Warm-Up": "2.5km",
+            "Reps": 8,
+            "Pace": "Hard uphill",
+            "PaceOffset": 0,
+            "Interval": "1 Minute",
+            "Recovery": "Jog/Walk downhill",
+            "Cooldown": "2km",
+            "Distance": 7
+        }
+    }
+
+    Novice_Long_Tempo_Types = {
+        "6K Continuous Tempo": {
+            "Warm-Up": "2km",
+            "Reps": 1,
+            "Pace": "Half Marathon",
+            "PaceOffset": 0,
+            "Interval": "6K",
+            "Recovery": None,
+            "Cooldown": "2km",
+            "Distance": 10
+        },
+
+        "8K Continuous Tempo": {
+            "Warm-Up": "2km",
+            "Reps": 1,
+            "Pace": "Half Marathon",
+            "PaceOffset": 0,
+            "Interval": "8K",
+            "Recovery": None,
+            "Cooldown": "2km",
+            "Distance": 12
+        },
+
+        "3 x 2K Tempo": {
+            "Warm-Up": "2km",
+            "Reps": 3,
+            "Pace": "Half Marathon",
+            "PaceOffset": 0,
+            "Interval": "2K",
+            "Recovery": "Jog 2 minutes",
+            "Cooldown": "2km",
+            "Distance": 10
+        },
+
+        "Progression 8K": {
+            "Warm-Up": "2km",
+            "Reps": 1,
+            "Pace": "Start Easy, progress toward Half Marathon pace",
+            "PaceOffset": 0,
+            "Interval": "8K",
+            "Recovery": None,
+            "Cooldown": "1.5km",
+            "Distance": 11.5
+        },
+
+        "Tempo 4K + 3K": {
+            "Warm-Up": "2km",
+            "Reps": 2,
+            "Pace": "4K at 10K pace, 3K at Half Marathon pace",
+            "PaceOffset": 0,
+            "Interval": ["4K", "3K"],
+            "Recovery": "Jog 2 minutes",
+            "Cooldown": "2km",
+            "Distance": 11
         }
     }
 
