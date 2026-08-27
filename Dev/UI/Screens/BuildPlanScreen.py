@@ -95,7 +95,7 @@ class BuildPlan(Screen):
         self.activityDays = Label(
             text="What days do you want to do a workout: ",
             font_size=20,
-            color = TEXT
+            color=TEXT
         )
         days = ["Monday", "Tuesday", "Wednesday",
                 "Thursday", "Friday", "Saturday", "Sunday"]
@@ -106,7 +106,6 @@ class BuildPlan(Screen):
             height=60,
             spacing=5
         )
-
 
         for day in days:
             grid.add_widget(self.create_button(day))
@@ -151,8 +150,8 @@ class BuildPlan(Screen):
 
         self.longActivityBtn.bind(on_release=self.dropdown2.open)
         # Dropdown uses x as the day and sets the long run day variable.
-        self.dropdown2.bind(on_select=lambda instance,
-                                             x: self.set_long_Activty_day(x))
+        self.dropdown2.bind(
+            on_select=lambda instance,x: self.set_long_Activty_day(x))
 
         # Build Plan Button
         buildPlanBtn = Button(
@@ -165,7 +164,7 @@ class BuildPlan(Screen):
             bold=True,
             border=(0, 0, 0, 0)
         )
-        buildPlanBtn.bind(on_press = self.build_plan)
+        buildPlanBtn.bind(on_press=self.build_plan)
 
         content.add_widget(self.race_label)
         content.add_widget(self.weekly_label)
@@ -275,7 +274,7 @@ class BuildPlan(Screen):
         raceRun = ['5k', '10k', 'half', 'marathon']
         raceCycle = ['cycle_20', 'cycle_50', 'cycle_100', 'cycle_160']
         raceSwim = ['swim_400', 'swim_1500', 'swim_3000', 'swim_5000']
-        raceTriathlon = ['olympic_triathlon','ironman_70.3', 'ironman_140.6']
+        raceTriathlon = ['olympic_triathlon' ,'ironman_70.3', 'ironman_140.6']
 
         weeklyRunDistance = data.get("Weekly_Distance")
         weeklySwimDistance = data.get("Weekly_Swimming")
@@ -324,6 +323,7 @@ class BuildPlan(Screen):
             self.longActivityDay.text = \
                 "What day do you want to do your long Ride: "
             self.race_label.text = \
+                f"Race: {race.upper()}"
             self.longest_label.text = \
                 f"Longest Cycle: {longestCycle} KM"
             self.weekly_label.text = \
@@ -339,20 +339,21 @@ class BuildPlan(Screen):
             self.longest_label.text = f"Longest Cycle: {longestCycle} KM"
             self.longest_label.text = f"Longest Swim: {longestSwim} M"
 
-            self.weekly_label.text = (f"Current Weekly"
-                                      f" Running Distance: {weeklyRunDistance} KM")
-            self.weekly_label.text = (f"Current Weekly"
-                                      f" Cycling Distance: {weeklyCycleDistance} KM")
-            self.weekly_label.text = (f"Current Weekly"
-                                      f" Swimming Distance: {weeklySwimDistance} M")
+            self.weekly_label.text = \
+                (f"Current Weekly Running Distance:"
+                 f" {weeklyRunDistance} KM")
+            self.weekly_label.text = \
+                (f"Current Weekly Cycling Distance:"
+                 f" {weeklyCycleDistance} KM")
+            self.weekly_label.text = \
+                (f"Current Weekly Swimming Distance:"
+                 f" {weeklySwimDistance} M")
 
     def update_length(self, instance):
-        App.get_running_app().data["CurrentPlanLength"]\
-            = self.planLength.text
+        App.get_running_app().data["CurrentPlanLength"] = self.planLength.text
 
     def update_sessions(self, instance):
-        App.get_running_app().data["CurrentAmountSessions"]\
-            = self.noSessions.text
+        App.get_running_app().data["CurrentAmountSessions"] = self.noSessions.text
 
     def create_button(self, day):
         btn = ToggleButton(
@@ -366,8 +367,7 @@ class BuildPlan(Screen):
             bold=True,
             border=(1, 1, 1, 1)
         )
-        btn.bind(on_press=lambda instance: self
-                 .toggle_day(instance, day))
+        btn.bind(on_press=lambda instance: self.toggle_day(instance, day))
         return btn
 
     def toggle_day(self, instance, day):
@@ -383,8 +383,7 @@ class BuildPlan(Screen):
         print("Selected days:", self.daysSelected)
 
         # Save globally
-        App.get_running_app().data["ActivityDays"]\
-            = self.daysSelected
+        App.get_running_app().data["ActivityDays"] = self.daysSelected
 
     def set_long_Activty_day(self, day):
         self.longActivityBtn.text = day

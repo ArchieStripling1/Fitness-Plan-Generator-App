@@ -171,6 +171,7 @@ class RunningScreen(Screen):
     def go_back(self, instance):
         self.manager.current = "race"
 
+
 class RunningTimeScreen(Screen):
     def __init__(self, distance, **kwargs):
         super().__init__(**kwargs)

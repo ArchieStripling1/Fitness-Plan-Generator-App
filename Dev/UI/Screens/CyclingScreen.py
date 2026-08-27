@@ -113,9 +113,9 @@ class CyclingScreen(Screen):
         elif CyclingDistance >= 160:
             self.manager.current = "Cycling160K"
 
-
     def go_back(self, instance):
         self.manager.current = "race"
+
 
 class CyclingTimeScreen(Screen):
     def __init__(self, distance, **kwargs):
@@ -139,7 +139,7 @@ class CyclingTimeScreen(Screen):
         elif distance == "20K":
             lst = ["cycle_20"]
 
-        #Enter your Average Time
+        # Enter your Average Time
         for dist in lst:
             # Enter Longest Distance Time
             title = Label(

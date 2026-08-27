@@ -206,7 +206,7 @@ class RunningPlanGenerator:
 
                 interval_types = (SpeedWorkoutData.
                                   Intermediate_Long_Interval_Types)
-                tempo_types =  (SpeedWorkoutData.
+                tempo_types = (SpeedWorkoutData.
                                 Intermediate_Long_Tempo_Types)
 
             # Interval/Tempo types for Advanced
@@ -280,7 +280,8 @@ class RunningPlanGenerator:
                         # Prevent going over max
                         if (long_run_distance >
                                 race_settings[race]["max_long_run"]):
-                            long_run_distance = race_settings[race]["max_long_run"]
+                            long_run_distance =\
+                                race_settings[race]["max_long_run"]
 
                         if recovery_week:
                             long_run_distance *= 0.8
@@ -306,7 +307,8 @@ class RunningPlanGenerator:
                                 # Session type is Tempo Run.
                                 hard_type = "Tempo Run"
 
-                                # Get Session name and session info from tempo types.
+                                # Get Session name and session
+                                # info from tempo types.
                                 session, session_info = random.choice(
                                     list(tempo_types.items()))
 
@@ -319,7 +321,8 @@ class RunningPlanGenerator:
                                     paceoffset = session_info["PaceOffset"]
 
                                     # If the pace is in list of races
-                                    if pace in ["5k", "10k", "half", "marathon"]:
+                                    if pace in ["5k", "10k", "half",
+                                                "marathon"]:
 
                                         # Get that race PB
                                         P = float(data.get(f"{pace}_pb", 2))
@@ -328,30 +331,36 @@ class RunningPlanGenerator:
                                         racePace = P + paceoffset
 
                                         # If race is a 5k divide it by 5
-                                        # and formatRunPace for the interval pace
+                                        # and formatRunPace for
+                                        # the interval pace
                                         if pace == "5k":
                                             new_race_pace = racePace / 5
-                                            interval_pace = self.formatRunPace(new_race_pace)
+                                            interval_pace = (self.
+                                                             formatRunPace(new_race_pace))
                                             workout_pace = interval_pace
 
                                         # If race is a 10k divide it by 10
                                         # and formatRunPace for the interval pace
                                         elif pace == "10k":
                                             new_race_pace = racePace / 10
-                                            interval_pace = self.formatRunPace(new_race_pace)
+                                            interval_pace = (self.
+                                                             formatRunPace(new_race_pace))
                                             workout_pace = interval_pace
 
-                                        # If race is a Half-Marathon divide it by 21 and formatRunPace for the interval pace
+                                        # If race is a Half-Marathon divide it
+                                        # by 21 and formatRunPace for the interval pace
                                         elif pace == "half":
                                             new_race_pace = racePace / 21
-                                            interval_pace = self.formatRunPace(new_race_pace)
+                                            interval_pace = (self.
+                                                             formatRunPace(new_race_pace))
                                             workout_pace = interval_pace
 
                                         # If race is a Marathon divide it by 42
                                         # and formatRunPace for the interval pace
                                         elif pace == "marathon":
                                             new_race_pace = racePace / 42
-                                            interval_pace = self.formatRunPace(new_race_pace)
+                                            interval_pace = (self.
+                                                             formatRunPace(new_race_pace))
                                             workout_pace = interval_pace
 
                                     else:
@@ -368,9 +377,15 @@ class RunningPlanGenerator:
                                 interval = session_info["Interval"]
 
                                 # Format them using function into Description.
-                                description = self.formatRunDescription(warmup,
-                                                                        reps, recovery, workout_pace, interval,
-                                                                        cooldown)
+                                description = self.formatRunDescription(
+                                    warmup,
+                                    reps,
+                                    recovery,
+                                    workout_pace,
+                                    interval,
+                                    cooldown)
+
+                                print(description)
 
                             else:
                                 # Session type is tempo run.
@@ -392,19 +407,23 @@ class RunningPlanGenerator:
 
                                         if pace == "5k":
                                             new_race_pace = racePace / 5
-                                            interval_pace = self.formatRunPace(new_race_pace)
+                                            interval_pace = (self.
+                                                             formatRunPace(new_race_pace))
                                             workout_pace = interval_pace
                                         elif pace == "10k":
                                             new_race_pace = racePace / 10
-                                            interval_pace = self.formatRunPace(new_race_pace)
+                                            interval_pace = (self.
+                                                             formatRunPace(new_race_pace))
                                             workout_pace = interval_pace
                                         elif pace == "half":
                                             new_race_pace = racePace / 21
-                                            interval_pace = self.formatRunPace(new_race_pace)
+                                            interval_pace = (self.
+                                                             formatRunPace(new_race_pace))
                                             workout_pace = interval_pace
                                         elif pace == "marathon":
                                             new_race_pace = racePace / 42
-                                            interval_pace = self.formatRunPace(new_race_pace)
+                                            interval_pace = (self.
+                                                             formatRunPace(new_race_pace))
                                             workout_pace = interval_pace
 
                                     else:
@@ -420,20 +439,28 @@ class RunningPlanGenerator:
                                 interval = session_info["Interval"]
 
                                 description = self.formatRunDescription(
-                                    warmup, reps, recovery, workout_pace, interval,cooldown)
+                                    warmup,
+                                    reps,
+                                    recovery,
+                                    workout_pace,
+                                    interval,
+                                    cooldown)
 
                                 print(description)
 
-                            # Create nested dict to store everything for the run
+                            # Create nested dict to store
+                            # everything for the run
                             workout = {
                                 "type": hard_type,
                                 "session": session,
                                 "distance": session_info["Distance"],
                                 "pace": workout_pace
                             }
-                            plan[week_name]["workouts"][day] = workout
+                            plan[week_name]["workouts"][day] \
+                                = workout
 
-                            current_weekly_distance += session_info["Distance"]
+                            current_weekly_distance +=\
+                                session_info["Distance"]
 
                         # Remaining = easy runs
                         else:
@@ -442,22 +469,28 @@ class RunningPlanGenerator:
                             )
 
                             # Prevent going over max
-                            if easy_distance > race_settings[race]["max_easy_run"]:
-                                easy_distance = race_settings[race]["max_easy_run"]
+                            if (easy_distance >
+                                    race_settings[race]["max_easy_run"]):
+                                easy_distance =\
+                                    race_settings[race]["max_easy_run"]
 
                             if recovery_week:
                                 easy_distance *= 0.8
 
-                            # Create nested dict to store everything for the run
+                            # Create nested dict to store
+                            # everything for the run
                             workout = {
                                 "type": "Easy Run",
                                 "distance": int(easy_distance),
                                 "pace": easy_pace
                             }
-                            plan[week_name]["workouts"][day] = workout
-                            current_weekly_distance += easy_distance
+                            plan[week_name]["workouts"][day] \
+                                = workout
+                            current_weekly_distance \
+                                += easy_distance
 
-                        # No more than one hard run a week right now.
+                        # No more than one hard
+                        # run a week right now.
                         weekly_hard_run += 1
 
                     # Race Week Workout
@@ -472,14 +505,16 @@ class RunningPlanGenerator:
                                 "distance": "Race Pace Miles x 3",
                                 "pace": race_pace
                             }
-                            plan[week_name]["workouts"][day] = workout
+                            plan[week_name]["workouts"][day] \
+                                = workout
                         if day == "Sunday":
                             workout = {
                                 "type": "Race Day!",
                                 "distance": race.capitalize(),
                                 "pace": race_pace
                             }
-                            plan[week_name]["workouts"][day] = workout
+                            plan[week_name]["workouts"][day] \
+                                = workout
 
                 # Reset for next week
                 plan[week_name]["distance"] = round(

@@ -134,7 +134,6 @@ class RaceScreen(Screen):
         btn.bind(on_press=lambda instance: self.select_race(value))
         return btn
 
-
     def select_race(self, race_value):
         self.selected_race = race_value
         if race_value in ["5k", "10k", "half", "marathon"]:

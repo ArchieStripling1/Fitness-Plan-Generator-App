@@ -6,7 +6,7 @@ from kivy.uix.slider import Slider
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen
 from Dev.UI.Screens.RaceScreen import selected
-from Dev.UI.Theme import TEXT,PRIMARY
+from Dev.UI.Theme import TEXT, PRIMARY
 
 
 class SwimmingScreen(Screen):
@@ -28,7 +28,8 @@ class SwimmingScreen(Screen):
 
         # Longest Swim
         longest_box = BoxLayout(orientation='vertical', spacing=10)
-        longest_label = Label(text="Longest Swim (Meters)", font_size=24, color=TEXT)
+        longest_label = Label(text="Longest Swim (Meters)",
+                              font_size=24, color=TEXT)
 
         self.longest_value = Label(text="0 m", font_size=26)
 
@@ -162,7 +163,7 @@ class SwimmingPace(Screen):
             layout.add_widget(title)
             layout.add_widget(pb_input)
 
-        #Buttons
+        # Buttons
         btn_box = BoxLayout(size_hint=(1, 0.2), spacing=20)
 
         back_btn = Button(
