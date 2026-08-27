@@ -1,6 +1,7 @@
 import unittest
 
-from Dev.Core.RunningPlanGenerator import *
+from Dev.Core.RunningPlanGenerator import RunningPlanGenerator
+
 
 class TestRunningPlan(unittest.TestCase):
 
@@ -184,6 +185,7 @@ class TestRunningPlan(unittest.TestCase):
                 self.assertEqual(workouts["Wednesday"]["type"], "Rest")
                 self.assertEqual(workouts["Friday"]["type"], "Rest")
                 self.assertEqual(workouts["Saturday"]["type"], "Rest")
+
 
 if __name__ == '__main__':
     unittest.main()

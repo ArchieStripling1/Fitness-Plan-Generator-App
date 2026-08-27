@@ -2,21 +2,21 @@ from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.scrollview import ScrollView
-from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen
 from kivy.uix.togglebutton import ToggleButton
 from kivy.app import App
-from Dev.UI.Theme import *
+from Dev.UI.Theme import BG, TEXT, PRIMARY
 from kivy.graphics import Color, RoundedRectangle
-
 
 selected = []
 
+
 class RaceScreen(Screen):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs) # setup Kivy screen
+        super().__init__(**kwargs)  # setup Kivy screen
 
-        layout = BoxLayout(orientation='vertical', padding=20, spacing=20)
+        layout = BoxLayout(orientation='vertical',
+                           padding=20, spacing=20)
 
         with layout.canvas.before:
             Color(*BG)
@@ -77,7 +77,7 @@ class RaceScreen(Screen):
         ]:
             content.add_widget(self.create_button(text, value))
 
-        #Triathlon
+        # Triathlon
         content.add_widget(self.section_label("Triathlon"))
 
         for text, value in [
@@ -89,7 +89,6 @@ class RaceScreen(Screen):
 
         scroll.add_widget(content)
         layout.add_widget(scroll)
-
 
         next_btn = Button(
             text="Next",
@@ -108,7 +107,6 @@ class RaceScreen(Screen):
         self.add_widget(layout)
 
         self.selected_race = None
-
 
     def section_label(self, text):
         return Label(
@@ -141,11 +139,14 @@ class RaceScreen(Screen):
         self.selected_race = race_value
         if race_value in ["5k", "10k", "half", "marathon"]:
             self.select_running()
-        elif race_value in ["cycle_20", "cycle_50", "cycle_100", "cycle_160"]:
+        elif race_value in ["cycle_20", "cycle_50",
+                            "cycle_100", "cycle_160"]:
             self.select_cycle()
-        elif race_value in ["swim_400", "swim_1500", "swim_3000", "swim_5000"]:
+        elif race_value in ["swim_400", "swim_1500",
+                            "swim_3000", "swim_5000"]:
             self.select_swim()
-        elif race_value in ["olympic_triathlon", "ironman_70.3", "ironman_140.6"]:
+        elif race_value in ["olympic_triathlon",
+                            "ironman_70.3", "ironman_140.6"]:
             self.select_running()
             self.select_cycle()
             self.select_swim()
@@ -157,7 +158,6 @@ class RaceScreen(Screen):
     def go_next(self, instance):
         self.manager.current = selected[0]
 
-
     def go_back(self, instance):
         self.manager.current = "sport"
 
@@ -165,7 +165,8 @@ class RaceScreen(Screen):
         self.rect.pos = self.pos
         self.rect.size = self.size
 
-        # If running is not in selected add it to selected, if it is in selected remove it.
+    # If running is not in selected add
+    # it to selected, if it is in selected remove it.
 
     @staticmethod
     def select_running():
@@ -176,7 +177,8 @@ class RaceScreen(Screen):
             selected.remove("running")
             print("Selected:", selected)
 
-    # If cycle is not in selected add it to selected, if it is in selected remove it.
+    # If cycle is not in selected add it to selected,
+    # if it is in selected remove it.
     @staticmethod
     def select_cycle():
         if "cycle" not in selected:
@@ -186,7 +188,8 @@ class RaceScreen(Screen):
             selected.remove("cycle")
             print("Selected:", selected)
 
-    # If swim is not in selected add it to selected, if it is in selected remove it.
+    # If swim is not in selected add it to selected,
+    # if it is in selected remove it.
     @staticmethod
     def select_swim():
         if "swim" not in selected:

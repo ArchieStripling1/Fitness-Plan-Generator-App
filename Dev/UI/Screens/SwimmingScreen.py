@@ -6,12 +6,12 @@ from kivy.uix.slider import Slider
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen
 from Dev.UI.Screens.RaceScreen import selected
-from Dev.UI.Theme import *
+from Dev.UI.Theme import TEXT,PRIMARY
 
 
 class SwimmingScreen(Screen):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs) # setup Kivy screen
+        super().__init__(**kwargs)  # setup Kivy screen
 
         layout = BoxLayout(orientation='vertical', padding=30, spacing=30)
 
@@ -45,7 +45,8 @@ class SwimmingScreen(Screen):
         # Weekly Distance
         weekly_box = BoxLayout(orientation='vertical', spacing=10)
 
-        weekly_label = Label(text="Weekly Distance (Meters)", font_size=20, color=TEXT)
+        weekly_label = Label(text="Weekly Distance (Meters)",
+                             font_size=20, color=TEXT)
 
         self.weekly_value = Label(text="0 m", font_size=26)
 
@@ -95,7 +96,6 @@ class SwimmingScreen(Screen):
         self.longest_value.text = f"{int(value)} meters"
 
     # Update Slider Value
-
     def update_weekly(self, instance, value):
         self.weekly_value.text = f"{int(value)} meters"
 
@@ -114,9 +114,9 @@ class SwimmingScreen(Screen):
         elif 5000 <= SwimmingDistance:
             self.manager.current = "Pace5000M"
 
-
     def go_back(self, instance):
         self.manager.current = "sport"
+
 
 class SwimmingPace(Screen):
     def __init__(self, distance, **kwargs):
@@ -126,7 +126,8 @@ class SwimmingPace(Screen):
 
         layout = BoxLayout(orientation='vertical', padding=30, spacing=30)
 
-        # Create list of all the PBs they will have depending on their furthest run.
+        # Create list of all the PBs they will
+        # have depending on their furthest run.
         lst = []
         if distance == "5000M":
             lst = ["swim_5000", "swim_3000"]
@@ -160,7 +161,6 @@ class SwimmingPace(Screen):
 
             layout.add_widget(title)
             layout.add_widget(pb_input)
-
 
         #Buttons
         btn_box = BoxLayout(size_hint=(1, 0.2), spacing=20)
@@ -197,7 +197,8 @@ class SwimmingPace(Screen):
         for dist, pb_input in self.inputs.items():
             text = pb_input.text.strip()
 
-            # If text is accepted try split it using ':' for hour minutes and seconds.
+            # If text is accepted try split it using ':'
+            # for hour minutes and seconds.
             if not text:
                 continue
 
@@ -215,7 +216,7 @@ class SwimmingPace(Screen):
 
                 print(dist, total)
 
-            except:
+            except Exception:
                 print(f"Invalid time for {dist}")
 
     def go_next(self, instance):

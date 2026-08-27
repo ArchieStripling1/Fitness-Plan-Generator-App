@@ -4,7 +4,8 @@ from kivy.uix.screenmanager import ScreenManager
 
 # Import all classes for each Screen.
 from Dev.UI.Screens.IntroScreen import IntroScreen
-from Dev.UI.Screens.RunningScreen import RunningScreen, RunningTimeScreen, LevelScreen
+from Dev.UI.Screens.RunningScreen import (RunningScreen,
+                                          RunningTimeScreen, LevelScreen)
 from Dev.UI.Screens.CyclingScreen import CyclingScreen, CyclingTimeScreen
 from Dev.UI.Screens.SwimmingScreen import SwimmingScreen, SwimmingPace
 from Dev.UI.Screens.RaceScreen import RaceScreen
@@ -14,10 +15,11 @@ from Dev.UI.Screens.PlanPage import PlanPage
 from kivy.core.window import Window
 from kivy.utils import get_color_from_hex
 
+
 class MainApp(App):
     def build(self):
 
-        self.data = {}  #  store everything here
+        self.data = {}  # store everything here
 
         Window.clearcolor = get_color_from_hex("#0F172A")
 
@@ -83,7 +85,6 @@ class MainApp(App):
 
         sm.add_widget(BuildPlan(name="BuildPlan"))
         sm.add_widget(PlanPage(name="plan"))
-
 
         return sm
 

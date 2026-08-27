@@ -8,7 +8,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.togglebutton import ToggleButton
 
 from Dev.UI.Screens.RaceScreen import selected
-from Dev.UI.Theme import *
+from Dev.UI.Theme import TEXT, PRIMARY, SUBTEXT
 
 
 class RunningScreen(Screen):
@@ -29,7 +29,8 @@ class RunningScreen(Screen):
 
         # Longest Run
         longest_box = BoxLayout(orientation='vertical', spacing=10)
-        longest_label = Label(text="Longest Recent Run (km)", font_size=20, color=TEXT, bold=True)
+        longest_label = Label(text="Longest Recent Run (km)",
+                              font_size=20, color=TEXT, bold=True)
 
         self.longest_value = Label(text="1 km", font_size=26)
 
@@ -46,7 +47,8 @@ class RunningScreen(Screen):
         # Weekly Distance
         weekly_box = BoxLayout(orientation='vertical', spacing=10)
 
-        weekly_label = Label(text="Current Weekly Distance (km)", font_size=20, color=TEXT, bold=True)
+        weekly_label = Label(text="Current Weekly Distance (km)",
+                             font_size=20, color=TEXT, bold=True)
 
         self.weekly_value = Label(text="1 km", font_size=26)
 
@@ -111,14 +113,12 @@ class RunningScreen(Screen):
         self.validate_distances()
 
     # Update Slider Value
-
     def update_weekly(self, instance, value):
         weekly_distance = int(value)
 
         self.weekly_value.text = f"{weekly_distance} km"
 
         self.validate_distances()
-
 
     def validate_distances(self):
 
@@ -150,7 +150,6 @@ class RunningScreen(Screen):
         if not self.validate_distances():
             return
 
-
         App.get_running_app().data["Longest_Run"] = longestDistance
         App.get_running_app().data["Weekly_Distance"] = weeklyDistance
 
@@ -172,16 +171,16 @@ class RunningScreen(Screen):
     def go_back(self, instance):
         self.manager.current = "race"
 
-
 class RunningTimeScreen(Screen):
     def __init__(self, distance, **kwargs):
         super().__init__(**kwargs)
 
-        #reachable dictionary of PBs for distances
+        # reachable dictionary of PBs for distances
         self.inputs = {}
         layout = BoxLayout(orientation='vertical', padding=15, spacing=15)
 
-        # Create list of all the PBs they will have depending on their furthest run.
+        # Create list of all the PBs they
+        # will have depending on their furthest run.
         lst = []
         if distance == "Marathon":
             lst = ["marathon", "half", "10k", "5k"]
@@ -224,7 +223,6 @@ class RunningTimeScreen(Screen):
             )
 
             layout.add_widget(self.error_label)
-
 
         # Buttons
 
@@ -308,7 +306,8 @@ class RunningTimeScreen(Screen):
         if "half" in pb_times and "marathon" in pb_times:
             if pb_times["marathon"] <= pb_times["half"]:
                 self.error_label.text = (
-                    "Your Marathon PB must be longer than your Half Marathon PB."
+                    "Your Marathon PB must be longer"
+                    " than your Half Marathon PB."
                 )
                 return False
 
@@ -390,6 +389,7 @@ class RunningTimeScreen(Screen):
     def go_back(self, instance):
         self.manager.current = "race"
 
+
 class LevelScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -425,22 +425,26 @@ class LevelScreen(Screen):
         level_descriptions = {
             "Beginner": (
                 "A runner who is new to structured training, "
-                "has not consistently run beyond 5km, and is building their running base."
+                "has not consistently run beyond 5km,"
+                "and is building their running base."
             ),
 
             "Novice": (
-                "A runner who regularly runs 5-10km, has some experience with structured workouts, "
+                "A runner who regularly runs 5-10km,"
+                "has some experience with structured workouts, "
                 "and is beginning to build endurance and speed."
             ),
 
             "Intermediate": (
-                "A runner who consistently trains, can comfortably complete 10-20km runs, "
+                "A runner who consistently trains,"
+                "can comfortably complete 10-20km runs, "
                 "and has experience racing distances up to the Half Marathon."
             ),
 
             "Advanced": (
-                "A highly experienced runner who regularly completes 30km+ runs "
-                "and has completed Marathons or Ultras."
+                "A highly experienced runner who regularly"
+                "completes 30km+ runs and has completed"
+                "Marathons or Ultras."
             )
         }
 
@@ -552,8 +556,6 @@ class LevelScreen(Screen):
 
         return True
 
-
-
     def go_next(self, instance):
 
         if not self.validate_level():
@@ -577,4 +579,3 @@ class LevelScreen(Screen):
 
     def go_back(self, instance):
         self.manager.current = "race"
-

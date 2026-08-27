@@ -6,11 +6,12 @@ from kivy.uix.slider import Slider
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen
 from Dev.UI.Screens.RaceScreen import selected
-from Dev.UI.Theme import *
+from Dev.UI.Theme import PRIMARY, TEXT
+
 
 class CyclingScreen(Screen):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs) # setup Kivy screen
+        super().__init__(**kwargs)  # setup Kivy screen
 
         layout = BoxLayout(orientation='vertical', padding=30, spacing=30)
 
@@ -26,7 +27,8 @@ class CyclingScreen(Screen):
 
         # Longest Swim
         longest_box = BoxLayout(orientation='vertical', spacing=10)
-        longest_label = Label(text="Longest Cycle (km)", color=TEXT, font_size=24)
+        longest_label = Label(text="Longest Cycle (km)",
+                              color=TEXT, font_size=24)
 
         self.longest_value = Label(text="0 km", font_size=26)
 
@@ -43,7 +45,8 @@ class CyclingScreen(Screen):
         # Weekly Distance
         weekly_box = BoxLayout(orientation='vertical', spacing=10)
 
-        weekly_label = Label(text="Weekly Distance (km)", color=TEXT, font_size=20)
+        weekly_label = Label(text="Weekly Distance (km)",
+                             color=TEXT, font_size=20)
 
         self.weekly_value = Label(text="0 km", font_size=26)
 
@@ -96,7 +99,6 @@ class CyclingScreen(Screen):
     def update_weekly(self, instance, value):
         self.weekly_value.text = f"{int(value)} km"
 
-
     def go_next(self, instance):
         CyclingDistance = int(self.longest_slider.value)
         weeklyCycling = int(self.weekly_slider.value)
@@ -115,7 +117,6 @@ class CyclingScreen(Screen):
     def go_back(self, instance):
         self.manager.current = "race"
 
-
 class CyclingTimeScreen(Screen):
     def __init__(self, distance, **kwargs):
         super().__init__(**kwargs)  # setup Kivy screen
@@ -123,9 +124,11 @@ class CyclingTimeScreen(Screen):
         # reachable dictionary of PBs for distances
         self.inputs = {}
 
-        layout = BoxLayout(orientation='vertical', padding=30, spacing=30)
+        layout = BoxLayout(orientation='vertical',
+                           padding=30, spacing=30)
 
-        # Create list of all the PBs they will have depending on their furthest run.
+        # Create list of all the PBs they will
+        # have depending on their furthest run.
         lst = []
         if distance == "160K":
             lst = ["cycle_160", "cycle_100"]
@@ -135,7 +138,6 @@ class CyclingTimeScreen(Screen):
             lst = ["cycle_50", "cycle_20"]
         elif distance == "20K":
             lst = ["cycle_20"]
-
 
         #Enter your Average Time
         for dist in lst:
@@ -162,8 +164,7 @@ class CyclingTimeScreen(Screen):
             layout.add_widget(title)
             layout.add_widget(pb_input)
 
-
-        #Buttons
+        # Buttons
         btn_box = BoxLayout(size_hint=(1, 0.2), spacing=20)
 
         back_btn = Button(
@@ -200,9 +201,8 @@ class CyclingTimeScreen(Screen):
 
             try:
                 App.get_running_app().data[f"{dist}_pb"] = text
-            except:
+            except Exception:
                 print(f"Invalid time for {dist}")
-
 
     def go_next(self, instance):
         selected.remove('cycle')

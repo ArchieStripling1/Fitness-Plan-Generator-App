@@ -1,17 +1,14 @@
 from kivy.graphics import Color, RoundedRectangle
-from kivy.uix.boxlayout import BoxLayout
-from kivy.uix.button import Button
 from kivy.uix.floatlayout import FloatLayout
 from kivy.uix.label import Label
-from kivy.uix.screenmanager import Screen, SlideTransition, FadeTransition
+from kivy.uix.screenmanager import Screen, FadeTransition
 from kivy.animation import Animation
-
-from Dev.UI.Theme import *
+from Dev.UI.Theme import BG, TEXT, SUBTEXT, PRIMARY
 
 
 class IntroScreen(Screen):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs) # setup Kivy screen
+        super().__init__(**kwargs)  # setup Kivy screen
 
         root = FloatLayout()
 
@@ -43,7 +40,8 @@ class IntroScreen(Screen):
             pos_hint={"center_x": 0.5, "center_y": 0.18}
         )
 
-        anim = Animation(opacity=0.3, duration=1) + Animation(opacity=1, duration=1)
+        anim = (Animation(opacity=0.3, duration=1)
+                + Animation(opacity=1, duration=1))
         anim.repeat = True
         anim.start(tap)
 

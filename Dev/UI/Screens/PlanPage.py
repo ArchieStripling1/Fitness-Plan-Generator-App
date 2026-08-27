@@ -1,4 +1,3 @@
-
 from kivy.graphics import Color, RoundedRectangle, Line
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.label import Label
@@ -6,11 +5,13 @@ from kivy.uix.scrollview import ScrollView
 from kivy.uix.screenmanager import Screen
 from Dev.Core.RunningPlanGenerator import RunningPlanGenerator
 from kivy.app import App
-from Dev.UI.Theme import *
+from Dev.UI.Theme import (CARD, TEXT, SUBTEXT,
+                          EASY, LONG, INTERVAL, TEMPO, RACE)
+
 
 class PlanPage(Screen):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs) # setup Kivy screen
+        super().__init__(**kwargs)  # setup Kivy screen
 
         # Scroll area
         self.scroll = ScrollView()
@@ -28,7 +29,6 @@ class PlanPage(Screen):
         self.scroll.add_widget(self.content)
 
         self.add_widget(self.scroll)
-
 
     def on_enter(self):
 
@@ -169,7 +169,8 @@ class PlanPage(Screen):
             # Get the day and workout in workouts
             for day, workout in workouts.items():
 
-                # Skip rest days as these don't need to be displayed in the plan section
+                # Skip rest days as these don't
+                # need to be displayed in the plan section
                 if workout["type"] == "Rest":
                     continue
 
@@ -265,15 +266,7 @@ class PlanPage(Screen):
             # Add whole week card
             self.content.add_widget(card)
 
-
-
-
     def restart(self, instance):
 
         self.manager.current = "intro"
         self.data = {}
-
-
-
-
-
