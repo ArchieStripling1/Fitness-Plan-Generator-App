@@ -207,7 +207,7 @@ class RunningPlanGenerator:
                 interval_types = (SpeedWorkoutData.
                                   Intermediate_Long_Interval_Types)
                 tempo_types = (SpeedWorkoutData.
-                                Intermediate_Long_Tempo_Types)
+                               Intermediate_Long_Tempo_Types)
 
             # Interval/Tempo types for Advanced
             # runners which have a 5k or 10k race
@@ -269,7 +269,7 @@ class RunningPlanGenerator:
 
                         # Calculate gradual progression towards target
                         long_run_progress = ((target_long_run -
-                                             starting_distance)
+                                              starting_distance)
                                              / max(plan_length - 1, 1))
 
                         long_run_distance = (
@@ -280,7 +280,7 @@ class RunningPlanGenerator:
                         # Prevent going over max
                         if (long_run_distance >
                                 race_settings[race]["max_long_run"]):
-                            long_run_distance =\
+                            long_run_distance = \
                                 race_settings[race]["max_long_run"]
 
                         if recovery_week:
@@ -459,7 +459,7 @@ class RunningPlanGenerator:
                             plan[week_name]["workouts"][day] \
                                 = workout
 
-                            current_weekly_distance +=\
+                            current_weekly_distance += \
                                 session_info["Distance"]
 
                         # Remaining = easy runs
@@ -471,7 +471,7 @@ class RunningPlanGenerator:
                             # Prevent going over max
                             if (easy_distance >
                                     race_settings[race]["max_easy_run"]):
-                                easy_distance =\
+                                easy_distance = \
                                     race_settings[race]["max_easy_run"]
 
                             if recovery_week:

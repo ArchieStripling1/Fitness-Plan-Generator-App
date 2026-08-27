@@ -151,7 +151,7 @@ class BuildPlan(Screen):
         self.longActivityBtn.bind(on_release=self.dropdown2.open)
         # Dropdown uses x as the day and sets the long run day variable.
         self.dropdown2.bind(
-            on_select=lambda instance,x: self.set_long_Activty_day(x))
+            on_select=lambda instance, x: self.set_long_Activty_day(x))
 
         # Build Plan Button
         buildPlanBtn = Button(
@@ -274,7 +274,7 @@ class BuildPlan(Screen):
         raceRun = ['5k', '10k', 'half', 'marathon']
         raceCycle = ['cycle_20', 'cycle_50', 'cycle_100', 'cycle_160']
         raceSwim = ['swim_400', 'swim_1500', 'swim_3000', 'swim_5000']
-        raceTriathlon = ['olympic_triathlon' ,'ironman_70.3', 'ironman_140.6']
+        raceTriathlon = ['olympic_triathlon', 'ironman_70.3', 'ironman_140.6']
 
         weeklyRunDistance = data.get("Weekly_Distance")
         weeklySwimDistance = data.get("Weekly_Swimming")
