@@ -3,7 +3,7 @@ import unittest
 from Dev.Core.RunningPlanGenerator import RunningPlanGenerator
 
 
-class TestRunningPlan(unittest.TestCase):
+class test_RunningPlan(unittest.TestCase):
 
     # Generate Plan so no reuse of code
     def generate_plan(self, data):
