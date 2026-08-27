@@ -29,6 +29,3 @@ jobs:
       - name: Run tests
         run: |
           pytest
-      run: |
-        conda install pytest
-        pytest
