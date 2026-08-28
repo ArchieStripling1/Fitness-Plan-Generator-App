@@ -1,0 +1,339 @@
+from kivy.app import App
+from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
+from kivy.uix.label import Label
+from kivy.uix.scrollview import ScrollView
+from kivy.uix.textinput import TextInput
+from kivy.uix.screenmanager import Screen
+from Dev.UI.Theme import TEXT, PRIMARY, SUBTEXT
+from kivy.graphics import Color, RoundedRectangle
+from kivy.metrics import dp
+
+
+class RunningTimeScreen(Screen):
+    def __init__(self, distance, **kwargs):
+        super().__init__(**kwargs)
+
+        # reachable dictionary of PBs for distances
+        self.inputs = {}
+        layout = BoxLayout(
+            orientation='vertical',
+            padding=[dp(35), dp(25), dp(35), dp(25)],
+            spacing=dp(15)
+        )
+        title = Label(
+            text="Personal Bests",
+            font_size=36,
+            size_hint_y=None,
+            height=dp(50),
+            bold=True,
+            color=TEXT
+        )
+
+        subtitle = Label(
+            text="Enter your best recent race times",
+            font_size=17,
+            size_hint_y=None,
+            height=dp(30),
+            color=SUBTEXT
+        )
+
+        layout.add_widget(title)
+        layout.add_widget(subtitle)
+
+        scroll = ScrollView(
+            size_hint_y=1,
+            bar_width=dp(4)
+        )
+        content = BoxLayout(
+            orientation='vertical',
+            spacing=dp(10),
+            size_hint_y=None
+        )
+        content.bind(
+            minimum_height=content.setter("height")
+        )
+
+        # Create list of all the PBs they
+        # will have depending on their furthest run.
+        lst = []
+        if distance == "Marathon":
+            lst = ["marathon", "half", "10k", "5k"]
+        elif distance == "Half-Marathon":
+            lst = ["half", "10k", "5k"]
+        elif distance == "10K":
+            lst = ["10k", "5k"]
+        elif distance == "5K":
+            lst = ["5k"]
+
+        for dist in lst:
+            # Enter Longest Distance Time
+            pb_box = BoxLayout(
+                orientation='vertical',
+                spacing=dp(8),
+                padding=[dp(20), dp(12), dp(20), dp(12)],
+                size_hint_y=None,
+                height=dp(105)
+            )
+
+            with pb_box.canvas.before:
+                Color(0.12, 0.15, 0.23, 1)
+                pb_background = RoundedRectangle(
+                    pos=pb_box.pos,
+                    size=pb_box.size,
+                    radius=[dp(15)]
+                )
+
+            pb_box.bind(
+                pos=lambda instance, value, bg=pb_background:
+                setattr(bg, 'pos', value),
+                size=lambda instance, value, bg=pb_background:
+                setattr(bg, 'size', value)
+            )
+
+            title = Label(
+                text=f"{dist.upper()} PERSONAL BEST",
+                font_size=15,
+                color=SUBTEXT,
+                bold=True,
+                size_hint_y=None,
+                height=dp(25),
+                halign="left"
+            )
+
+            title.bind(
+                size=lambda instance, value:
+                setattr(instance, 'text_size', value)
+            )
+
+            pb_input = TextInput(
+                hint_text="HH:MM:SS",
+                font_size=21,
+                height=dp(45),
+                size_hint_y=None,
+                multiline=False,
+                padding=[dp(12), dp(8)],
+                background_normal="",
+                background_color=(0.08, 0.10, 0.16, 1),
+                foreground_color=TEXT,
+                hint_text_color=SUBTEXT
+            )
+
+            self.inputs[dist] = pb_input
+
+            pb_box.add_widget(title)
+            pb_box.add_widget(pb_input)
+
+            content.add_widget(pb_box)
+
+        scroll.add_widget(content)
+
+        layout.add_widget(scroll)
+
+        # ERROR MESSAGE
+        self.error_label = Label(
+            text="",
+            font_size=18,
+            color=(1, 0.3, 0.3, 1),
+            size_hint_y=None,
+            height=30
+        )
+
+        layout.add_widget(self.error_label)
+
+        # Buttons
+
+        btn_box = BoxLayout(
+            size_hint=(1, None),
+            height=dp(55),
+            spacing=dp(15)
+        )
+
+        back_btn = Button(
+            text="Previous",
+            font_size=19,
+            background_normal="",
+            background_color=(0, 0, 0, 0),
+            color=TEXT,
+            bold=True
+        )
+
+        with back_btn.canvas.before:
+            Color(0.15, 0.18, 0.27, 1)
+            back_background = RoundedRectangle(
+                pos=back_btn.pos,
+                size=back_btn.size,
+                radius=[dp(12)]
+            )
+
+        back_btn.bind(
+            pos=lambda instance, value:
+            setattr(back_background, 'pos', value),
+            size=lambda instance, value:
+            setattr(back_background, 'size', value)
+        )
+
+        next_btn = Button(
+            text="Continue",
+            font_size=19,
+            background_normal="",
+            background_color=(0, 0, 0, 0),
+            color=TEXT,
+            bold=True
+        )
+
+        with next_btn.canvas.before:
+            Color(*PRIMARY)
+            next_background = RoundedRectangle(
+                pos=next_btn.pos,
+                size=next_btn.size,
+                radius=[dp(12)]
+            )
+
+        next_btn.bind(
+            pos=lambda instance, value:
+            setattr(next_background, 'pos', value),
+            size=lambda instance, value:
+            setattr(next_background, 'size', value)
+        )
+
+        back_btn.bind(on_press=self.go_back)
+        next_btn.bind(on_press=self.go_next)
+
+        btn_box.add_widget(back_btn)
+        btn_box.add_widget(next_btn)
+
+        layout.add_widget(btn_box)
+
+        self.add_widget(layout)
+
+    def validate_PBs(self):
+
+        self.error_label.text = ""
+
+        pb_times = {}
+
+        # Validate format
+        for dist, pb_input in self.inputs.items():
+
+            text = pb_input.text.strip()
+
+            # No blank entries
+            if not text:
+                self.error_label.text = (
+                    f"Please enter a {dist.upper()} time.\n"
+                    "Please use HH:MM:SS."
+                )
+                return False
+
+            total_seconds = self.convert_time_to_seconds(text)
+
+            if total_seconds is None:
+                self.error_label.text = (
+                    f"Invalid {dist.upper()} time.\n"
+                    "Please use HH:MM:SS."
+                )
+                return False
+
+            pb_times[dist] = total_seconds
+
+        # Check PB consistency
+        if "5k" in pb_times and "10k" in pb_times:
+            if pb_times["10k"] <= pb_times["5k"]:
+                self.error_label.text = (
+                    "Your 10K PB must be longer than your 5K PB."
+                )
+                return False
+
+        if "10k" in pb_times and "half" in pb_times:
+            if pb_times["half"] <= pb_times["10k"]:
+                self.error_label.text = (
+                    "Your Half Marathon PB must be longer than your 10K PB."
+                )
+                return False
+
+        if "half" in pb_times and "marathon" in pb_times:
+            if pb_times["marathon"] <= pb_times["half"]:
+                self.error_label.text = (
+                    "Your Marathon PB must be longer"
+                    " than your Half Marathon PB."
+                )
+                return False
+
+        return True
+
+    def convert_time_to_seconds(self, text):
+
+        try:
+
+            parts = text.strip().split(":")
+
+            if len(parts) != 3:
+
+                return None
+
+            hours = int(parts[0])
+            minutes = int(parts[1])
+            seconds = int(parts[2])
+
+            if minutes >= 60 or seconds >= 60:
+
+                return None
+
+            total_seconds = (
+                hours * 3600
+                + minutes * 60
+                + seconds
+            )
+
+            return total_seconds
+
+        except ValueError:
+
+            return None
+
+    # SAVE TIMES
+
+    def save_inputs(self):
+
+        data = App.get_running_app().data
+
+        for dist, pb_input in self.inputs.items():
+
+            text = pb_input.text.strip()
+
+            if not text:
+
+                continue
+
+            total_seconds = (
+                self.convert_time_to_seconds(text)
+            )
+
+            if total_seconds is None:
+
+                print(
+                    f"Invalid time entered for {dist}"
+                )
+
+                continue
+
+            data[f"{dist}_pb"] = total_seconds
+
+            print(
+                f"{dist}: {total_seconds} seconds"
+            )
+
+    def go_next(self, instance):
+
+        # Validate all PB's
+        if not self.validate_PBs():
+            return
+
+        # Save all inputs when Next is pressed
+        self.save_inputs()
+
+        self.manager.current = "level"
+
+    def go_back(self, instance):
+        self.manager.current = "race"

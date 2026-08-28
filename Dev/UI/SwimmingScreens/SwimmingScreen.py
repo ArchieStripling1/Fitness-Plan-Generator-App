@@ -5,19 +5,20 @@ from kivy.uix.label import Label
 from kivy.uix.slider import Slider
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen
-from Dev.UI.Screens.RaceScreen import selected
-from Dev.UI.Theme import PRIMARY, TEXT
+from Dev.UI.DefaultScreens.RaceScreen import selected
+from Dev.UI.Theme import TEXT, PRIMARY
 
 
-class CyclingScreen(Screen):
+class SwimmingScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)  # setup Kivy screen
 
         layout = BoxLayout(orientation='vertical', padding=30, spacing=30)
 
         # Header
+
         title = Label(
-            text="Cycling Profile",
+            text="Swimming Profile",
             font_size=24,
             size_hint=(1, 0.15),
             bold=True,
@@ -27,13 +28,13 @@ class CyclingScreen(Screen):
 
         # Longest Swim
         longest_box = BoxLayout(orientation='vertical', spacing=10)
-        longest_label = Label(text="Longest Cycle (km)",
-                              color=TEXT, font_size=24)
+        longest_label = Label(text="Longest Swim (Meters)",
+                              font_size=24, color=TEXT)
 
-        self.longest_value = Label(text="0 km", font_size=26)
+        self.longest_value = Label(text="0 m", font_size=26)
 
         # Slider
-        self.longest_slider = Slider(min=1, max=200, value=0)
+        self.longest_slider = Slider(min=1, max=6000, value=0)
         self.longest_slider.bind(value=self.update_longest)
 
         longest_box.add_widget(longest_label)
@@ -45,13 +46,13 @@ class CyclingScreen(Screen):
         # Weekly Distance
         weekly_box = BoxLayout(orientation='vertical', spacing=10)
 
-        weekly_label = Label(text="Weekly Distance (km)",
-                             color=TEXT, font_size=20)
+        weekly_label = Label(text="Weekly Distance (Meters)",
+                             font_size=20, color=TEXT)
 
-        self.weekly_value = Label(text="0 km", font_size=26)
+        self.weekly_value = Label(text="0 m", font_size=26)
 
         # Slider
-        self.weekly_slider = Slider(min=0, max=800, value=0)
+        self.weekly_slider = Slider(min=0, max=12000, value=0)
         self.weekly_slider.bind(value=self.update_weekly)
 
         weekly_box.add_widget(weekly_label)
@@ -80,7 +81,7 @@ class CyclingScreen(Screen):
             bold=True
         )
 
-        # Button Binds
+        # Bind Buttons
         back_btn.bind(on_press=self.go_back)
         next_btn.bind(on_press=self.go_next)
 
@@ -91,66 +92,64 @@ class CyclingScreen(Screen):
 
         self.add_widget(layout)
 
-    # Update Slider value
+    # Update Slider Value
     def update_longest(self, instance, value):
-        self.longest_value.text = f"{int(value)} km"
+        self.longest_value.text = f"{int(value)} meters"
 
-    # Update Slider value
+    # Update Slider Value
     def update_weekly(self, instance, value):
-        self.weekly_value.text = f"{int(value)} km"
+        self.weekly_value.text = f"{int(value)} meters"
 
     def go_next(self, instance):
-        CyclingDistance = int(self.longest_slider.value)
-        weeklyCycling = int(self.weekly_slider.value)
-        App.get_running_app().data["Longest_Cycle"] = CyclingDistance
-        App.get_running_app().data["Weekly_Cycle"] = weeklyCycling
-        if 20 <= CyclingDistance < 50:
-            self.manager.current = "Cycling20K"
-        elif 50 <= CyclingDistance < 100:
-            self.manager.current = "Cycling50K"
-        elif 100 <= CyclingDistance < 160:
-            self.manager.current = "Cycling100K"
-        elif CyclingDistance >= 160:
-            self.manager.current = "Cycling160K"
+        SwimmingDistance = int(self.longest_slider.value)
+        weeklySwimming = int(self.weekly_slider.value)
+        App.get_running_app().data["Longest_Swim"] = SwimmingDistance
+        App.get_running_app().data["Weekly_Swimming"] = weeklySwimming
+
+        if 400 <= SwimmingDistance < 1500:
+            self.manager.current = "Pace400M"
+        elif 1500 <= SwimmingDistance < 3000:
+            self.manager.current = "Pace1500M"
+        elif 3000 <= SwimmingDistance < 5000:
+            self.manager.current = "Pace3000M"
+        elif 5000 <= SwimmingDistance:
+            self.manager.current = "Pace5000M"
 
     def go_back(self, instance):
-        self.manager.current = "race"
+        self.manager.current = "sport"
 
 
-class CyclingTimeScreen(Screen):
+class SwimmingPace(Screen):
     def __init__(self, distance, **kwargs):
         super().__init__(**kwargs)  # setup Kivy screen
 
-        # reachable dictionary of PBs for distances
         self.inputs = {}
 
-        layout = BoxLayout(orientation='vertical',
-                           padding=30, spacing=30)
+        layout = BoxLayout(orientation='vertical', padding=30, spacing=30)
 
         # Create list of all the PBs they will
         # have depending on their furthest run.
         lst = []
-        if distance == "160K":
-            lst = ["cycle_160", "cycle_100"]
-        elif distance == "100K":
-            lst = ["cycle_100", "cycle_50"]
-        elif distance == "50K":
-            lst = ["cycle_50", "cycle_20"]
-        elif distance == "20K":
-            lst = ["cycle_20"]
+        if distance == "5000M":
+            lst = ["swim_5000", "swim_3000"]
+        elif distance == "3000M":
+            lst = ["swim_3000", "swim_1500"]
+        elif distance == "1500M":
+            lst = ["swim_1500", "swim_400"]
+        elif distance == "400M":
+            lst = ["swim_400"]
 
-        # Enter your Average Time
         for dist in lst:
             # Enter Longest Distance Time
             title = Label(
-                text=f"What is your average pace per {dist} (KMH)",
+                text=f"Enter your {dist} time",
                 font_size=30,
                 color=TEXT,
                 bold=True
             )
 
             pb_input = TextInput(
-                hint_text="KMH",
+                hint_text="HH:MM:SS",
                 font_size=24,
                 height=30,
                 size_hint=(1, 0.3),
@@ -197,18 +196,35 @@ class CyclingTimeScreen(Screen):
 
     def update_input(self, instance):
         for dist, pb_input in self.inputs.items():
-            text = pb_input.text
+            text = pb_input.text.strip()
+
+            # If text is accepted try split it using ':'
+            # for hour minutes and seconds.
+            if not text:
+                continue
 
             try:
-                App.get_running_app().data[f"{dist}_pb"] = text
+                hours, minutes, seconds = map(int, text.split(":"))
+
+                # Sum for the amount of seconds.
+                total = (
+                        hours * 3600
+                        + minutes * 60
+                        + seconds
+                )
+
+                App.get_running_app().data[f"{dist}_pb"] = total
+
+                print(dist, total)
+
             except Exception:
                 print(f"Invalid time for {dist}")
 
     def go_next(self, instance):
-        selected.remove('cycle')
+        selected.remove('swim')
         print(selected)
 
-        # For each sport go through Process
+        # For Each Sport go through process
         length = len(selected)
         for i in range(length):
             self.manager.current = selected[i]
