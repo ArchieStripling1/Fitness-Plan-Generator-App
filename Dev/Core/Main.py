@@ -5,7 +5,7 @@ from kivy.uix.screenmanager import ScreenManager
 # Import all classes for each Screen.
 from Dev.UI.Screens.IntroScreen import IntroScreen
 from Dev.UI.Screens.RunningScreen import (RunningScreen,
-                                          RunningTimeScreen, LevelScreen)
+                                          RunningTimeScreen, LevelScreen, RunningPlanInfoScreen)
 from Dev.UI.Screens.CyclingScreen import CyclingScreen, CyclingTimeScreen
 from Dev.UI.Screens.SwimmingScreen import SwimmingScreen, SwimmingPace
 from Dev.UI.Screens.RaceScreen import RaceScreen
@@ -46,6 +46,7 @@ class MainApp(App):
             distance="5K"))
 
         sm.add_widget(LevelScreen(name="level"))
+        sm.add_widget(RunningPlanInfoScreen(name="runningInfo"))
 
         # Swimming Screens
         sm.add_widget(SwimmingPace(

@@ -1,273 +1,349 @@
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
-from kivy.uix.gridlayout import GridLayout
-from kivy.uix.dropdown import DropDown
 from kivy.uix.label import Label
-from kivy.uix.scrollview import ScrollView
-from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen
-from kivy.uix.togglebutton import ToggleButton
 from kivy.app import App
 from Dev.UI.Theme import TEXT, PRIMARY
+from kivy.graphics import Color, RoundedRectangle
+from kivy.metrics import dp
 
 
 class BuildPlan(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)  # setup Kivy screen
 
-        self.daysSelected = []
-
-        layout = BoxLayout(orientation='vertical', padding=25, spacing=25)
+        layout = BoxLayout(
+            orientation='vertical',
+            padding=[dp(35), dp(25), dp(35), dp(25)],
+            spacing=dp(15)
+        )
 
         # Header
         title = Label(
-            text="Build Plan",
+            text="Your Plan",
             font_size=36,
-            size_hint=(1, 0.15),
+            size_hint=(1, None),
+            height=dp(55),
             bold=True,
+            color=TEXT
+        )
+
+        subtitle = Label(
+            text="Review your training information before building your plan.",
+            font_size=15,
+            size_hint=(1, None),
+            height=dp(35),
             color=TEXT
         )
 
         layout.add_widget(title)
+        layout.add_widget(subtitle)
 
-        scroll = ScrollView(size_hint=(1, 0.75))
         content = BoxLayout(
             orientation='vertical',
-            spacing=20,
-            size_hint_y=None
+            spacing=dp(10),
+            size_hint_y=1
         )
-        content.bind(minimum_height=content.setter('height'))
 
-        # Race Type
-        self.race_label = Label(font_size=22,
-                                size_hint_y=None,
-                                height=30,
-                                color=TEXT)
+        race_card = BoxLayout(
+            orientation='vertical',
+            padding=[dp(20), dp(10)],
+            size_hint_y=None,
+            height=dp(65)
+        )
+
+        with race_card.canvas.before:
+            Color(
+                0.10, 0.14, 0.22, 1
+            )
+            race_card.background = RoundedRectangle(
+                pos=race_card.pos,
+                size=race_card.size,
+                radius=[dp(12)]
+            )
+
+        race_card.bind(
+            pos=lambda instance, value:
+            setattr(instance.background, 'pos', value)
+        )
+
+        race_card.bind(
+            size=lambda instance, value:
+            setattr(instance.background, 'size', value)
+        )
+        self.race_label = Label(
+            text="Race",
+            font_size=23,
+            bold=True,
+            color=TEXT,
+            halign='left',
+            valign='middle'
+        )
+
+        self.race_label.bind(
+            size=lambda instance, value:
+            setattr(instance, 'text_size', value)
+        )
+
+        race_card.add_widget(self.race_label)
+
+        # Current Training Title
+
+        training_title = Label(
+            text="CURRENT TRAINING",
+            font_size=13,
+            bold=True,
+            color=TEXT,
+            size_hint_y=None,
+            height=dp(30),
+            halign='left'
+        )
+
+        training_title.bind(
+            size=lambda instance, value:
+            setattr(instance, 'text_size', value)
+        )
+
+        content.add_widget(training_title)
 
         # Current Weekly Mileage
-        self.weekly_label = Label(font_size=20,
-                                  size_hint_y=None,
-                                  height=30,
-                                  color=TEXT)
 
-        # Current Longest Effort
-        self.longest_label = Label(font_size=20,
-                                   size_hint_y=None,
-                                   height=30,
-                                   color=TEXT)
+        weekly_card = BoxLayout(
+            padding=[dp(20), dp(5)],
+            size_hint_y=None,
+            height=dp(48)
+        )
 
-        # Current PB
-        self.currentPB_label = Label(font_size=20,
-                                     size_hint_y=None,
-                                     height=30,
-                                     color=TEXT)
+        with weekly_card.canvas.before:
+            Color(0.07, 0.10, 0.17, 1)
+            weekly_card.background = RoundedRectangle(
+                pos=weekly_card.pos,
+                size=weekly_card.size,
+                radius=[dp(10)]
+            )
+
+        weekly_card.bind(
+            pos=lambda instance, value:
+            setattr(instance.background, 'pos', value),
+            size=lambda instance, value:
+            setattr(instance.background, 'size', value)
+        )
+
+        self.weekly_label = Label(
+            font_size=17,
+            color=TEXT,
+            halign='left',
+            valign='middle'
+        )
+
+        self.weekly_label.bind(
+            size=lambda instance, value:
+            setattr(instance, 'text_size', value)
+        )
+
+        weekly_card.add_widget(self.weekly_label)
+        content.add_widget(weekly_card)
+
+        # Longest Effort
+
+        longest_card = BoxLayout(
+            padding=[dp(20), dp(5)],
+            size_hint_y=None,
+            height=dp(48)
+        )
+
+        with longest_card.canvas.before:
+            Color(0.07, 0.10, 0.17, 1)
+            longest_card.background = RoundedRectangle(
+                pos=longest_card.pos,
+                size=longest_card.size,
+                radius=[dp(10)]
+            )
+
+        longest_card.bind(
+            pos=lambda instance, value:
+            setattr(instance.background, 'pos', value),
+            size=lambda instance, value:
+            setattr(instance.background, 'size', value)
+        )
+
+        self.longest_label = Label(
+            font_size=17,
+            color=TEXT,
+            halign='left',
+            valign='middle'
+        )
+
+        self.longest_label.bind(
+            size=lambda instance, value:
+            setattr(instance, 'text_size', value)
+        )
+
+        longest_card.add_widget(self.longest_label)
+        content.add_widget(longest_card)
+
+        # PB
+
+        pb_card = BoxLayout(
+            padding=[dp(20), dp(5)],
+            size_hint_y=None,
+            height=dp(48)
+        )
+
+        with pb_card.canvas.before:
+            Color(0.07, 0.10, 0.17, 1)
+            pb_card.background = RoundedRectangle(
+                pos=pb_card.pos,
+                size=pb_card.size,
+                radius=[dp(10)]
+            )
+
+        pb_card.bind(
+            pos=lambda instance, value:
+            setattr(instance.background, 'pos', value),
+            size=lambda instance, value:
+            setattr(instance.background, 'size', value)
+        )
+
+        self.currentPB_label = Label(
+            font_size=17,
+            color=TEXT,
+            halign='left',
+            valign='middle'
+        )
+
+        self.currentPB_label.bind(
+            size=lambda instance, value:
+            setattr(instance, 'text_size', value)
+        )
+
+        pb_card.add_widget(self.currentPB_label)
+        content.add_widget(pb_card)
+
+        # Plan Details Title
+
+        plan_title = Label(
+            text="PLAN DETAILS",
+            font_size=13,
+            bold=True,
+            color=TEXT,
+            size_hint_y=None,
+            height=dp(30),
+            halign='left'
+        )
+
+        plan_title.bind(
+            size=lambda instance, value:
+            setattr(instance, 'text_size', value)
+        )
+
+        content.add_widget(plan_title)
 
         # Level
-        self.level_label = Label(font_size=20,
-                                 size_hint_y=None,
-                                 height=30,
-                                 color=TEXT)
 
-        # Length of Plan
-        self.length = Label(
-            text="How many weeks do you want this plan to be: ",
-            font_size=20,
+        level_card = BoxLayout(
+            padding=[dp(20), dp(5)],
             size_hint_y=None,
-            height=30,
-            color=TEXT,
-        )
-        self.planLength = TextInput(
-            hint_text="No. Weeks",
-            font_size=22,
-            size_hint=(1, None),
-            height=55,
-            multiline=False,
-            background_normal="",
-            background_active="",
-            background_color=(1, 1, 1, 1),
-            foreground_color=(0, 0, 0, 1),
-            padding=[10, 15]
+            height=dp(48)
         )
 
-        self.planLength.bind(on_text_validate=self.update_length)
-
-        # Days Available
-        self.activityDays = Label(
-            text="What days do you want to do a workout: ",
-            font_size=20,
-            color=TEXT
-        )
-        days = ["Monday", "Tuesday", "Wednesday",
-                "Thursday", "Friday", "Saturday", "Sunday"]
-        grid = GridLayout(
-            rows=1,
-            cols=7,
-            size_hint_y=None,
-            height=60,
-            spacing=5
-        )
-
-        for day in days:
-            grid.add_widget(self.create_button(day))
-
-        # Long Distance Effort Day
-        self.longActivityDay = Label(
-            text="What day do you want to do your long workout: ",
-            font_size=20,
-            color=TEXT
-        )
-        # Creates Dropdown
-        self.dropdown2 = DropDown()
-
-        # For each day in days
-        for day in days:
-            btn = Button(
-                text=day,
-                size_hint_y=None,
-                height=44,
-                background_normal="",
-                background_color=PRIMARY,
-                color=TEXT,
-                bold=True,
-                border=(0, 0, 0, 0)
+        with level_card.canvas.before:
+            Color(0.07, 0.10, 0.17, 1)
+            level_card.background = RoundedRectangle(
+                pos=level_card.pos,
+                size=level_card.size,
+                radius=[dp(10)]
             )
-            # On button click it selects the text from
-            # the day and creates a button using an anonymous function
-            btn.bind(on_release=lambda btn: self.dropdown2.select(btn.text))
 
-            self.dropdown2.add_widget(btn)
-
-        self.longActivityBtn = Button(
-            text="Select Day",
-            size_hint=(1, None),
-            height=50,
-            background_normal="",
-            background_color=PRIMARY,
-            color=TEXT,
-            bold=True,
-            border=(0, 0, 0, 0)
+        level_card.bind(
+            pos=lambda instance, value:
+            setattr(instance.background, 'pos', value),
+            size=lambda instance, value:
+            setattr(instance.background, 'size', value)
         )
 
-        self.longActivityBtn.bind(on_release=self.dropdown2.open)
-        # Dropdown uses x as the day and sets the long run day variable.
-        self.dropdown2.bind(
-            on_select=lambda instance, x: self.set_long_Activty_day(x))
+        self.level_label = Label(
+            font_size=17,
+            color=TEXT,
+            halign='left',
+            valign='middle'
+        )
+
+        self.level_label.bind(
+            size=lambda instance, value:
+            setattr(instance, 'text_size', value)
+        )
+
+        level_card.add_widget(self.level_label)
+        content.add_widget(level_card)
+
+        # Plan Length
+
+        length_card = BoxLayout(
+            padding=[dp(20), dp(5)],
+            size_hint_y=None,
+            height=dp(48)
+        )
+
+        with length_card.canvas.before:
+            Color(0.07, 0.10, 0.17, 1)
+            length_card.background = RoundedRectangle(
+                pos=length_card.pos,
+                size=length_card.size,
+                radius=[dp(10)]
+            )
+
+        length_card.bind(
+            pos=lambda instance, value:
+            setattr(instance.background, 'pos', value),
+            size=lambda instance, value:
+            setattr(instance.background, 'size', value)
+        )
+
+        self.plan_length_label = Label(
+            font_size=17,
+            color=TEXT,
+            halign='left',
+            valign='middle'
+        )
+
+        self.plan_length_label.bind(
+            size=lambda instance, value:
+            setattr(instance, 'text_size', value)
+        )
+
+        length_card.add_widget(self.plan_length_label)
+        content.add_widget(length_card)
+
+        layout.add_widget(content)
 
         # Build Plan Button
+
         buildPlanBtn = Button(
             text="Build Plan",
+            font_size=18,
             size_hint=(1, None),
-            height=50,
+            height=dp(58),
             background_normal="",
-            background_color=PRIMARY,
+            background_color=(0.12, 0.16, 0.24, 1),
             color=TEXT,
             bold=True,
             border=(0, 0, 0, 0)
         )
-        buildPlanBtn.bind(on_press=self.build_plan)
 
-        content.add_widget(self.race_label)
-        content.add_widget(self.weekly_label)
-        content.add_widget(self.longest_label)
-        content.add_widget(self.currentPB_label)
-        content.add_widget(self.level_label)
-        content.add_widget(self.length)
-        content.add_widget(self.planLength)
-        content.add_widget(self.activityDays)
-        content.add_widget(grid)
-        content.add_widget(self.longActivityDay)
-        content.add_widget(self.longActivityBtn)
-
-        # ERROR MESSAGE
-        self.error_label = Label(
-            text="",
-            font_size=18,
-            color=(1, 0.3, 0.3, 1),
-            size_hint_y=None,
-            height=30
+        buildPlanBtn.bind(
+            on_press=self.build_plan
         )
 
-        content.add_widget(self.error_label)
+        layout.add_widget(buildPlanBtn)
 
-        content.add_widget((buildPlanBtn))
-        scroll.add_widget(content)
-        layout.add_widget(scroll)
         self.add_widget(layout)
-
-    def validate_plan_length(self):
-
-        self.error_label.text = ""
-
-        planLength = self.planLength.text
-
-        # No blank entries
-        if not planLength:
-            self.error_label.text = (
-                "Please Input your plan length."
-            )
-            return False
-
-        # Validate format
-        if not planLength.isdigit():
-            self.error_label.text = (
-                "You must input a number"
-            )
-            return False
-
-        # Plan can be no less than 3 weeks
-        if int(planLength) < 3:
-            self.error_label.text = (
-                "The plan must be at least 3 weeks."
-            )
-            return False
-
-        # Plan can be no more than 20 weeks
-        if int(planLength) > 20:
-            self.error_label.text = (
-                "The plan length must be less than 30 weeks."
-            )
-            return False
-        return True
-
-    def validate_activity_days(self):
-
-        self.error_label.text = ""
-
-        days = self.daysSelected
-
-        # No blank entries
-        if not days:
-            self.error_label.text = (
-                "Please select your days."
-            )
-            return False
-
-        # At least 2 running days
-        if len(days) < 2:
-            self.error_label.text = (
-                "Please run at least 2 days."
-            )
-            return False
-        return True
-
-    def validate_longActivityDay(self):
-
-        self.error_label.text = ""
-
-        longActivityDay = self.longActivityBtn.text
-
-        # No blank entries
-        if longActivityDay == "Select Day":
-            self.error_label.text = (
-                "Please input your long activity day."
-            )
-            return False
-        return True
 
     def on_enter(self):
         data = App.get_running_app().data
         race = data.get("race")
         level = data.get("level")
+        plan_length = data.get("CurrentPlanLength")
         print(race)
 
         # Race Types
@@ -290,10 +366,6 @@ class BuildPlan(Screen):
 
         # if Race is a Running Race
         if race in raceRun:
-            self.activityDays.text = \
-                "What days do you want to Run: "
-            self.longActivityDay.text = \
-                "What day do you want to do your long Run: "
             self.race_label.text = f"Race: {race.upper()}"
             self.level_label.text = f"Level Runner: {level}"
             self.longest_label.text = \
@@ -302,6 +374,8 @@ class BuildPlan(Screen):
                 f"Current Weekly Running Distance: {weeklyRunDistance} KM"
             self.currentPB_label.text = \
                 f"Your Current {race.upper()} PB is: {currentRunPB}"
+            self.plan_length_label.text = \
+                f"Plan Length: {plan_length} Weeks"
 
         # if Race is a Swimming Race
         elif race in raceSwim:
@@ -349,59 +423,5 @@ class BuildPlan(Screen):
                 (f"Current Weekly Swimming Distance:"
                  f" {weeklySwimDistance} M")
 
-    def update_length(self, instance):
-        App.get_running_app().data["CurrentPlanLength"] = self.planLength.text
-
-    def update_sessions(self, instance):
-        App.get_running_app().data["CurrentAmountSessions"] = self.noSessions.text
-
-    def create_button(self, day):
-        btn = ToggleButton(
-            text=day,
-            size_hint=(1, None),
-            height=60,
-            font_size=20,
-            background_normal="",
-            background_color=PRIMARY,
-            color=TEXT,
-            bold=True,
-            border=(1, 1, 1, 1)
-        )
-        btn.bind(on_press=lambda instance: self.toggle_day(instance, day))
-        return btn
-
-    def toggle_day(self, instance, day):
-        if instance.state == "down":
-            instance.background_color = (0.2, 0.6, 1, 1)
-            if day not in self.daysSelected:
-                self.daysSelected.append(day)
-        else:
-            instance.background_color = (0.9, 0.9, 0.9, 1)
-            if day in self.daysSelected:
-                self.daysSelected.remove(day)
-
-        print("Selected days:", self.daysSelected)
-
-        # Save globally
-        App.get_running_app().data["ActivityDays"] = self.daysSelected
-
-    def set_long_Activty_day(self, day):
-        self.longActivityBtn.text = day
-        App.get_running_app().data["LongActivityDay"] = day
-        print("Long Activity day:", day)
-
     def build_plan(self, instance):
-
-        # Validate plan Length
-        if not self.validate_plan_length():
-            return
-
-        # Validate activity days
-        if not self.validate_activity_days():
-            return
-
-        # Validate long activity day
-        if not self.validate_longActivityDay():
-            return
-
         self.manager.current = "plan"
