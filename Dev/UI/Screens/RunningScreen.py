@@ -8,35 +8,84 @@ from kivy.uix.slider import Slider
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen
 from kivy.uix.togglebutton import ToggleButton
-from kivy.graphics import Color, RoundedRectangle
-from kivy.metrics import dp
-
 from Dev.UI.Screens.RaceScreen import selected
 from Dev.UI.Theme import TEXT, PRIMARY, SUBTEXT
+from kivy.graphics import Color, RoundedRectangle
+from kivy.metrics import dp
 
 
 class RunningScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        layout = BoxLayout(orientation='vertical', padding=20, spacing=20)
+        layout = BoxLayout(
+            orientation='vertical',
+            padding=[dp(35), dp(25), dp(35), dp(25)],
+            spacing=dp(15)
+        )
 
         # Header
         title = Label(
             text="Running Profile",
-            font_size=34,
-            size_hint=(1, 0.15),
+            font_size=36,
+            size_hint=(1, None),
+            height=dp(50),
             bold=True,
-            color=TEXT,
+            color=TEXT
         )
+
+        subtitle = Label(
+            text="Tell us about your current running",
+            font_size=17,
+            size_hint=(1, None),
+            height=dp(30),
+            color=SUBTEXT
+        )
+
         layout.add_widget(title)
+        layout.add_widget(subtitle)
 
         # Longest Run
-        longest_box = BoxLayout(orientation='vertical', spacing=10)
-        longest_label = Label(text="Longest Recent Run (km)",
-                              font_size=20, color=TEXT, bold=True)
+        longest_box = BoxLayout(
+            orientation='vertical',
+            spacing=dp(8),
+            padding=[dp(20), dp(15), dp(20), dp(15)],
+            size_hint=(1, None),
+            height=dp(145)
+        )
 
-        self.longest_value = Label(text="1 km", font_size=26)
+        with longest_box.canvas.before:
+            Color(0.12, 0.15, 0.23, 1)
+            longest_background = RoundedRectangle(
+                pos=longest_box.pos,
+                size=longest_box.size,
+                radius=[dp(15)]
+            )
+
+        longest_box.bind(
+            pos=lambda instance, value:
+            setattr(longest_background, 'pos', value),
+            size=lambda instance, value:
+            setattr(longest_background, 'size', value)
+        )
+
+        longest_label = Label(
+            text="Longest Recent Run (km)",
+            font_size=15,
+            color=SUBTEXT,
+            bold=True,
+            size_hint_y=None,
+            height=dp(25)
+        )
+
+        self.longest_value = Label(
+            text="1 km",
+            font_size=27,
+            color=TEXT,
+            bold=True,
+            size_hint_y=None,
+            height=dp(38)
+        )
 
         # Slider
         self.longest_slider = Slider(min=1, max=60, value=1, step=1)
@@ -49,12 +98,46 @@ class RunningScreen(Screen):
         layout.add_widget(longest_box)
 
         # Weekly Distance
-        weekly_box = BoxLayout(orientation='vertical', spacing=10)
+        weekly_box = BoxLayout(
+            orientation='vertical',
+            spacing=dp(8),
+            padding=[dp(20), dp(15), dp(20), dp(15)],
+            size_hint=(1, None),
+            height=dp(145)
+        )
 
-        weekly_label = Label(text="Current Weekly Distance (km)",
-                             font_size=20, color=TEXT, bold=True)
+        with weekly_box.canvas.before:
+            Color(0.12, 0.15, 0.23, 1)
+            weekly_background = RoundedRectangle(
+                pos=weekly_box.pos,
+                size=weekly_box.size,
+                radius=[dp(15)]
+            )
 
-        self.weekly_value = Label(text="1 km", font_size=26)
+        weekly_box.bind(
+            pos=lambda instance, value:
+            setattr(weekly_background, 'pos', value),
+            size=lambda instance, value:
+            setattr(weekly_background, 'size', value)
+        )
+
+        weekly_label = Label(
+            text="Current Weekly Distance (km)",
+            font_size=15,
+            color=SUBTEXT,
+            bold=True,
+            size_hint_y=None,
+            height=dp(25)
+        )
+
+        self.weekly_value = Label(
+            text="1 km",
+            font_size=27,
+            color=TEXT,
+            bold=True,
+            size_hint_y=None,
+            height=dp(38)
+        )
 
         # Slider
         self.weekly_slider = Slider(min=1, max=150, value=1, step=1)
@@ -69,35 +152,69 @@ class RunningScreen(Screen):
         # ERROR MESSAGE
         self.error_label = Label(
             text="",
-            font_size=18,
+            font_size=16,
             color=(1, 0.3, 0.3, 1),
             size_hint_y=None,
-            height=30
+            height=dp(35)
         )
 
         layout.add_widget(self.error_label)
 
         # Buttons
-        btn_box = BoxLayout(size_hint=(1, 0.2), spacing=20)
+        btn_box = BoxLayout(
+            size_hint=(1, None),
+            height=dp(55),
+            spacing=dp(15)
+        )
 
         back_btn = Button(
             text="Previous",
-            font_size=22,
+            font_size=19,
             background_normal="",
-            background_color=PRIMARY,
-            color=TEXT,
-            bold=True
-        )
-        next_btn = Button(
-            text="Next",
-            font_size=22,
-            background_normal="",
-            background_color=PRIMARY,
+            background_color=(0, 0, 0, 0),
             color=TEXT,
             bold=True
         )
 
-        # Bind Buttons
+        with back_btn.canvas.before:
+            Color(0.15, 0.18, 0.27, 1)
+            back_background = RoundedRectangle(
+                pos=back_btn.pos,
+                size=back_btn.size,
+                radius=[dp(12)]
+            )
+
+        back_btn.bind(
+            pos=lambda instance, value:
+            setattr(back_background, 'pos', value),
+            size=lambda instance, value:
+            setattr(back_background, 'size', value)
+        )
+
+        next_btn = Button(
+            text="Next",
+            font_size=19,
+            background_normal="",
+            background_color=(0, 0, 0, 0),
+            color=TEXT,
+            bold=True
+        )
+
+        with next_btn.canvas.before:
+            Color(*PRIMARY)
+            next_background = RoundedRectangle(
+                pos=next_btn.pos,
+                size=next_btn.size,
+                radius=[dp(12)]
+            )
+
+        next_btn.bind(
+            pos=lambda instance, value:
+            setattr(next_background, 'pos', value),
+            size=lambda instance, value:
+            setattr(next_background, 'size', value)
+        )
+
         back_btn.bind(on_press=self.go_back)
         next_btn.bind(on_press=self.go_next)
 
@@ -182,7 +299,30 @@ class RunningTimeScreen(Screen):
 
         # reachable dictionary of PBs for distances
         self.inputs = {}
-        layout = BoxLayout(orientation='vertical', padding=15, spacing=15)
+        layout = BoxLayout(
+            orientation='vertical',
+            padding=[dp(35), dp(25), dp(35), dp(25)],
+            spacing=dp(15)
+        )
+        title = Label(
+            text="Personal Bests",
+            font_size=36,
+            size_hint=(1, None),
+            height=dp(50),
+            bold=True,
+            color=TEXT
+        )
+
+        subtitle = Label(
+            text="Enter your best recent race times",
+            font_size=17,
+            size_hint=(1, None),
+            height=dp(30),
+            color=SUBTEXT
+        )
+
+        layout.add_widget(title)
+        layout.add_widget(subtitle)
 
         # Create list of all the PBs they
         # will have depending on their furthest run.
@@ -198,25 +338,63 @@ class RunningTimeScreen(Screen):
 
         for dist in lst:
             # Enter Longest Distance Time
+            pb_box = BoxLayout(
+                orientation='vertical',
+                spacing=dp(8),
+                padding=[dp(20), dp(12), dp(20), dp(12)],
+                size_hint=(1, None),
+                height=dp(105)
+            )
+
+            with pb_box.canvas.before:
+                Color(0.12, 0.15, 0.23, 1)
+                pb_background = RoundedRectangle(
+                    pos=pb_box.pos,
+                    size=pb_box.size,
+                    radius=[dp(15)]
+                )
+
+            pb_box.bind(
+                pos=lambda instance, value, bg=pb_background:
+                setattr(bg, 'pos', value),
+                size=lambda instance, value, bg=pb_background:
+                setattr(bg, 'size', value)
+            )
+
             title = Label(
-                text=f"Enter your best recent {dist.upper()} time",
-                font_size=30,
-                color=TEXT,
-                bold=True
+                text=f"{dist.upper()} PERSONAL BEST",
+                font_size=15,
+                color=SUBTEXT,
+                bold=True,
+                size_hint_y=None,
+                height=dp(25),
+                halign="left"
             )
 
-            self.pb_input = TextInput(
+            title.bind(
+                size=lambda instance, value:
+                setattr(instance, 'text_size', value)
+            )
+
+            pb_input = TextInput(
                 hint_text="HH:MM:SS",
-                font_size=24,
-                height=30,
-                size_hint=(1, 0.3),
-                multiline=False
+                font_size=21,
+                height=dp(45),
+                size_hint=(1, None),
+                multiline=False,
+                padding=[dp(12), dp(8)],
+                background_normal="",
+                background_color=(0.08, 0.10, 0.16, 1),
+                foreground_color=TEXT,
+                hint_text_color=SUBTEXT
             )
 
-            self.inputs[dist] = self.pb_input
+            self.inputs[dist] = pb_input
 
-            layout.add_widget(title)
-            layout.add_widget(self.pb_input)
+            pb_box.add_widget(title)
+            pb_box.add_widget(pb_input)
+
+            layout.add_widget(pb_box)
 
             # ERROR MESSAGE
             self.error_label = Label(
@@ -232,25 +410,57 @@ class RunningTimeScreen(Screen):
         # Buttons
 
         btn_box = BoxLayout(
-            size_hint=(1, 0.2),
-            spacing=20
+            size_hint=(1, None),
+            height=dp(55),
+            spacing=dp(15)
         )
 
         back_btn = Button(
             text="Previous",
-            font_size=22,
+            font_size=19,
             background_normal="",
-            background_color=PRIMARY,
+            background_color=(0, 0, 0, 0),
             color=TEXT,
             bold=True
         )
+
+        with back_btn.canvas.before:
+            Color(0.15, 0.18, 0.27, 1)
+            back_background = RoundedRectangle(
+                pos=back_btn.pos,
+                size=back_btn.size,
+                radius=[dp(12)]
+            )
+
+        back_btn.bind(
+            pos=lambda instance, value:
+            setattr(back_background, 'pos', value),
+            size=lambda instance, value:
+            setattr(back_background, 'size', value)
+        )
+
         next_btn = Button(
-            text="Next",
-            font_size=22,
+            text="Continue",
+            font_size=19,
             background_normal="",
-            background_color=PRIMARY,
+            background_color=(0, 0, 0, 0),
             color=TEXT,
             bold=True
+        )
+
+        with next_btn.canvas.before:
+            Color(*PRIMARY)
+            next_background = RoundedRectangle(
+                pos=next_btn.pos,
+                size=next_btn.size,
+                radius=[dp(12)]
+            )
+
+        next_btn.bind(
+            pos=lambda instance, value:
+            setattr(next_background, 'pos', value),
+            size=lambda instance, value:
+            setattr(next_background, 'size', value)
         )
 
         back_btn.bind(on_press=self.go_back)
@@ -404,22 +614,32 @@ class LevelScreen(Screen):
 
         layout = BoxLayout(
             orientation='vertical',
-            padding=15,
-            spacing=15
+            padding=[dp(35), dp(25), dp(35), dp(25)],
+            spacing=dp(15)
         )
 
         title = Label(
             text="What Level Runner are you?",
-            font_size=30,
-            color=TEXT,
-            bold=True
+            font_size=36,
+            size_hint=(1, None),
+            height=dp(55),
+            bold=True,
+            color=TEXT
+        )
+        subtitle = Label(
+            text="Choose the level that best describes your experience",
+            font_size=15,
+            size_hint=(1, None),
+            height=dp(35),
+            color=TEXT
         )
 
         layout.add_widget(title)
+        layout.add_widget(subtitle)
 
         content = BoxLayout(
-            orientation='vertical',
-            spacing=20,
+            orientation="vertical",
+            spacing=dp(12),
             size_hint_y=None
         )
 
@@ -461,43 +681,50 @@ class LevelScreen(Screen):
         ]
 
         for level in level_list:
-            level_box = BoxLayout(
-                orientation="vertical",
-                spacing=5,
-                size_hint_y=None,
-                height=90
-            )
+            level_card = self.create_card(dp(100))
 
+            # Level title
             btn = ToggleButton(
                 text=level,
-                size_hint_y=None,
-                height=44,
+                size_hint=(1, None),
+                height=dp(35),
+                font_size=dp(19),
                 background_normal="",
-                background_color=PRIMARY,
+                background_color=(0.12, 0.16, 0.24, 1),
                 color=TEXT,
                 bold=True,
-                border=(0, 0, 0, 0)
+                border=(0, 0, 0, 0),
+                group="running_level"
             )
 
+            # Description
             description = Label(
                 text=level_descriptions[level],
-                font_size=16,
+                font_size=dp(13),
                 color=SUBTEXT,
                 halign="center",
                 valign="middle",
-                size_hint_y=None,
-                height=40,
-                text_size=(500, None)
+                size_hint=(1, None),
+                height=dp(40)
             )
 
-            btn.bind(on_press=self.set_level)
+            description.bind(
+                size=lambda instance, value:
+                setattr(instance, "text_size", value)
+            )
+
+            btn.bind(
+                on_press=self.set_level
+            )
 
             self.level_buttons[level] = btn
 
-            level_box.add_widget(btn)
-            level_box.add_widget(description)
+            level_card.add_widget(btn)
+            level_card.add_widget(description)
 
-            content.add_widget(level_box)
+            content.add_widget(level_card)
+
+        layout.add_widget(content)
 
         # ERROR MESSAGE (outside loop)
         self.error_label = Label(
@@ -508,31 +735,61 @@ class LevelScreen(Screen):
             height=30
         )
 
-        layout.add_widget(content)
         layout.add_widget(self.error_label)
 
-        # BUTTONS (outside loop)
+        # Buttons
         btn_box = BoxLayout(
-            size_hint=(1, 0.2),
-            spacing=20
+            size_hint=(1, None),
+            height=dp(55),
+            spacing=dp(15)
         )
 
         back_btn = Button(
             text="Previous",
-            font_size=22,
+            font_size=19,
             background_normal="",
-            background_color=PRIMARY,
+            background_color=(0, 0, 0, 0),
             color=TEXT,
             bold=True
         )
 
+        with back_btn.canvas.before:
+            Color(0.15, 0.18, 0.27, 1)
+            back_background = RoundedRectangle(
+                pos=back_btn.pos,
+                size=back_btn.size,
+                radius=[dp(12)]
+            )
+
+        back_btn.bind(
+            pos=lambda instance, value:
+            setattr(back_background, 'pos', value),
+            size=lambda instance, value:
+            setattr(back_background, 'size', value)
+        )
+
         next_btn = Button(
             text="Next",
-            font_size=22,
+            font_size=19,
             background_normal="",
-            background_color=PRIMARY,
+            background_color=(0, 0, 0, 0),
             color=TEXT,
             bold=True
+        )
+
+        with next_btn.canvas.before:
+            Color(*PRIMARY)
+            next_background = RoundedRectangle(
+                pos=next_btn.pos,
+                size=next_btn.size,
+                radius=[dp(12)]
+            )
+
+        next_btn.bind(
+            pos=lambda instance, value:
+            setattr(next_background, 'pos', value),
+            size=lambda instance, value:
+            setattr(next_background, 'size', value)
         )
 
         back_btn.bind(on_press=self.go_back)
@@ -545,9 +802,77 @@ class LevelScreen(Screen):
 
         self.add_widget(layout)
 
+    def create_card(self, height=None):
+
+        card = BoxLayout(
+            orientation="vertical",
+            padding=[dp(20), dp(12)],
+            spacing=dp(5),
+            size_hint_y=None,
+            height=height
+        )
+
+        with card.canvas.before:
+            Color(
+                0.08, 0.11, 0.18, 1
+            )
+
+            card.rect = RoundedRectangle(
+                pos=card.pos,
+                size=card.size,
+                radius=[dp(15)]
+            )
+
+        card.bind(
+            pos=lambda instance, value:
+            setattr(card.rect, "pos", value)
+        )
+
+        card.bind(
+            size=lambda instance, value:
+            setattr(card.rect, "size", value)
+        )
+
+        return card
+
     def set_level(self, instance):
 
+        # If clicking the currently selected level,
+        # deselect it.
+        if self.selected_level == instance.text:
+            self.selected_level = None
+
+            instance.background_color = (
+                0.12,
+                0.16,
+                0.24,
+                1
+            )
+
+            return
+
+        # Select the new level
         self.selected_level = instance.text
+
+        # Reset all buttons
+        for level, button in self.level_buttons.items():
+            button.background_color = (
+                0.12,
+                0.16,
+                0.24,
+                1
+            )
+
+        # Highlight selected button
+        instance.background_color = (
+            0.2,
+            0.6,
+            1,
+            1
+        )
+
+        # Clear error
+        self.error_label.text = ""
 
     def validate_level(self):
 

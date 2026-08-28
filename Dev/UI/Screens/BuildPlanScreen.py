@@ -3,7 +3,7 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.screenmanager import Screen
 from kivy.app import App
-from Dev.UI.Theme import TEXT, PRIMARY
+from Dev.UI.Theme import TEXT
 from kivy.graphics import Color, RoundedRectangle
 from kivy.metrics import dp
 
