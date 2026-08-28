@@ -4,6 +4,7 @@ from kivy.uix.button import Button
 from kivy.uix.dropdown import DropDown
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.label import Label
+from kivy.uix.scrollview import ScrollView
 from kivy.uix.slider import Slider
 from kivy.uix.textinput import TextInput
 from kivy.uix.screenmanager import Screen
@@ -307,7 +308,7 @@ class RunningTimeScreen(Screen):
         title = Label(
             text="Personal Bests",
             font_size=36,
-            size_hint=(1, None),
+            size_hint_y=None,
             height=dp(50),
             bold=True,
             color=TEXT
@@ -316,13 +317,26 @@ class RunningTimeScreen(Screen):
         subtitle = Label(
             text="Enter your best recent race times",
             font_size=17,
-            size_hint=(1, None),
+            size_hint_y=None,
             height=dp(30),
             color=SUBTEXT
         )
 
         layout.add_widget(title)
         layout.add_widget(subtitle)
+
+        scroll = ScrollView(
+            size_hint_y=1,
+            bar_width=dp(4)
+        )
+        content = BoxLayout(
+            orientation='vertical',
+            spacing=dp(10),
+            size_hint_y=None
+        )
+        content.bind(
+            minimum_height=content.setter("height")
+        )
 
         # Create list of all the PBs they
         # will have depending on their furthest run.
@@ -342,7 +356,7 @@ class RunningTimeScreen(Screen):
                 orientation='vertical',
                 spacing=dp(8),
                 padding=[dp(20), dp(12), dp(20), dp(12)],
-                size_hint=(1, None),
+                size_hint_y=None,
                 height=dp(105)
             )
 
@@ -380,7 +394,7 @@ class RunningTimeScreen(Screen):
                 hint_text="HH:MM:SS",
                 font_size=21,
                 height=dp(45),
-                size_hint=(1, None),
+                size_hint_y=None,
                 multiline=False,
                 padding=[dp(12), dp(8)],
                 background_normal="",
@@ -394,18 +408,22 @@ class RunningTimeScreen(Screen):
             pb_box.add_widget(title)
             pb_box.add_widget(pb_input)
 
-            layout.add_widget(pb_box)
+            content.add_widget(pb_box)
 
-            # ERROR MESSAGE
-            self.error_label = Label(
-                text="",
-                font_size=18,
-                color=(1, 0.3, 0.3, 1),
-                size_hint_y=None,
-                height=30
-            )
+        scroll.add_widget(content)
 
-            layout.add_widget(self.error_label)
+        layout.add_widget(scroll)
+
+        # ERROR MESSAGE
+        self.error_label = Label(
+            text="",
+            font_size=18,
+            color=(1, 0.3, 0.3, 1),
+            size_hint_y=None,
+            height=30
+        )
+
+        layout.add_widget(self.error_label)
 
         # Buttons
 
@@ -621,7 +639,7 @@ class LevelScreen(Screen):
         title = Label(
             text="What Level Runner are you?",
             font_size=36,
-            size_hint=(1, None),
+            size_hint_y=None,
             height=dp(55),
             bold=True,
             color=TEXT
@@ -629,13 +647,18 @@ class LevelScreen(Screen):
         subtitle = Label(
             text="Choose the level that best describes your experience",
             font_size=15,
-            size_hint=(1, None),
+            size_hint_y=None,
             height=dp(35),
             color=TEXT
         )
 
         layout.add_widget(title)
         layout.add_widget(subtitle)
+
+        scroll = ScrollView(
+            size_hint_y=1,
+            bar_width=dp(4)
+        )
 
         content = BoxLayout(
             orientation="vertical",
@@ -686,7 +709,7 @@ class LevelScreen(Screen):
             # Level title
             btn = ToggleButton(
                 text=level,
-                size_hint=(1, None),
+                size_hint_y=None,
                 height=dp(35),
                 font_size=dp(19),
                 background_normal="",
@@ -704,7 +727,7 @@ class LevelScreen(Screen):
                 color=SUBTEXT,
                 halign="center",
                 valign="middle",
-                size_hint=(1, None),
+                size_hint_y=None,
                 height=dp(40)
             )
 
@@ -724,7 +747,9 @@ class LevelScreen(Screen):
 
             content.add_widget(level_card)
 
-        layout.add_widget(content)
+        scroll.add_widget(content)
+
+        layout.add_widget(scroll)
 
         # ERROR MESSAGE (outside loop)
         self.error_label = Label(
@@ -739,7 +764,7 @@ class LevelScreen(Screen):
 
         # Buttons
         btn_box = BoxLayout(
-            size_hint=(1, None),
+            size_hint_y=None,
             height=dp(55),
             spacing=dp(15)
         )
@@ -933,6 +958,11 @@ class RunningPlanInfoScreen(Screen):
         layout.add_widget(title)
         layout.add_widget(subtitle)
 
+        scroll = ScrollView(
+            size_hint_y=1,
+            bar_width=dp(4)
+        )
+
         content = BoxLayout(
             orientation="vertical",
             spacing=dp(15),
@@ -968,7 +998,7 @@ class RunningPlanInfoScreen(Screen):
         self.planLength = TextInput(
             hint_text="Number of weeks (3-20)",
             font_size=dp(17),
-            size_hint=(1, None),
+            size_hint_y=None,
             height=dp(50),
             multiline=False,
             background_normal="",
@@ -1089,7 +1119,7 @@ class RunningPlanInfoScreen(Screen):
 
         self.longActivityBtn = Button(
             text="Select Day",
-            size_hint=(1, None),
+            size_hint_y=None,
             height=dp(50),
             background_normal="",
             background_color=(0.12, 0.16, 0.24, 1),
@@ -1114,7 +1144,9 @@ class RunningPlanInfoScreen(Screen):
 
         content.add_widget(long_run_card)
 
-        layout.add_widget(content)
+        scroll.add_widget(content)
+
+        layout.add_widget(scroll)
 
         # ERROR MESSAGE
 

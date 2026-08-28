@@ -407,6 +407,23 @@ class RaceScreen(Screen):
 
     # go to first in queue of selected sports
     def go_next(self, instance):
+
+        if not self.selected_race:
+
+            self.error_label.text = (
+                "Please select a race."
+            )
+
+            return
+
+        if not selected:
+
+            self.error_label.text = (
+                "Please select a race."
+            )
+
+            return
+
         self.manager.current = selected[0]
 
     def go_back(self, instance):
