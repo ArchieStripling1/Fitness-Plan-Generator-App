@@ -247,7 +247,6 @@ class RunningPlanGenerator:
 
                 if week % 4 == 0:
                     recovery_week = True
-                    weekly_miles *= 0.8
                 else:
                     weekly_miles *= 1.05
 
@@ -261,21 +260,74 @@ class RunningPlanGenerator:
                     # Long run
                     if day == long_run_day:
 
+                        base_phase = []
+                        build_phase = []
+                        peak_phase = []
+                        taper_phase = []
+                        raceWeek = []
+
+                        for i in range(1, plan_length+1):
+                            position = i / plan_length
+
+                            if position < 0.25:
+                                base_phase.append(i)
+                            elif position < 0.5:
+                                build_phase.append(i)
+                            elif position < 0.75:
+                                peak_phase.append(i)
+                            elif position == 1:
+                                raceWeek.append(i)
+                            else:
+                                taper_phase.append(i)
+                        print(base_phase, build_phase, peak_phase, taper_phase, raceWeek)
+
                         # Create a Starting Distance Memory
                         starting_distance = longest_run
+                        long_run_distance = starting_distance
 
-                        # What the target long run of the plan will be.
-                        target_long_run = race_settings[race]["max_long_run"]
+                        # Longest run of training
+                        peak_long_run = race_settings[race]["max_long_run"]
+                        peak_week = peak_phase[-1]
 
-                        # Calculate gradual progression towards target
-                        long_run_progress = ((target_long_run -
-                                              starting_distance)
-                                             / max(plan_length - 1, 1))
-
-                        long_run_distance = (
-                                starting_distance +
-                                long_run_progress * (week - 1)
+                        # Calculate Up step to peak weak
+                        up_step = (
+                            round((peak_long_run - starting_distance) / peak_week, 1)
                         )
+
+                        # Calculate down step for taper phase
+                        down_step = 1- (0.2 * (week - peak_week))
+
+                        # Calculate weekly long run progression
+                        long_run_progress = (
+                            week * up_step
+                        )
+
+                        # Calculate weekly long run decrease for taper
+                        long_run_decrease = (
+                            race_settings[race]["max_long_run"] * down_step
+                        )
+
+                        # Starting week == longest run
+                        if week == base_phase[0]:
+                            long_run_distance = starting_distance
+
+                        # Peak week == max long run
+                        elif week == peak_week:
+                            long_run_distance = race_settings[race]["max_long_run"]
+
+                        # Weekly progression
+                        elif (week in base_phase) or (week in build_phase) or (week in peak_phase):
+                            print("here", week)
+                            long_run_distance = (
+                                    starting_distance + long_run_progress
+                            )
+
+                        # Taper fade
+                        elif week in taper_phase:
+                            print("taper", week)
+                            long_run_distance = (
+                                round(long_run_decrease)
+                            )
 
                         # Prevent going over max
                         if (long_run_distance >
@@ -284,7 +336,7 @@ class RunningPlanGenerator:
                                 race_settings[race]["max_long_run"]
 
                         if recovery_week:
-                            long_run_distance *= 0.8
+                            long_run_distance *= 0.95
 
                         workout = {
                             "type": "Long Run",
@@ -604,6 +656,9 @@ class RunningPlanGenerator:
         # rounded to the nearest division of 5.
         minutes = int(PB // 60)
         seconds = 5 * int(round((PB % 60) / 5))
+        if seconds == 60:
+            minutes +=1
+            seconds = 0
 
         # Return the formated string.
         return f"{minutes}:{seconds:02d}/km"
