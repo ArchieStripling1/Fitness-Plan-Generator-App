@@ -295,7 +295,7 @@ class RunningPlanGenerator:
                         )
 
                         # Calculate down step for taper phase
-                        down_step = 1- (0.2 * (week - peak_week))
+                        down_step = 1 - (0.2 * (week - peak_week))
 
                         # Calculate weekly long run progression
                         long_run_progress = (
@@ -657,7 +657,7 @@ class RunningPlanGenerator:
         minutes = int(PB // 60)
         seconds = 5 * int(round((PB % 60) / 5))
         if seconds == 60:
-            minutes +=1
+            minutes += 1
             seconds = 0
 
         # Return the formated string.
