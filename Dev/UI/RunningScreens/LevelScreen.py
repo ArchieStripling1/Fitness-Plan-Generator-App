@@ -287,7 +287,6 @@ class LevelScreen(Screen):
         # Clear error
         self.error_label.text = ""
 
-
     def go_next(self, instance):
 
         # Validate Level
