@@ -320,10 +320,10 @@ class RunningInfoScreen(Screen):
             )
             return False
 
-        # Plan can be no more than 20 weeks
-        if int(planLength) > 20:
+        # Plan can be no more than 14 weeks
+        if int(planLength) > 14:
             self.error_label.text = (
-                "The plan length must be less than 30 weeks."
+                "The plan length must be less than 14 weeks."
             )
             return False
         return True

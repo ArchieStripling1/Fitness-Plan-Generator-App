@@ -32,7 +32,7 @@ class RaceSettingsData:
             "max_easy_run": 13,
         },
         "marathon": {
-            "max_long_run": 38,
+            "max_long_run": 34,
             "max_easy_run": 20,
         }
     }
