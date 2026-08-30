@@ -12,6 +12,7 @@ from Dev.UI.DefaultScreens.RaceScreen import selected
 from Dev.UI.Theme import TEXT, SUBTEXT
 from kivy.graphics import Color, RoundedRectangle
 from kivy.metrics import dp
+from Dev.Core.UserDataValidation import UserDataValidation
 
 
 class RunningInfoScreen(Screen):
@@ -293,76 +294,6 @@ class RunningInfoScreen(Screen):
 
         self.add_widget(layout)
 
-    def validate_plan_length(self):
-
-        self.error_label.text = ""
-
-        planLength = self.planLength.text
-
-        # No blank entries
-        if not planLength:
-            self.error_label.text = (
-                "Please Input your plan length."
-            )
-            return False
-
-        # Validate format
-        if not planLength.isdigit():
-            self.error_label.text = (
-                "You must input a number"
-            )
-            return False
-
-        # Plan can be no less than 3 weeks
-        if int(planLength) < 3:
-            self.error_label.text = (
-                "The plan must be at least 3 weeks."
-            )
-            return False
-
-        # Plan can be no more than 14 weeks
-        if int(planLength) > 14:
-            self.error_label.text = (
-                "The plan length must be less than 14 weeks."
-            )
-            return False
-        return True
-
-    def validate_activity_days(self):
-
-        self.error_label.text = ""
-
-        days = self.daysSelected
-
-        # No blank entries
-        if not days:
-            self.error_label.text = (
-                "Please select your days."
-            )
-            return False
-
-        # At least 2 running days
-        if len(days) < 2:
-            self.error_label.text = (
-                "Please run at least 2 days."
-            )
-            return False
-        return True
-
-    def validate_longActivityDay(self):
-
-        self.error_label.text = ""
-
-        longActivityDay = self.longActivityBtn.text
-
-        # No blank entries
-        if longActivityDay == "Select Day":
-            self.error_label.text = (
-                "Please input your long activity day."
-            )
-            return False
-        return True
-
     def update_length(self, instance):
         App.get_running_app().data["CurrentPlanLength"] = self.planLength.text
 
@@ -446,16 +377,32 @@ class RunningInfoScreen(Screen):
         return card
 
     def go_next(self, instance):
+
         # Validate plan Length
-        if not self.validate_plan_length():
+        valid, error = UserDataValidation.validate_plan_length(
+            self.planLength.text
+        )
+
+        if not valid:
+            self.error_label.text = error
             return
 
         # Validate activity days
-        if not self.validate_activity_days():
+        valid, error = UserDataValidation.validate_activity_days(
+            self.daysSelected
+        )
+
+        if not valid:
+            self.error_label.text = error
             return
 
         # Validate long activity day
-        if not self.validate_longActivityDay():
+        valid, error = UserDataValidation.validate_long_activity_day(
+            self.longActivityBtn.text
+        )
+
+        if not valid:
+            self.error_label.text = error
             return
 
         if "running" in selected:

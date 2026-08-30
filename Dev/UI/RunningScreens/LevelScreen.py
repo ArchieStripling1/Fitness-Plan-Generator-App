@@ -8,6 +8,7 @@ from kivy.uix.togglebutton import ToggleButton
 from Dev.UI.Theme import TEXT, PRIMARY, SUBTEXT
 from kivy.graphics import Color, RoundedRectangle
 from kivy.metrics import dp
+from Dev.Core.UserDataValidation import UserDataValidation
 
 
 class LevelScreen(Screen):
@@ -286,21 +287,15 @@ class LevelScreen(Screen):
         # Clear error
         self.error_label.text = ""
 
-    def validate_level(self):
-
-        self.error_label.text = ""
-
-        if self.selected_level is None:
-            self.error_label.text = (
-                "You must select what level runner you are."
-            )
-            return False
-
-        return True
 
     def go_next(self, instance):
 
-        if not self.validate_level():
+        # Validate Level
+        valid, error = UserDataValidation.validate_level(
+            self.selected_level
+        )
+        if not valid:
+            self.error_label.text = error
             return
 
         App.get_running_app().data["level"] = self.selected_level

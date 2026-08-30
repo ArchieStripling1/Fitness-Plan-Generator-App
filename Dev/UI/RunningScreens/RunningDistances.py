@@ -4,6 +4,8 @@ from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.slider import Slider
 from kivy.uix.screenmanager import Screen
+
+from Dev.Core.UserDataValidation import UserDataValidation
 from Dev.UI.Theme import TEXT, PRIMARY, SUBTEXT
 from kivy.graphics import Color, RoundedRectangle
 from kivy.metrics import dp
@@ -238,21 +240,15 @@ class RunningDistances(Screen):
 
     def validate_distances(self):
 
-        longest_distance = int(
-            self.longest_slider.value
+        longestDistance = int(self.longest_slider.value)
+        weeklyDistance = int(self.weekly_slider.value)
+
+        valid, error = UserDataValidation.validate_distances(
+            longestDistance, weeklyDistance
         )
-
-        weekly_distance = int(
-            self.weekly_slider.value
-        )
-
-        if weekly_distance < longest_distance:
-            self.error_label.text = (
-                "Weekly distance cannot be lower "
-                "than your longest run."
-            )
-
-            return False
+        if not valid:
+            self.error_label.text = error
+            return
 
         self.error_label.text = ""
 
@@ -262,19 +258,9 @@ class RunningDistances(Screen):
         longestDistance = int(self.longest_slider.value)
         weeklyDistance = int(self.weekly_slider.value)
 
-        # Prevent invalid data
-        if not self.validate_distances():
-            return
-
         App.get_running_app().data["Longest_Run"] = longestDistance
         App.get_running_app().data["Weekly_Distance"] = weeklyDistance
 
-        if longestDistance < 5:
-            self.error_label.text = (
-                "Your longest run should be at least 5 km."
-            )
-
-            return
         if 5 <= longestDistance < 10:
             self.manager.current = "RunningTime5k"
         elif 10 <= longestDistance < 21:

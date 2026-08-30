@@ -8,6 +8,7 @@ from kivy.uix.screenmanager import Screen
 from Dev.UI.Theme import TEXT, PRIMARY, SUBTEXT
 from kivy.graphics import Color, RoundedRectangle
 from kivy.metrics import dp
+from Dev.Core.UserDataValidation import UserDataValidation
 
 
 class RunningTimeScreen(Screen):
@@ -207,91 +208,6 @@ class RunningTimeScreen(Screen):
 
         self.add_widget(layout)
 
-    def validate_PBs(self):
-
-        self.error_label.text = ""
-
-        pb_times = {}
-
-        # Validate format
-        for dist, pb_input in self.inputs.items():
-
-            text = pb_input.text.strip()
-
-            # No blank entries
-            if not text:
-                self.error_label.text = (
-                    f"Please enter a {dist.upper()} time.\n"
-                    "Please use HH:MM:SS."
-                )
-                return False
-
-            total_seconds = self.convert_time_to_seconds(text)
-
-            if total_seconds is None:
-                self.error_label.text = (
-                    f"Invalid {dist.upper()} time.\n"
-                    "Please use HH:MM:SS."
-                )
-                return False
-
-            pb_times[dist] = total_seconds
-
-        # Check PB consistency
-        if "5k" in pb_times and "10k" in pb_times:
-            if pb_times["10k"] <= pb_times["5k"]:
-                self.error_label.text = (
-                    "Your 10K PB must be longer than your 5K PB."
-                )
-                return False
-
-        if "10k" in pb_times and "half" in pb_times:
-            if pb_times["half"] <= pb_times["10k"]:
-                self.error_label.text = (
-                    "Your Half Marathon PB must be longer than your 10K PB."
-                )
-                return False
-
-        if "half" in pb_times and "marathon" in pb_times:
-            if pb_times["marathon"] <= pb_times["half"]:
-                self.error_label.text = (
-                    "Your Marathon PB must be longer"
-                    " than your Half Marathon PB."
-                )
-                return False
-
-        return True
-
-    def convert_time_to_seconds(self, text):
-
-        try:
-
-            parts = text.strip().split(":")
-
-            if len(parts) != 3:
-
-                return None
-
-            hours = int(parts[0])
-            minutes = int(parts[1])
-            seconds = int(parts[2])
-
-            if minutes >= 60 or seconds >= 60:
-
-                return None
-
-            total_seconds = (
-                hours * 3600
-                + minutes * 60
-                + seconds
-            )
-
-            return total_seconds
-
-        except ValueError:
-
-            return None
-
     # SAVE TIMES
 
     def save_inputs(self):
@@ -307,7 +223,7 @@ class RunningTimeScreen(Screen):
                 continue
 
             total_seconds = (
-                self.convert_time_to_seconds(text)
+                UserDataValidation.convert_time_to_seconds(text)
             )
 
             if total_seconds is None:
@@ -327,7 +243,11 @@ class RunningTimeScreen(Screen):
     def go_next(self, instance):
 
         # Validate all PB's
-        if not self.validate_PBs():
+        valid, error = UserDataValidation.validate_pbs(
+            self.inputs
+        )
+        if not valid:
+            self.error_label.text = error
             return
 
         # Save all inputs when Next is pressed
