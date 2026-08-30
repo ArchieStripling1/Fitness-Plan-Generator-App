@@ -1,5 +1,6 @@
 import random
 from Dev.Data.SpeedWorkoutData import SpeedWorkoutData
+from Dev.Data.RaceSettingsData import RaceSettingsData
 
 
 class RunningPlanGenerator:
@@ -10,6 +11,7 @@ class RunningPlanGenerator:
     def generate_running_plan(self):
 
         data = self.data
+        print(data)
 
         race = data.get("race")
         plan_length = int(data.get("CurrentPlanLength", 0))
@@ -105,54 +107,9 @@ class RunningPlanGenerator:
             # Change max distances based of
             # their longest run and race distance.
             if raceDistance > longest_run:
-                race_settings = {
-                    "5k": {
-                        "max_long_run": 5,
-                        "max_easy_run": 3,
-                        "speed": "fast"
-                    },
-                    "10k": {
-                        "max_long_run": 10,
-                        "max_easy_run": 6,
-                        "speed": "semi-fast"
-
-                    },
-                    "half": {
-                        "max_long_run": 20,
-                        "max_easy_run": 8,
-                        "speed": "medium"
-                    },
-                    "marathon": {
-                        "max_long_run": 34,
-                        "max_easy_run": 15,
-                        "speed": "slow"
-                    }
-                }
+                race_settings = RaceSettingsData.distance_smaller
             else:
-                race_settings = {
-                    "5k": {
-                        "max_long_run": 12,
-                        "max_easy_run": 6,
-                        "speed": "fast"
-                    },
-                    "10k": {
-                        "max_long_run": 16,
-                        "max_easy_run": 8,
-                        "speed": "semi-fast"
-
-                    },
-                    "half": {
-                        "max_long_run": 26,
-                        "max_easy_run": 13,
-                        "speed": "medium"
-                    },
-                    "marathon": {
-                        "max_long_run": 38,
-                        "max_easy_run": 20,
-                        "speed": "slow"
-                    }
-                }
-
+                race_settings = RaceSettingsData.distance_greater
             print(PB)
 
             # Interval/Tempo types for Beginner
@@ -308,6 +265,9 @@ class RunningPlanGenerator:
                         )
 
                         # Starting week == longest run
+                        #
+                        # should make this if the runner has gone over target distance or is way too close to it.
+                        #
                         if week == base_phase[0]:
                             long_run_distance = starting_distance
 
