@@ -107,7 +107,13 @@ class UserDataValidation:
         # Extract the distance and the pb from pbs
         for dist, pb_input in pbs.items():
 
-            text = pb_input.text.strip()
+            # for app validation
+            if not str:
+                text = pb_input.text.strip()
+
+            # for unit tests
+            if str:
+                text = pb_input.strip()
 
             # No input
             if not text:
