@@ -1,15 +1,8 @@
-from kivy.app import App
-from kivy.uix.textinput import TextInput
-
-
 class UserDataValidation:
 
     # Validate plan Length
     @staticmethod
-    def validate_plan_length(plan_length):
-
-        data = App.get_running_app().data
-        race = data["race"]
+    def validate_plan_length(plan_length, race):
 
         # No input
         if not plan_length:
@@ -126,13 +119,12 @@ class UserDataValidation:
         # Extract the distance and the pb from pbs
         for dist, pb_input in pbs.items():
 
-            # for app validation
-            if TextInput:
-                text = pb_input.text.strip()
-
-            # for unit tests
-            elif str:
+            # Unit-test/string input
+            if isinstance(pb_input, str):
                 text = pb_input.strip()
+
+            else:
+                text = pb_input.text.strip()
 
             # No input
             if not text:

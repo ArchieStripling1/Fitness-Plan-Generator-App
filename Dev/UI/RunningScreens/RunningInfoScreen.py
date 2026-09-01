@@ -378,9 +378,11 @@ class RunningInfoScreen(Screen):
 
     def go_next(self, instance):
 
+        race = App.get_running_app().data["race"]
         # Validate plan Length
         valid, error = UserDataValidation.validate_plan_length(
-            self.planLength.text
+            self.planLength.text,
+            race
         )
 
         if not valid:
