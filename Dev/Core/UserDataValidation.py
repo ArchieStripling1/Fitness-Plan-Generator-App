@@ -1,8 +1,15 @@
+from kivy.app import App
+from kivy.uix.textinput import TextInput
+
+
 class UserDataValidation:
 
     # Validate plan Length
     @staticmethod
     def validate_plan_length(plan_length):
+
+        data = App.get_running_app().data
+        race = data["race"]
 
         # No input
         if not plan_length:
@@ -19,6 +26,18 @@ class UserDataValidation:
         # Plan must be lower than 15
         if int(plan_length) > 14:
             return False, "The plan length must be less than 14 weeks."
+
+        if race == "marathon":
+            if int(plan_length) < 8:
+                return False, "The plan length must be at least 8 weeks for a Marathon."
+
+        if race == "half":
+            if int(plan_length) < 6:
+                return False, "The plan length must be at least 6 weeks for a Half-Marathon."
+
+        if race == "10k":
+            if int(plan_length) < 4:
+                return False, "The plan length must be at least 4 weeks for a 10K."
 
         return True, ""
 
@@ -108,11 +127,11 @@ class UserDataValidation:
         for dist, pb_input in pbs.items():
 
             # for app validation
-            if not str:
+            if TextInput:
                 text = pb_input.text.strip()
 
             # for unit tests
-            if str:
+            elif str:
                 text = pb_input.strip()
 
             # No input
@@ -144,7 +163,4 @@ class UserDataValidation:
             if pb_times["marathon"] <= pb_times["half"]:
                 return False, "Your marathon must be longer than your half PB."
 
-        #
-        # Add more.
-        #
         return True, ""
