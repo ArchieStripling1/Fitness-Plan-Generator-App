@@ -9,7 +9,7 @@ class ValidationTests(unittest.TestCase):
         self.assertTrue(valid)
 
     def test_plan_length_is_14_valid(self):
-        valid, error = UserDataValidation.validate_plan_length("14","marathon")
+        valid, error = UserDataValidation.validate_plan_length("14", "marathon")
         self.assertTrue(valid)
 
     def test_plan_length_is_1_invalid(self):
