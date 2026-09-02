@@ -129,7 +129,7 @@ class test_RunningPlan(unittest.TestCase):
                 self.assertEqual(workouts["Sunday"]["type"], "Rest")
 
     # Create 10k Test Data
-    def test_10k_data(self):
+    def data_10k(self):
         return {
             "race": "10k",
             "Longest_Run": 7,
@@ -150,13 +150,13 @@ class test_RunningPlan(unittest.TestCase):
 
     # Test Plan length of 10k plan
     def test_10k_race_plan_length(self):
-        plan = self.generate_plan(self.test_10k_data())
+        plan = self.generate_plan(self.data_10k())
 
         self.assertEqual(len(plan), 6)
 
     # Test Race day of 10k plan
     def test_10k_race_day(self):
-        plan = self.generate_plan(self.test_10k_data())
+        plan = self.generate_plan(self.data_10k())
 
         race_day = plan["Week 6"]["workouts"]["Sunday"]
 
@@ -165,7 +165,7 @@ class test_RunningPlan(unittest.TestCase):
 
     # Test Long Run of 10k plan
     def test_10k_race_long_run(self):
-        plan = self.generate_plan(self.test_10k_data())
+        plan = self.generate_plan(self.data_10k())
 
         for week, week_data in plan.items():
             if week != "Week 6":
@@ -175,7 +175,7 @@ class test_RunningPlan(unittest.TestCase):
 
     # Test Rest day of 10k plan
     def test_10k_race_rest_day(self):
-        plan = self.generate_plan(self.test_10k_data())
+        plan = self.generate_plan(self.data_10k())
 
         for week, week_data in plan.items():
             if week != "Week 6":
