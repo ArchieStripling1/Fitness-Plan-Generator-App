@@ -5,28 +5,52 @@ from Dev.Core.UserDataValidation import UserDataValidation
 class ValidationTests(unittest.TestCase):
 
     def test_plan_length_is_3_valid(self):
-        valid, error = UserDataValidation.validate_plan_length("3")
+        valid, error = UserDataValidation.validate_plan_length("3", "5k")
         self.assertTrue(valid)
 
     def test_plan_length_is_14_valid(self):
-        valid, error = UserDataValidation.validate_plan_length("14")
+        valid, error = UserDataValidation.validate_plan_length("14","marathon")
         self.assertTrue(valid)
 
     def test_plan_length_is_1_invalid(self):
-        valid, error = UserDataValidation.validate_plan_length("1")
+        valid, error = UserDataValidation.validate_plan_length("1", "5k")
         self.assertFalse(valid)
 
     def test_plan_length_is_20_invalid(self):
-        valid, error = UserDataValidation.validate_plan_length("20")
+        valid, error = UserDataValidation.validate_plan_length("20", "marathon")
         self.assertFalse(valid)
 
     def test_plan_length_is_a_invalid(self):
-        valid, error = UserDataValidation.validate_plan_length("a")
+        valid, error = UserDataValidation.validate_plan_length("a", "marathon")
         self.assertFalse(valid)
 
     def test_null_plan_length_invalid(self):
-        valid, error = UserDataValidation.validate_plan_length("")
+        valid, error = UserDataValidation.validate_plan_length("", "10k")
         self.assertFalse(valid)
+
+    def test_marathon_plan_length_invalid(self):
+        valid, error = UserDataValidation.validate_plan_length("5", "marathon")
+        self.assertFalse(valid)
+
+    def test_marathon_plan_length_valid(self):
+        valid, error = UserDataValidation.validate_plan_length("10", "marathon")
+        self.assertTrue(valid)
+
+    def test_half_marathon_plan_length_invalid(self):
+        valid, error = UserDataValidation.validate_plan_length("5", "half")
+        self.assertFalse(valid)
+
+    def test_half_marathon_plan_length_valid(self):
+        valid, error = UserDataValidation.validate_plan_length("8", "half")
+        self.assertTrue(valid)
+
+    def test_10k_plan_length_invalid(self):
+        valid, error = UserDataValidation.validate_plan_length("3", "10k")
+        self.assertFalse(valid)
+
+    def test_10k_plan_length_valid(self):
+        valid, error = UserDataValidation.validate_plan_length("6", "10k")
+        self.assertTrue(valid)
 
     def test_activity_days_valid(self):
         valid, error = UserDataValidation.validate_activity_days(["Monday", "Wednesday", "Friday"])
@@ -37,7 +61,7 @@ class ValidationTests(unittest.TestCase):
         self.assertFalse(valid)
 
     def test_null_activity_days_invalid(self):
-        valid, error = UserDataValidation.validate_plan_length("")
+        valid, error = UserDataValidation.validate_activity_days("")
         self.assertFalse(valid)
 
     def test_long_activity_day_valid(self):
@@ -65,7 +89,7 @@ class ValidationTests(unittest.TestCase):
         self.assertTrue(valid)
 
     def test_validate_null_level_invalid(self):
-        valid, error = UserDataValidation.validate_plan_length("")
+        valid, error = UserDataValidation.validate_level("")
         self.assertFalse(valid)
 
     def test_validate_pbs_valid(self):
