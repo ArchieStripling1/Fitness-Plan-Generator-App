@@ -106,7 +106,7 @@ class RunningPlanGenerator:
 
             # Change max distances based of
             # their longest run and race distance.
-            if raceDistance > longest_run:
+            if RaceSettingsData.distance_greater[race]["distance"] > longest_run:
                 race_settings = RaceSettingsData.distance_smaller
             else:
                 race_settings = RaceSettingsData.distance_greater
@@ -204,8 +204,6 @@ class RunningPlanGenerator:
 
                 if week % 4 == 0:
                     recovery_week = True
-                else:
-                    weekly_miles *= 1.05
 
                 for day in days:
                     # Default
@@ -246,48 +244,91 @@ class RunningPlanGenerator:
                         peak_long_run = race_settings[race]["max_long_run"]
                         peak_week = peak_phase[-1]
 
-                        # Calculate Up step to peak weak
-                        up_step = (
-                            round((peak_long_run - starting_distance) / peak_week, 1)
-                        )
-
-                        # Calculate down step for taper phase
-                        down_step = 1 - (0.2 * (week - peak_week))
-
-                        # Calculate weekly long run progression
-                        long_run_progress = (
-                            week * up_step
-                        )
-
-                        # Calculate weekly long run decrease for taper
-                        long_run_decrease = (
-                            race_settings[race]["max_long_run"] * down_step
-                        )
-
-                        # Starting week == longest run
-                        #
-                        # should make this if the runner has gone over target distance or is way too close to it.
-                        #
-                        if week == base_phase[0]:
-                            long_run_distance = starting_distance
-
-                        # Peak week == max long run
-                        elif week == peak_week:
-                            long_run_distance = race_settings[race]["max_long_run"]
-
-                        # Weekly progression
-                        elif (week in base_phase) or (week in build_phase) or (week in peak_phase):
-                            print("here", week)
-                            long_run_distance = (
-                                    starting_distance + long_run_progress
+                        if longest_run < peak_long_run:
+                            # Calculate Up step to peak weak
+                            up_step = (
+                                round((peak_long_run - starting_distance) / peak_week, 1)
                             )
 
-                        # Taper fade
-                        elif week in taper_phase:
-                            print("taper", week)
-                            long_run_distance = (
-                                round(long_run_decrease)
+                            # Calculate down step for taper phase
+                            down_step = 1 - (0.2 * (week - peak_week))
+
+                            # Calculate weekly long run progression
+                            long_run_progress = (
+                                    week * up_step
                             )
+
+                            # Calculate weekly long run decrease for taper
+                            long_run_decrease = (
+                                    race_settings[race]["max_long_run"] * down_step
+                            )
+
+                            # Starting week == longest run
+                            if week == base_phase[0]:
+                                long_run_distance = starting_distance
+
+                            # Peak week == max long run
+                            elif week == peak_week:
+                                long_run_distance = race_settings[race]["max_long_run"]
+
+                            # Weekly progression
+                            elif (week in base_phase) or (week in build_phase) or (week in peak_phase):
+                                long_run_distance = (
+                                        starting_distance + long_run_progress
+                                )
+
+                            # Taper fade
+                            elif week in taper_phase:
+                                long_run_distance = (
+                                    round(long_run_decrease)
+                                )
+
+                        elif longest_run > peak_long_run:
+
+                            up_step = (
+                                round((peak_long_run - race_settings[race]["min_long_run"]) / peak_week, 1)
+                            )
+
+                            # Calculate down step for taper phase
+                            down_step = 1 - (0.2 * (week - peak_week))
+
+                            # Calculate weekly long run progression
+                            long_run_progress = (
+                                    week * up_step
+                            )
+
+                            # Calculate weekly long run decrease for taper
+                            long_run_decrease = (
+                                    race_settings[race]["max_long_run"] * down_step
+                            )
+
+                            # Starting week == longest run
+                            if week == base_phase[0]:
+                                long_run_distance = race_settings[race]["min_long_run"]
+
+                            # Peak week == max long run
+                            elif week == peak_week:
+                                long_run_distance = race_settings[race]["max_long_run"]
+
+                            # Weekly progression
+                            elif week in base_phase:
+                                long_run_distance = (
+                                    race_settings[race]["min_long_run"] + long_run_progress
+                                )
+                            elif week in build_phase:
+                                long_run_distance = (
+                                        race_settings[race]["min_long_run"] + long_run_progress
+                                )
+                            elif week in peak_phase:
+                                long_run_distance = (
+                                    race_settings[race]["min_long_run"] + long_run_progress
+                                )
+
+                            # Taper fade
+                            elif week in taper_phase:
+                                long_run_distance = (
+                                    round(long_run_decrease)
+                                )
 
                         # Prevent going over max
                         if (long_run_distance >
@@ -538,8 +579,6 @@ class RunningPlanGenerator:
             data["GeneratedPlan"] = plan
 
             return plan
-
-        # Format their paces
 
     def createPredictedTimes(self):
         data = self.data

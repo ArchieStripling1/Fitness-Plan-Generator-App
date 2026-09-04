@@ -15,24 +15,30 @@ class RaceSettingsData:
         },
         "marathon": {
             "max_long_run": 34,
-            "max_easy_run": 15,
+            "max_easy_run": 10,
         }
     }
     distance_greater = {
         "5k": {
+            "distance": 6,
             "max_long_run": 12,
             "max_easy_run": 6,
         },
         "10k": {
+            "distance": 9,
             "max_long_run": 16,
             "max_easy_run": 8,
         },
         "half": {
-            "max_long_run": 26,
+            "distance": 18,
+            "max_long_run": 22,
+            "min_long_run": 16,
             "max_easy_run": 13,
         },
         "marathon": {
+            "distance": 34,
             "max_long_run": 34,
-            "max_easy_run": 20,
+            "min_long_run": 25,
+            "max_easy_run": 16,
         }
     }
