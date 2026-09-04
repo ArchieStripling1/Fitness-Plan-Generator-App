@@ -42,7 +42,7 @@ class RunningPlanGenerator:
             # Variable settings that change for each race.
 
             if race == "5k":
-                raceDistance = 5
+                # raceDistance = 5
 
                 # Work out what their race pace based off their last PB
                 predictedPace = PB - plan_length * 10
@@ -56,7 +56,7 @@ class RunningPlanGenerator:
                 # get the PB that they have,
                 # not run a half-marathon yet
                 # so they will use their 10k PB for reference.
-                raceDistance = 10
+                # raceDistance = 10
 
                 if PB == 2.0:
                     PB = float(data.get("10k_pb", 2))
@@ -72,7 +72,7 @@ class RunningPlanGenerator:
 
             elif race == "half":
                 print(PB)
-                raceDistance = 21.1
+                # raceDistance = 21.1
                 if PB == 2.0:
                     PB = float(data.get("half_pb", 2))
                     race_pace = self.formatRunPace(PB / 21.1)
@@ -87,7 +87,7 @@ class RunningPlanGenerator:
                     easy_pace = self.formatRunPace(PB / 21.1 + 90)
 
             elif race == "marathon":
-                raceDistance = 42.2
+                # raceDistance = 42.2
                 if PB == 2.0:
                     PB = float(data.get("marathon_pb", 2))
                     race_pace = self.formatRunPace(PB / 42.2)
