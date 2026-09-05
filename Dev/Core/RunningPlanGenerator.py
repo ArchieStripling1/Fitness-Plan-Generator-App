@@ -339,10 +339,27 @@ class RunningPlanGenerator:
                         if recovery_week:
                             long_run_distance *= 0.95
 
+                        # Start of customizing long run workouts
+                        long_run_workout_structure = ""
+                        if level == "Beginner":
+                            long_run_workout_structure = "Run at a conversational pace"
+                        elif level == "Novice":
+                            if week % 3 == 0:
+                                long_run_workout_structure = "Hard session"
+                            else:
+                                long_run_workout_structure = "Run at a conversational pace"
+                        elif level == "Intermediate":
+                            if week % 2 == 0:
+                                long_run_workout_structure = "Hard session"
+                            else:
+                                long_run_workout_structure = "Run at a conversational pace"
+                        elif level == "Advanced":
+                            long_run_workout_structure = "Hard session"
+
                         workout = {
                             "type": "Long Run",
+                            "long run Structure": long_run_workout_structure,
                             "distance": int(long_run_distance),
-                            "pace": "Conversational Pace"
                         }
                         plan[week_name]["workouts"][day] = workout
 
