@@ -66,35 +66,97 @@ The project also allowed me to improve my understanding of:
 * GitHub Actions (CI)
 * pytest (Testing)
 * Flake8 (Code Quality)
+* Docker — Containerised application environment
 
 Concepts used:
-* Object*Oriented Programming
+* Object-Oriented Programming
 * Dictionaries and nested data structures
 * Event-driven programming
 * Screen management/navigation
 * Dynamic workout generation
+* Automated testing 
+* Continuous integration
+* Containerisation
 
 ## Software Development
 
-* Continuous Integration (CI) using GitHub Actions
-* Automated testing using pytest
-* Automated code quality checks using Flake8
-* Git and GitHub version control
+HYBRD uses several development practices to improve reliability and maintainability.
 
-## How It Works
+## Continuous Integration
 
-1. The user selects which sports they participate in.
-2. The app asks for race goals and target events.
-3. The user enters current fitness information:
+GitHub Actions is used to automatically run project checks when changes are pushed to the repository.
+
+## Automated Testing
+
+pytest is used to test core functionality including training plan generation and user input validation.
+
+## Code Quality
+
+Flake8 is used to identify code quality and formatting issues.
+
+## Version Control
+
+Git and GitHub are used to manage the development history of the project.
+
+## Containerisation
+
+Docker is used to create a reproducible Python environment containing the application's dependencies.
+
+The Docker environment currently uses:
+
+* Python 3.11
+* Kivy 2.3.1
+
+This allows the project's Python environment and dependencies to be built consistently rather than relying entirely on the configuration of the host machine.
+
+## Docker
+
+HYBRD includes a Dockerfile to reproduce the application's Python environment.
+
+## Steps to Build the Docker Image
+
+Clone the repository:
+
+git clone https://github.com/ArchieStripling1/Fitness-Plan-Generator-App.git
+cd Fitness-Plan-Generator-App
+
+Build the Docker image:
+
+docker build -t hybrd .
+
+The Docker image installs the project's dependencies from requirements.txt and copies the HYBRD source code into the container.
+
+## Steps to Running the Application
+
+HYBRD uses Kivy to provide a graphical user interface.
+
+Kivy is installed automatically as part of the Docker image using the version specified in requirements.txt.
+
+The current Docker configuration is intended to reproduce the Python environment and install the required dependencies. However, the Kivy graphical interface is not currently configured to run directly from the Docker container.
+
+The application can still be run normally on the host machine using Python and Kivy.
+
+## Simple Steps for whole Build
+
+Download Docker Desktop and have it running
+git clone https://github.com/ArchieStripling1/Fitness-Plan-Generator-App.git
+docker build -t hybrd .
+python -m Dev.Core.Main
+
+## How The Application Works
+
+1. The user selects which race they are participating in.
+2. The user enters current fitness information:
    * Longest distance
    * Weekly volume
    * PB times
-4. The user selects:
+   * Level
+3. The user selects:
    * Available training days
    * Long Distance Day
    * Number of weekly sessions
    * Plan length
-5. The application generates a structured weekly training schedule using dictionaries and workout rotation logic including planned distances.
+4. The application generates a structured weekly training schedule using dictionaries and workout rotation logic including planned distances.
 
 ## Recent Screenshots
 Intro Screen:
@@ -162,5 +224,10 @@ Through this project I improved my understanding of:
 * Creating reusable UI components
 * Structuring larger software projects
 * Using Git and GitHub for version control
+* Automated testing with pytest
+* Code quality checking with Flake8
+* Continuous integration with GitHub Actions
+* Containerisation with Docker
+* Reproducible development environments
 
 I also learned the importance of planning software architecture early, especially when managing multiple screens, user inputs, and dynamically generated data.
