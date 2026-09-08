@@ -87,7 +87,7 @@ class RunningInfoScreen(Screen):
         )
 
         self.planLength = TextInput(
-            hint_text="Number of weeks (3-20)",
+            hint_text="Number of weeks (3-14)",
             font_size=dp(17),
             size_hint_y=None,
             height=dp(50),
@@ -422,4 +422,4 @@ class RunningInfoScreen(Screen):
             self.manager.current = "BuildPlan"
 
     def go_back(self, instance):
-        self.manager.current = "race"
+        self.manager.current = "level"
