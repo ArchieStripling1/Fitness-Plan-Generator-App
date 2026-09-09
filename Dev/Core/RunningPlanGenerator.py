@@ -1,4 +1,6 @@
 import random
+
+from Dev.Data.LongRunData import LongRunData
 from Dev.Data.SpeedWorkoutData import SpeedWorkoutData
 from Dev.Data.RaceSettingsData import RaceSettingsData
 
@@ -215,6 +217,57 @@ class RunningPlanGenerator:
                     # Long run
                     if day == long_run_day:
 
+                        # Initialize long run types.
+                        long_run_types = {}
+
+                        if level == "Beginner":
+                            long_run_types ={
+                                "easy_long_run": {
+                                    "description": "Entire run at easy conversational effort.",
+                                    "easy_portion": 1.0,
+                                    "quality_portion": 0.0,
+                                    "quality_type": None,
+                                    "phase": "all",
+                                }
+                            }
+
+                        elif level == "Novice":
+                            long_run_types = LongRunData.novice_long_run_types
+
+                        elif level == "Intermediate":
+                            long_run_types = LongRunData.intermediate_long_run_types
+
+                        elif level == "Advanced":
+                            long_run_types = LongRunData.advanced_long_run_types
+
+                        # Creates new dict with only the base long runs in.
+                        base_runs = {
+                            name: info
+                            for name, info in long_run_types.items()
+                            if info["phase"] == "base"
+                        }
+
+                        # Creates new dict with only the build long runs in.
+                        build_runs = {
+                            name: info
+                            for name, info in long_run_types.items()
+                            if info["phase"] == "base"
+                        }
+
+                        # Creates new dict with only the peak long runs in.
+                        peak_runs = {
+                            name: info
+                            for name, info in long_run_types.items()
+                            if info["phase"] == "peak"
+                        }
+
+                        # Creates new dict with only the taper long runs in.
+                        taper_runs = {
+                            name: info
+                            for name, info in long_run_types.items()
+                            if info["phase"] == "taper"
+                        }
+
                         base_phase = []
                         build_phase = []
                         peak_phase = []
@@ -228,7 +281,7 @@ class RunningPlanGenerator:
                                 base_phase.append(i)
                             elif position < 0.5:
                                 build_phase.append(i)
-                            elif position < 0.75:
+                            elif position < 0.80:
                                 peak_phase.append(i)
                             elif position == 1:
                                 raceWeek.append(i)
@@ -267,20 +320,56 @@ class RunningPlanGenerator:
                             if week == base_phase[0]:
                                 long_run_distance = starting_distance
 
+                                # Picks one base long run at random
+                                session, session_info = random.choice(
+                                    list(base_runs.items())
+                                )
+
                             # Peak week == max long run
                             elif week == peak_week:
                                 long_run_distance = race_settings[race]["max_long_run"]
 
+                                session, session_info = random.choice(
+                                    list(peak_runs.items())
+                                )
+
                             # Weekly progression
-                            elif (week in base_phase) or (week in build_phase) or (week in peak_phase):
+                            elif week in base_phase:
                                 long_run_distance = (
                                         starting_distance + long_run_progress
+                                )
+
+                                # Picks one base long run at random
+                                session, session_info = random.choice(
+                                    list(base_runs.items())
+                                )
+
+                            elif week in build_phase:
+                                long_run_distance = (
+                                        starting_distance + long_run_progress
+                                )
+
+                                session, session_info = random.choice(
+                                    list(build_runs.items())
+                                )
+
+                            elif week in peak_phase:
+                                long_run_distance = (
+                                        starting_distance + long_run_progress
+                                )
+
+                                session, session_info = random.choice(
+                                    list(peak_runs.items())
                                 )
 
                             # Taper fade
                             elif week in taper_phase:
                                 long_run_distance = (
                                     round(long_run_decrease)
+                                )
+
+                                session, session_info = random.choice(
+                                    list(taper_runs.items())
                                 )
 
                         elif longest_run > peak_long_run:
@@ -306,28 +395,54 @@ class RunningPlanGenerator:
                             if week == base_phase[0]:
                                 long_run_distance = race_settings[race]["min_long_run"]
 
+                                session, session_info = random.choice(
+                                    list(base_runs.items())
+                                )
+
                             # Peak week == max long run
                             elif week == peak_week:
                                 long_run_distance = race_settings[race]["max_long_run"]
+
+                                session, session_info = random.choice(
+                                    list(peak_runs.items())
+                                )
 
                             # Weekly progression
                             elif week in base_phase:
                                 long_run_distance = (
                                     race_settings[race]["min_long_run"] + long_run_progress
                                 )
+
+                                session, session_info = random.choice(
+                                    list(base_runs.items())
+                                )
+
                             elif week in build_phase:
                                 long_run_distance = (
                                         race_settings[race]["min_long_run"] + long_run_progress
                                 )
+
+                                session, session_info = random.choice(
+                                    list(build_runs.items())
+                                )
+
                             elif week in peak_phase:
                                 long_run_distance = (
                                     race_settings[race]["min_long_run"] + long_run_progress
+                                )
+
+                                session, session_info = random.choice(
+                                    list(peak_runs.items())
                                 )
 
                             # Taper fade
                             elif week in taper_phase:
                                 long_run_distance = (
                                     round(long_run_decrease)
+                                )
+
+                                session, session_info = random.choice(
+                                    list(taper_runs.items())
                                 )
 
                         # Prevent going over max
@@ -337,28 +452,15 @@ class RunningPlanGenerator:
                                 race_settings[race]["max_long_run"]
 
                         if recovery_week:
-                            long_run_distance *= 0.95
+                            if week == peak_week:
+                                long_run_distance *= 1
+                            else:
+                                long_run_distance *= 0.9
 
-                        # Start of customizing long run workouts
-                        long_run_workout_structure = ""
-                        if level == "Beginner":
-                            long_run_workout_structure = "Run at a conversational pace"
-                        elif level == "Novice":
-                            if week % 3 == 0:
-                                long_run_workout_structure = "Hard session"
-                            else:
-                                long_run_workout_structure = "Run at a conversational pace"
-                        elif level == "Intermediate":
-                            if week % 2 == 0:
-                                long_run_workout_structure = "Hard session"
-                            else:
-                                long_run_workout_structure = "Run at a conversational pace"
-                        elif level == "Advanced":
-                            long_run_workout_structure = "Hard session"
 
                         workout = {
                             "type": "Long Run",
-                            "long run Structure": long_run_workout_structure,
+                            "session": session,
                             "distance": int(long_run_distance),
                         }
                         plan[week_name]["workouts"][day] = workout
