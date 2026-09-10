@@ -221,7 +221,7 @@ class RunningPlanGenerator:
                         long_run_types = {}
 
                         if level == "Beginner":
-                            long_run_types ={
+                            long_run_types = {
                                 "easy_long_run": {
                                     "description": "Entire run at easy conversational effort.",
                                     "easy_portion": 1.0,
@@ -478,7 +478,6 @@ class RunningPlanGenerator:
                                 long_run_distance *= 1
                             else:
                                 long_run_distance *= 0.9
-
 
                         workout = {
                             "type": "Long Run",
