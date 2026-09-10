@@ -232,10 +232,32 @@ class RunningPlanGenerator:
                             }
 
                         elif level == "Novice":
-                            long_run_types = LongRunData.novice_long_run_types
+                            if week % 3 == 0:
+                                long_run_types = LongRunData.novice_long_run_types
+                            else:
+                                long_run_types = {
+                                    "easy_long_run": {
+                                        "description": "Entire run at easy conversational effort.",
+                                        "easy_portion": 1.0,
+                                        "quality_portion": 0.0,
+                                        "quality_type": None,
+                                        "phase": "all",
+                                    }
+                                }
 
                         elif level == "Intermediate":
-                            long_run_types = LongRunData.intermediate_long_run_types
+                            if week % 2 == 0:
+                                long_run_types = LongRunData.intermediate_long_run_types
+                            else:
+                                long_run_types = {
+                                    "easy_long_run": {
+                                        "description": "Entire run at easy conversational effort.",
+                                        "easy_portion": 1.0,
+                                        "quality_portion": 0.0,
+                                        "quality_type": None,
+                                        "phase": "all",
+                                    }
+                                }
 
                         elif level == "Advanced":
                             long_run_types = LongRunData.advanced_long_run_types
@@ -244,28 +266,28 @@ class RunningPlanGenerator:
                         base_runs = {
                             name: info
                             for name, info in long_run_types.items()
-                            if info["phase"] == "base"
+                            if info["phase"] == "base" or info["phase"] == "all"
                         }
 
                         # Creates new dict with only the build long runs in.
                         build_runs = {
                             name: info
                             for name, info in long_run_types.items()
-                            if info["phase"] == "base"
+                            if info["phase"] == "build" or info["phase"] == "all"
                         }
 
                         # Creates new dict with only the peak long runs in.
                         peak_runs = {
                             name: info
                             for name, info in long_run_types.items()
-                            if info["phase"] == "peak"
+                            if info["phase"] == "peak" or info["phase"] == "all"
                         }
 
                         # Creates new dict with only the taper long runs in.
                         taper_runs = {
                             name: info
                             for name, info in long_run_types.items()
-                            if info["phase"] == "taper"
+                            if info["phase"] == "taper" or info["phase"] == "all"
                         }
 
                         base_phase = []
