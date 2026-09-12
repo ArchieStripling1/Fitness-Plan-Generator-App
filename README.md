@@ -1,4 +1,4 @@
-# HYBRD * Hybrid Athlete Training Planner
+# HYBRD - Hybrid Athlete Training Planner
 
 ## Description
 
@@ -27,7 +27,7 @@ The project also allowed me to improve my understanding of:
 
 ## Features
 
-* Multi*sport athlete support:
+* Multi-sport athlete support:
   * Running
   * Cycling
   * Swimming
@@ -138,10 +138,17 @@ The application can still be run normally on the host machine using Python and K
 
 ## Simple Steps for whole Build
 
-Download Docker Desktop and have it running
+Open Command Prompt
+
+Download Git using this command: winget install --id Git.Git -e --source winget
+
+Restart Command Prompt
+
+Download Docker Desktop and have it running in the background
+
 git clone https://github.com/ArchieStripling1/Fitness-Plan-Generator-App.git
+
 docker build -t hybrd .
-python -m Dev.Core.Main
 
 ## How The Application Works
 
