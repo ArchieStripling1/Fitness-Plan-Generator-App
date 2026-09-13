@@ -35,6 +35,8 @@ class CalendarScreen(Screen):
 
         plan = data["GeneratedPlan"]
 
+        print(dates, plan)
+
     # Function to create dates for each day of plan.
     def workout_dates(self):
 
