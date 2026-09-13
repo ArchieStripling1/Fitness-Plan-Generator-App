@@ -13,6 +13,7 @@ from Dev.UI.SwimmingScreens.SwimmingScreen import SwimmingScreen, SwimmingPace
 from Dev.UI.DefaultScreens.RaceScreen import RaceScreen
 from Dev.UI.DefaultScreens.BuildPlanScreen import BuildPlan
 from Dev.UI.DefaultScreens.PlanPage import PlanPage
+from Dev.UI.DefaultScreens.CalenderScreen import CalendarScreen
 
 from kivy.core.window import Window
 from kivy.utils import get_color_from_hex
@@ -88,6 +89,7 @@ class MainApp(App):
 
         sm.add_widget(BuildPlan(name="BuildPlan"))
         sm.add_widget(PlanPage(name="plan"))
+        sm.add_widget(CalendarScreen(name="calendar"))
 
         return sm
 

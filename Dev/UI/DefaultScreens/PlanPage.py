@@ -1,5 +1,7 @@
 from kivy.graphics import Color, RoundedRectangle, Line
+from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.button import Button
 from kivy.uix.label import Label
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.screenmanager import Screen
@@ -266,7 +268,43 @@ class PlanPage(Screen):
             # Add whole week card
             self.content.add_widget(card)
 
-    def restart(self, instance):
+        # Nav Buttons
+        btn_box = BoxLayout(
+            size_hint=(1, None),
+            height=dp(52),
+            spacing=dp(15)
+        )
+        back_btn = Button(
+            text="Previous",
+            font_size=dp(17),
+            background_normal="",
+            background_color=(0.12, 0.16, 0.24, 1),
+            color=TEXT,
+            bold=True,
+            border=(0, 0, 0, 0)
+        )
+        next_btn = Button(
+            text="Continue",
+            font_size=dp(17),
+            background_normal="",
+            background_color=(0.12, 0.16, 0.24, 1),
+            color=TEXT,
+            bold=True,
+            border=(0, 0, 0, 0)
+        )
+        back_btn.bind(
+            on_press=self.go_back
+        )
+        next_btn.bind(
+            on_press=self.go_next
+        )
+        btn_box.add_widget(back_btn)
+        btn_box.add_widget(next_btn)
+        self.content.add_widget(btn_box)
 
-        self.manager.current = "intro"
-        self.data = {}
+    def go_next(self, instance):
+
+        self.manager.current = "calendar"
+
+    def go_back(self, instance):
+        self.manager.current = "BuildPlan"
