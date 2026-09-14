@@ -13,7 +13,7 @@ from Dev.UI.SwimmingScreens.SwimmingScreen import SwimmingScreen, SwimmingPace
 from Dev.UI.DefaultScreens.RaceScreen import RaceScreen
 from Dev.UI.DefaultScreens.BuildPlanScreen import BuildPlan
 from Dev.UI.DefaultScreens.PlanPage import PlanPage
-from Dev.UI.DefaultScreens.CalenderScreen import CalendarScreen
+from Dev.UI.DefaultScreens.CalendarScreen import CalendarScreen
 
 from kivy.core.window import Window
 from kivy.utils import get_color_from_hex
