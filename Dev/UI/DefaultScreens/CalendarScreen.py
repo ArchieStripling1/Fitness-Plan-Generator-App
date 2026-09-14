@@ -114,6 +114,10 @@ class CalendarScreen(Screen):
         # Create empty dict of workouts and dates of workouts
         workout_dates = {}
 
+        days = ["Monday", "Tuesday", "Wednesday",
+                "Thursday", "Friday", "Saturday", "Sunday"]
+
+        print(today.weekday())
         print(plan)
 
         # Get week and workouts form plan.
@@ -133,5 +137,12 @@ class CalendarScreen(Screen):
             # Get day out of workouts.
             for day, workout in workouts.items():
                 print(day)
+                weekday_offset = days.index(day)
+
+                print(weekday_offset)
+
+                workout_date = next_monday + timedelta(days=week_offset) + timedelta(days = weekday_offset)
+
+                print(workout_date)
 
         return workout_dates
