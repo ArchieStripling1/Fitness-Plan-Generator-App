@@ -103,8 +103,6 @@ class CalendarScreen(Screen):
         # date of start of the week
         next_monday = today + timedelta(days=days_until_monday)
 
-        # Create instance of week offset
-        week_offset = 0
         print(next_monday)
 
         data = App.get_running_app().data
@@ -136,13 +134,21 @@ class CalendarScreen(Screen):
 
             # Get day out of workouts.
             for day, workout in workouts.items():
-                print(day)
-                weekday_offset = days.index(day)
 
-                print(weekday_offset)
+                # Skip Rest days
+                if workout["type"] != "Rest":
 
-                workout_date = next_monday + timedelta(days=week_offset) + timedelta(days = weekday_offset)
+                    print(day)
 
-                print(workout_date)
+                    # Get weekday in number form.
+                    weekday_offset = days.index(day)
+                    print(weekday_offset)
+
+                    # Calculate for workout date.
+                    workout_date = next_monday + timedelta(days=week_offset) + timedelta(days = weekday_offset)
+                    print(workout_date)
+
+                    # Add workout date and workout to dictionary workout dates.
+                    workout_dates[workout_date] = workout
 
         return workout_dates
