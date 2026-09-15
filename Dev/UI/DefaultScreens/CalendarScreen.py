@@ -145,7 +145,7 @@ class CalendarScreen(Screen):
                     print(weekday_offset)
 
                     # Calculate for workout date.
-                    workout_date = next_monday + timedelta(days=week_offset) + timedelta(days = weekday_offset)
+                    workout_date = next_monday + timedelta(days=week_offset) + timedelta(days=weekday_offset)
                     print(workout_date)
 
                     # Add workout date and workout to dictionary workout dates.
