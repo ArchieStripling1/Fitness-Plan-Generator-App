@@ -98,7 +98,7 @@ class CalendarScreen(Screen):
 
         # Titles for the days of the week
         weekdays = ["Monday", "Tuesday", "Wednesday",
-                         "Thursday", "Friday", "Saturday", "Sunday"]
+                    "Thursday", "Friday", "Saturday", "Sunday"]
 
         # Today's date and month
         today = date.today()
@@ -136,7 +136,6 @@ class CalendarScreen(Screen):
             current_day += timedelta(days=1)
 
         self.content.add_widget(grid)
-
 
     def create_button(self, day_date):
         btn = Button(
