@@ -1,9 +1,12 @@
 from kivy.app import App
 from kivy.graphics import Color, RoundedRectangle
+from kivy.metrics import dp
 from kivy.uix.boxlayout import BoxLayout
+from kivy.uix.gridlayout import GridLayout
 from kivy.uix.screenmanager import Screen
 from kivy.uix.label import Label
 from kivy.uix.scrollview import ScrollView
+from kivy.uix.button import Button
 from Dev.UI.Theme import TEXT, CARD
 from datetime import date, timedelta
 
@@ -89,6 +92,65 @@ class CalendarScreen(Screen):
         header_card.add_widget(header)
 
         self.content.add_widget(header_card)
+
+        # Columns for calendar
+        cols = 7
+
+        # Titles for the days of the week
+        weekdays = ["Monday", "Tuesday", "Wednesday",
+                         "Thursday", "Friday", "Saturday", "Sunday"]
+
+        # Today's date and month
+        today = date.today()
+        current_month = today.month
+
+        # First day of the month and what day the month starts on
+        first_day = today.replace(day=1)
+        first_day_num = first_day.weekday()
+        number_of_blanks = first_day_num
+
+        current_day = first_day
+
+        # Create grid for calendar
+        grid = GridLayout(
+            cols=cols,
+            size_hint_y=None,
+            spacing=dp(6)
+        )
+
+        grid.bind(minimum_height=grid.setter("height"))
+
+        # Add weekdays to top of calendar
+        for title in weekdays:
+            grid.add_widget(Label(text=title))
+
+        # Create blank sections for previous month
+        blank = 0
+        while blank < number_of_blanks:
+            grid.add_widget(self.create_button(""))
+            blank += 1
+
+        # Add days of the month
+        while current_day.month == current_month:
+            grid.add_widget(self.create_button(str(current_day.day)))
+            current_day += timedelta(days=1)
+
+        self.content.add_widget(grid)
+
+
+    def create_button(self, day_date):
+        btn = Button(
+            text=day_date,
+            size_hint=(1, None),
+            height=dp(55),
+            font_size=dp(14),
+            background_normal="",
+            background_color=(0.12, 0.16, 0.24, 1),
+            color=TEXT,
+            bold=True,
+            border=(0, 0, 0, 0)
+        )
+        return btn
 
     # Function to create dates for each day of plan.
     def workout_dates(self):
