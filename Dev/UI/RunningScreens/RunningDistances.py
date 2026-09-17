@@ -2,6 +2,7 @@ from kivy.app import App
 from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.button import Button
 from kivy.uix.label import Label
+from kivy.uix.scrollview import ScrollView
 from kivy.uix.slider import Slider
 from kivy.uix.screenmanager import Screen
 
@@ -41,6 +42,19 @@ class RunningDistances(Screen):
 
         layout.add_widget(title)
         layout.add_widget(subtitle)
+
+        scroll = ScrollView(
+            size_hint_y=1,
+            bar_width=dp(4)
+        )
+        content = BoxLayout(
+            orientation='vertical',
+            spacing=dp(10),
+            size_hint_y=None
+        )
+        content.bind(
+            minimum_height=content.setter("height")
+        )
 
         # Longest Run
         longest_box = BoxLayout(
@@ -92,7 +106,7 @@ class RunningDistances(Screen):
         longest_box.add_widget(self.longest_value)
         longest_box.add_widget(self.longest_slider)
 
-        layout.add_widget(longest_box)
+        content.add_widget(longest_box)
 
         # Weekly Distance
         weekly_box = BoxLayout(
@@ -144,7 +158,11 @@ class RunningDistances(Screen):
         weekly_box.add_widget(self.weekly_value)
         weekly_box.add_widget(self.weekly_slider)
 
-        layout.add_widget(weekly_box)
+        content.add_widget(weekly_box)
+
+        scroll.add_widget(content)
+
+        layout.add_widget(scroll)
 
         # ERROR MESSAGE
         self.error_label = Label(

@@ -25,6 +25,11 @@ class MainApp(App):
         self.data = {}  # store everything here
 
         Window.clearcolor = get_color_from_hex("#0F172A")
+        Window.size = (600, 844)
+
+        Window.top = (Window.system_size[1] - Window.height) // 3
+        Window.left = (Window.system_size[1] + Window.width) // 3
+
 
         sm = ScreenManager()
 
