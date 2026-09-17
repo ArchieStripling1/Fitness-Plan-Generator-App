@@ -30,7 +30,6 @@ class MainApp(App):
         Window.top = (Window.system_size[1] - Window.height) // 3
         Window.left = (Window.system_size[1] + Window.width) // 3
 
-
         sm = ScreenManager()
 
         sm.add_widget(IntroScreen(name="intro"))
