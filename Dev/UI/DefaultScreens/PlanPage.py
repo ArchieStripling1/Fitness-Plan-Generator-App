@@ -257,8 +257,15 @@ class PlanPage(Screen):
                     color=TEXT,
                     halign="left",
                     valign="middle",
-                    text_size=(650, None)
+                    size_hint=(1, 1),
+                    text_size=(None, None)
                 )
+
+                def update_label(instance, value):
+                    instance.text_size = (instance.width, instance.height)
+
+                day_label.bind(size=update_label)
+
                 # Add day and workout to workout card
                 workout_card.add_widget(day_label)
 
