@@ -137,6 +137,62 @@ class CalendarScreen(Screen):
 
         self.content.add_widget(grid)
 
+        # Nav Buttons
+
+        btn_box = BoxLayout(
+            size_hint=(1, None),
+            height=dp(52),
+            spacing=dp(15)
+        )
+
+        calendar_btn = Button(
+            text="Calendar",
+            font_size=dp(17),
+            background_normal="",
+            background_color=(0.12, 0.16, 0.24, 1),
+            color=TEXT,
+            bold=True,
+            border=(0, 0, 0, 0)
+        )
+
+        weekly_btn = Button(
+            text="Weekly Plan",
+            font_size=dp(17),
+            background_normal="",
+            background_color=(0.12, 0.16, 0.24, 1),
+            color=TEXT,
+            bold=True,
+            border=(0, 0, 0, 0)
+        )
+
+        settings_btn = Button(
+            text="Settings",
+            font_size=dp(17),
+            background_normal="",
+            background_color=(0.12, 0.16, 0.24, 1),
+            color=TEXT,
+            bold=True,
+            border=(0, 0, 0, 0)
+        )
+
+        calendar_btn.bind(
+            on_press=self.go_calendar
+        )
+
+        weekly_btn.bind(
+            on_press=self.go_calendar
+        )
+
+        settings_btn.bind(
+            on_press=self.go_calendar
+        )
+
+        btn_box.add_widget(calendar_btn)
+        btn_box.add_widget(weekly_btn)
+        btn_box.add_widget(settings_btn)
+
+        self.content.add_widget(btn_box)
+
     def create_button(self, day_date):
         btn = Button(
             text=day_date,
@@ -150,6 +206,10 @@ class CalendarScreen(Screen):
             border=(0, 0, 0, 0)
         )
         return btn
+
+    def go_calendar(self, instance):
+
+        self.manager.current = "calendar"
 
     # Function to create dates for each day of plan.
     def workout_dates(self):
