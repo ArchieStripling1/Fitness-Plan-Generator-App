@@ -100,10 +100,6 @@ class RunningInfoScreen(Screen):
             padding=[dp(15), dp(12)]
         )
 
-        self.planLength.bind(
-            on_text_validate=self.update_length
-        )
-
         plan_card.add_widget(plan_title)
         plan_card.add_widget(self.plan_length_title)
         plan_card.add_widget(self.planLength)
@@ -294,11 +290,8 @@ class RunningInfoScreen(Screen):
 
         self.add_widget(layout)
 
-    def update_length(self, instance):
+    def save_inputs(self):
         App.get_running_app().data["CurrentPlanLength"] = self.planLength.text
-
-    def update_sessions(self, instance):
-        App.get_running_app().data["CurrentPlanLength"] = self.noSessions.text
 
     def create_button(self, day):
         btn = ToggleButton(
@@ -406,6 +399,9 @@ class RunningInfoScreen(Screen):
         if not valid:
             self.error_label.text = error
             return
+
+        # Save all inputs when Next is pressed
+        self.save_inputs()
 
         if "running" in selected:
             selected.remove("running")
