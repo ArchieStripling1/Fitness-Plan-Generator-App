@@ -93,49 +93,8 @@ class CalendarScreen(Screen):
 
         self.content.add_widget(header_card)
 
-        # Columns for calendar
-        cols = 7
-
-        # Titles for the days of the week
-        weekdays = ["Monday", "Tuesday", "Wednesday",
-                    "Thursday", "Friday", "Saturday", "Sunday"]
-
-        # Today's date and month
-        today = date.today()
-        current_month = today.month
-
-        # First day of the month and what day the month starts on
-        first_day = today.replace(day=1)
-        first_day_num = first_day.weekday()
-        number_of_blanks = first_day_num
-
-        current_day = first_day
-
-        # Create grid for calendar
-        grid = GridLayout(
-            cols=cols,
-            size_hint_y=None,
-            spacing=dp(6)
-        )
-
-        grid.bind(minimum_height=grid.setter("height"))
-
-        # Add weekdays to top of calendar
-        for title in weekdays:
-            grid.add_widget(Label(text=title))
-
-        # Create blank sections for previous month
-        blank = 0
-        while blank < number_of_blanks:
-            grid.add_widget(self.create_button(""))
-            blank += 1
-
-        # Add days of the month
-        while current_day.month == current_month:
-            grid.add_widget(self.create_button(str(current_day.day)))
-            current_day += timedelta(days=1)
-
-        self.content.add_widget(grid)
+        # Calendar
+        self.build_calendar()
 
         # Nav Buttons
 
@@ -210,6 +169,95 @@ class CalendarScreen(Screen):
     def go_calendar(self, instance):
 
         self.manager.current = "calendar"
+
+    def build_calendar(self):
+        # Columns for calendar
+        cols = 7
+
+        # Titles for the days of the week
+        weekdays = ["Monday", "Tuesday", "Wednesday",
+                    "Thursday", "Friday", "Saturday", "Sunday"]
+        months = ["January", "February", "March", "April",
+                  "May", "June", "July", "August",
+                  "September", "October", "November",
+                  "December"]
+
+        # Today's date and month
+        today = date.today()
+        current_month = today.month
+
+        # First day of the month and what day the month starts on
+        first_day = today.replace(day=1)
+        first_day_num = first_day.weekday()
+        number_of_blanks = first_day_num
+
+        current_day = first_day
+
+        month_name = months[current_month - 1]
+
+        # Create Month Buttons
+        heading_grid = GridLayout(
+            cols=3,
+            size_hint_y=None,
+            spacing=dp(6)
+        )
+        prev_month = Button(
+            text="Previous Month",
+            font_size=dp(17),
+            background_normal="",
+            background_color=(0.12, 0.16, 0.24, 1),
+            color=TEXT,
+            bold=True,
+            border=(0, 0, 0, 0)
+        )
+
+        month_label = Label(
+            text=month_name,
+            font_size=dp(17),
+            bold=True,
+            color=TEXT
+        )
+        next_month = Button(
+            text="Next Month",
+            font_size=dp(17),
+            background_normal="",
+            background_color=(0.12, 0.16, 0.24, 1),
+            color=TEXT,
+            bold=True,
+            border=(0, 0, 0, 0)
+        )
+
+        heading_grid.add_widget(prev_month)
+        heading_grid.add_widget(month_label)
+        heading_grid.add_widget(next_month)
+
+        self.content.add_widget(heading_grid)
+
+        # Create grid for calendar
+        calendar_grid = GridLayout(
+            cols=cols,
+            size_hint_y=None,
+            spacing=dp(6)
+        )
+
+        calendar_grid.bind(minimum_height=calendar_grid.setter("height"))
+
+        # Add weekdays to top of calendar
+        for title in weekdays:
+            calendar_grid.add_widget(Label(text=title))
+
+        # Create blank sections for previous month
+        blank = 0
+        while blank < number_of_blanks:
+            calendar_grid.add_widget(self.create_button(""))
+            blank += 1
+
+        # Add days of the month
+        while current_day.month == current_month:
+            calendar_grid.add_widget(self.create_button(str(current_day.day)))
+            current_day += timedelta(days=1)
+
+        self.content.add_widget(calendar_grid)
 
     # Function to create dates for each day of plan.
     def workout_dates(self):
