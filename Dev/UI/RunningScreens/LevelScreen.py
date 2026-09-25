@@ -302,4 +302,4 @@ class LevelScreen(Screen):
         self.manager.current = "runningInfo"
 
     def go_back(self, instance):
-        self.manager.current = "race"
+        self.manager.current = "runningTimes"
