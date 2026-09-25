@@ -15,6 +15,10 @@ class CalendarScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)  # setup Kivy screen
 
+        self.current_day = date.today()
+        self.current_month = self.current_day.month
+        self.current_year = self.current_day.year
+
         self.scroll = ScrollView()
 
         self.content = BoxLayout(
@@ -182,18 +186,14 @@ class CalendarScreen(Screen):
                   "September", "October", "November",
                   "December"]
 
-        # Today's date and month
-        today = date.today()
-        current_month = today.month
-
         # First day of the month and what day the month starts on
-        first_day = today.replace(day=1)
+        first_day = self.current_day.replace(day=1)
         first_day_num = first_day.weekday()
         number_of_blanks = first_day_num
 
         current_day = first_day
 
-        month_name = months[current_month - 1]
+        month_name = months[self.current_month - 1]
 
         # Create Month Buttons
         heading_grid = GridLayout(
@@ -210,6 +210,12 @@ class CalendarScreen(Screen):
             bold=True,
             border=(0, 0, 0, 0)
         )
+        prev_month.bind(
+            on_press=lambda instance: self.go_prev_month(
+                self.current_month,
+                self.current_year
+            )
+        )
 
         month_label = Label(
             text=month_name,
@@ -217,6 +223,7 @@ class CalendarScreen(Screen):
             bold=True,
             color=TEXT
         )
+
         next_month = Button(
             text="Next Month",
             font_size=dp(17),
@@ -225,6 +232,12 @@ class CalendarScreen(Screen):
             color=TEXT,
             bold=True,
             border=(0, 0, 0, 0)
+        )
+        next_month.bind(
+            on_press=lambda instance: self.go_next_month(
+                self.current_month,
+                self.current_year
+            )
         )
 
         heading_grid.add_widget(prev_month)
@@ -253,11 +266,29 @@ class CalendarScreen(Screen):
             blank += 1
 
         # Add days of the month
-        while current_day.month == current_month:
+        while current_day.month == self.current_month:
             calendar_grid.add_widget(self.create_button(str(current_day.day)))
             current_day += timedelta(days=1)
 
         self.content.add_widget(calendar_grid)
+
+    def go_prev_month(self, current_month, current_year):
+        if current_month == 1:
+            self.current_month = 12
+            self.current_year = current_year-1
+        else:
+            self.current_month = current_month - 1
+
+        print(self.current_month, self.current_year)
+
+    def go_next_month(self, current_month, current_year):
+        if current_month == 12:
+            self.current_month = 1
+            self.current_year = current_year+1
+        else:
+            self.current_month = current_month + 1
+
+        print(self.current_month, self.current_year)
 
     # Function to create dates for each day of plan.
     def workout_dates(self):
