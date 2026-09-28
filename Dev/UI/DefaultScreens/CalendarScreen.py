@@ -194,7 +194,7 @@ class CalendarScreen(Screen):
 
     def go_calendar(self, instance):
 
-        self.current_day =date.today()
+        self.current_day = date.today()
         self.current_month = self.current_day.month
         self.current_year = self.current_day.year
 
