@@ -33,6 +33,17 @@ class CalendarScreen(Screen):
         )
         self.scroll.add_widget(self.content)
 
+        self.calendar_container = BoxLayout(
+            orientation="vertical",
+            size_hint_y=None
+        )
+
+        self.calendar_container.bind(
+            minimum_height=self.calendar_container.setter("height")
+        )
+
+        self.content.add_widget(self.calendar_container)
+
         self.add_widget(self.scroll)
 
     def on_enter(self):
@@ -96,6 +107,17 @@ class CalendarScreen(Screen):
         header_card.add_widget(header)
 
         self.content.add_widget(header_card)
+
+        self.calendar_container = BoxLayout(
+            orientation="vertical",
+            size_hint_y=None
+        )
+
+        self.calendar_container.bind(
+            minimum_height=self.calendar_container.setter("height")
+        )
+
+        self.content.add_widget(self.calendar_container)
 
         # Calendar
         self.build_calendar()
@@ -175,6 +197,9 @@ class CalendarScreen(Screen):
         self.manager.current = "calendar"
 
     def build_calendar(self):
+
+        self.calendar_container.clear_widgets()
+
         # Columns for calendar
         cols = 7
 
@@ -187,7 +212,7 @@ class CalendarScreen(Screen):
                   "December"]
 
         # First day of the month and what day the month starts on
-        first_day = self.current_day.replace(day=1)
+        first_day = date(self.current_year, self.current_month, 1)
         first_day_num = first_day.weekday()
         number_of_blanks = first_day_num
 
@@ -211,14 +236,11 @@ class CalendarScreen(Screen):
             border=(0, 0, 0, 0)
         )
         prev_month.bind(
-            on_press=lambda instance: self.go_prev_month(
-                self.current_month,
-                self.current_year
-            )
+            on_press=self.go_prev_month
         )
 
         month_label = Label(
-            text=month_name,
+            text=f"{month_name} {self.current_year}",
             font_size=dp(17),
             bold=True,
             color=TEXT
@@ -234,18 +256,14 @@ class CalendarScreen(Screen):
             border=(0, 0, 0, 0)
         )
         next_month.bind(
-            on_press=lambda instance: self.go_next_month(
-                self.current_month,
-                self.current_year
-            )
+            on_press=self.go_next_month
         )
 
         heading_grid.add_widget(prev_month)
         heading_grid.add_widget(month_label)
         heading_grid.add_widget(next_month)
 
-        self.content.add_widget(heading_grid)
-
+        self.calendar_container.add_widget(heading_grid)
         # Create grid for calendar
         calendar_grid = GridLayout(
             cols=cols,
@@ -270,25 +288,25 @@ class CalendarScreen(Screen):
             calendar_grid.add_widget(self.create_button(str(current_day.day)))
             current_day += timedelta(days=1)
 
-        self.content.add_widget(calendar_grid)
+        self.calendar_container.add_widget(calendar_grid)
 
-    def go_prev_month(self, current_month, current_year):
-        if current_month == 1:
+    def go_prev_month(self, instance):
+        if self.current_month == 1:
             self.current_month = 12
-            self.current_year = current_year-1
+            self.current_year -= 1
         else:
-            self.current_month = current_month - 1
+            self.current_month -= 1
 
-        print(self.current_month, self.current_year)
+        self.build_calendar()
 
-    def go_next_month(self, current_month, current_year):
-        if current_month == 12:
+    def go_next_month(self, instance):
+        if self.current_month == 12:
             self.current_month = 1
-            self.current_year = current_year+1
+            self.current_year += 1
         else:
-            self.current_month = current_month + 1
+            self.current_month += 1
 
-        print(self.current_month, self.current_year)
+        self.build_calendar()
 
     # Function to create dates for each day of plan.
     def workout_dates(self):
