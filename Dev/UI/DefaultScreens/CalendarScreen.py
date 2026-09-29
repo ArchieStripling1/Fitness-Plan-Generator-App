@@ -50,8 +50,6 @@ class CalendarScreen(Screen):
 
         self.add_widget(self.scroll)
 
-
-
     def on_enter(self):
 
         self.content.clear_widgets()
@@ -249,7 +247,6 @@ class CalendarScreen(Screen):
         instance.rect.pos = instance.pos
         instance.rect.size = instance.size
 
-
     def go_calendar(self, instance):
 
         self.current_day = date.today()
@@ -263,9 +260,6 @@ class CalendarScreen(Screen):
     def build_calendar(self):
 
         self.calendar_container.clear_widgets()
-
-        # Columns for calendar
-        cols = 7
 
         # Titles for the days of the week
         weekdays = ["Monday", "Tuesday", "Wednesday",
