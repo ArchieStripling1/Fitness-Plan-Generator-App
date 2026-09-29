@@ -7,7 +7,7 @@ from kivy.uix.screenmanager import Screen
 from kivy.uix.label import Label
 from kivy.uix.scrollview import ScrollView
 from kivy.uix.button import Button
-from Dev.UI.Theme import TEXT, CARD
+from Dev.UI.Theme import TEXT, CARD, SUBTEXT
 from datetime import date, timedelta
 
 
@@ -19,17 +19,21 @@ class CalendarScreen(Screen):
         self.current_month = self.current_day.month
         self.current_year = self.current_day.year
 
-        self.scroll = ScrollView()
+        # Main scroll area
+        self.scroll = ScrollView(
+            size_hint=(1, 1),
+            do_scroll_x=False
+        )
 
         self.content = BoxLayout(
-            orientation='vertical',
-            spacing=30,
-            padding=25,
+            orientation="vertical",
+            spacing=dp(20),
+            padding=[dp(20), dp(20), dp(20), dp(20)],
             size_hint_y=None
         )
 
         self.content.bind(
-            minimum_height=self.content.setter('height')
+            minimum_height=self.content.setter("height")
         )
         self.scroll.add_widget(self.content)
 
@@ -46,6 +50,8 @@ class CalendarScreen(Screen):
 
         self.add_widget(self.scroll)
 
+
+
     def on_enter(self):
 
         self.content.clear_widgets()
@@ -60,51 +66,50 @@ class CalendarScreen(Screen):
 
         # Initialize Card
         header_card = BoxLayout(
-            orientation='vertical',
-            spacing=15,
-            padding=20,
-            size_hint_y=None
+            orientation="vertical",
+            padding=[dp(20), dp(18)],
+            spacing=dp(5),
+            size_hint_y=None,
+            height=dp(90)
         )
 
-        # Dynamic height
-        header_card.bind(minimum_height=header_card.setter("height"))
-
-        # Card background
         with header_card.canvas.before:
             Color(*CARD)
+
             header_card.rect = RoundedRectangle(
                 pos=header_card.pos,
                 size=header_card.size,
-                radius=[25]
+                radius=[dp(20)]
             )
 
-        # Keep card updated
-        def update_rect(instance, value):
-            instance.rect.pos = instance.pos
-            instance.rect.size = instance.size
-
-        # Bind Card with updated variables
-        header_card.bind(pos=update_rect, size=update_rect)
-
-        header = BoxLayout(
-            orientation="vertical",
-            size_hint_y=None,
-            height=70,
-            spacing=5
+        header_card.bind(
+            pos=self.update_background,
+            size=self.update_background
         )
 
-        title_label = Label(
-            text="Your Calender",
-            font_size=32,
+        title = Label(
+            text="Your Calendar",
+            font_size=dp(28),
             bold=True,
             color=TEXT,
             size_hint_y=None,
-            height=40
+            height=dp(38),
+            halign="left",
+            valign="middle"
         )
 
-        header.add_widget(title_label)
+        subtitle = Label(
+            text="Keep track of your upcoming training",
+            font_size=dp(14),
+            color=SUBTEXT,
+            size_hint_y=None,
+            height=dp(22),
+            halign="left",
+            valign="middle"
+        )
 
-        header_card.add_widget(header)
+        header_card.add_widget(title)
+        header_card.add_widget(subtitle)
 
         self.content.add_widget(header_card)
 
@@ -127,14 +132,19 @@ class CalendarScreen(Screen):
         btn_box = BoxLayout(
             size_hint=(1, None),
             height=dp(52),
-            spacing=dp(15)
+            spacing=dp(10)
         )
 
         calendar_btn = Button(
             text="Calendar",
-            font_size=dp(17),
+            font_size=dp(14),
             background_normal="",
-            background_color=(0.12, 0.16, 0.24, 1),
+            background_color=(
+                0.12,
+                0.16,
+                0.24,
+                1
+            ),
             color=TEXT,
             bold=True,
             border=(0, 0, 0, 0)
@@ -142,9 +152,14 @@ class CalendarScreen(Screen):
 
         weekly_btn = Button(
             text="Weekly Plan",
-            font_size=dp(17),
+            font_size=dp(14),
             background_normal="",
-            background_color=(0.12, 0.16, 0.24, 1),
+            background_color=(
+                0.12,
+                0.16,
+                0.24,
+                1
+            ),
             color=TEXT,
             bold=True,
             border=(0, 0, 0, 0)
@@ -152,9 +167,14 @@ class CalendarScreen(Screen):
 
         settings_btn = Button(
             text="Settings",
-            font_size=dp(17),
+            font_size=dp(14),
             background_normal="",
-            background_color=(0.12, 0.16, 0.24, 1),
+            background_color=(
+                0.12,
+                0.16,
+                0.24,
+                1
+            ),
             color=TEXT,
             bold=True,
             border=(0, 0, 0, 0)
@@ -192,6 +212,44 @@ class CalendarScreen(Screen):
         )
         return btn
 
+    def create_day_button(self, day_date, current_day):
+        # Normal background
+        background = (
+            0.12,
+            0.16,
+            0.24,
+            1
+        )
+
+        # Highlight today
+        if current_day == date.today():
+            background = (
+                0.18,
+                0.24,
+                0.35,
+                1
+            )
+
+        button = Button(
+            text=day_date,
+            markup=True,
+            font_size=dp(12),
+            background_normal="",
+            background_color=background,
+            color=TEXT,
+            bold=False,
+            size_hint_y=None,
+            height=dp(68),
+            border=(0, 0, 0, 0)
+        )
+        return button
+
+    def update_background(self, instance, value):
+
+        instance.rect.pos = instance.pos
+        instance.rect.size = instance.size
+
+
     def go_calendar(self, instance):
 
         self.current_day = date.today()
@@ -227,61 +285,106 @@ class CalendarScreen(Screen):
         month_name = months[self.current_month - 1]
 
         # Create Month Buttons
-        heading_grid = GridLayout(
-            cols=3,
+        month_header = BoxLayout(
+            orientation="horizontal",
             size_hint_y=None,
-            spacing=dp(6)
+            height=dp(55),
+            spacing=dp(10)
         )
+
         prev_month = Button(
-            text="Previous Month",
-            font_size=dp(17),
+            text="‹",
+            font_size=dp(32),
             background_normal="",
             background_color=(0.12, 0.16, 0.24, 1),
             color=TEXT,
-            bold=True,
-            border=(0, 0, 0, 0)
+            bold=True
         )
+
         prev_month.bind(
             on_press=self.go_prev_month
         )
 
         month_label = Label(
             text=f"{month_name} {self.current_year}",
-            font_size=dp(17),
+            font_size=dp(21),
             bold=True,
-            color=TEXT
+            color=TEXT,
+            halign="center",
+            valign="middle"
         )
 
         next_month = Button(
-            text="Next Month",
-            font_size=dp(17),
+            text="›",
+            font_size=dp(32),
             background_normal="",
             background_color=(0.12, 0.16, 0.24, 1),
             color=TEXT,
-            bold=True,
-            border=(0, 0, 0, 0)
+            bold=True
         )
         next_month.bind(
             on_press=self.go_next_month
         )
 
-        heading_grid.add_widget(prev_month)
-        heading_grid.add_widget(month_label)
-        heading_grid.add_widget(next_month)
+        month_header.add_widget(prev_month)
+        month_header.add_widget(month_label)
+        month_header.add_widget(next_month)
 
-        self.calendar_container.add_widget(heading_grid)
+        self.calendar_container.add_widget(month_header)
+
         # Create grid for calendar
-        calendar_grid = GridLayout(
-            cols=cols,
-            size_hint_y=None,
-            spacing=dp(6)
+        calendar_card = BoxLayout(
+            orientation="vertical",
+            padding=dp(12),
+            spacing=dp(8),
+            size_hint_y=None
         )
 
-        calendar_grid.bind(minimum_height=calendar_grid.setter("height"))
+        with calendar_card.canvas.before:
+            Color(*CARD)
+
+            calendar_card.rect = RoundedRectangle(
+                pos=calendar_card.pos,
+                size=calendar_card.size,
+                radius=[dp(20)]
+            )
+
+        calendar_card.bind(
+            pos=self.update_background,
+            size=self.update_background
+        )
+
+        weekday_grid = GridLayout(
+            cols=7,
+            size_hint_y=None,
+            height=dp(30),
+            spacing=dp(4)
+        )
 
         # Add weekdays to top of calendar
-        for title in weekdays:
-            calendar_grid.add_widget(Label(text=title))
+        for weekday in weekdays:
+            weekday_label = Label(
+                text=weekday,
+                font_size=dp(11),
+                bold=True,
+                color=SUBTEXT,
+                halign="center",
+                valign="middle"
+            )
+
+            weekday_grid.add_widget(weekday_label)
+
+        calendar_card.add_widget(weekday_grid)
+
+        calendar_grid = GridLayout(
+            cols=7,
+            spacing=dp(5),
+            size_hint_y=None
+        )
+
+        calendar_grid.bind(
+            minimum_height=calendar_grid.setter("height")
+        )
 
         # Create blank sections for previous month
         blank = 0
@@ -291,10 +394,22 @@ class CalendarScreen(Screen):
 
         # Add days of the month
         while current_day.month == self.current_month:
-            calendar_grid.add_widget(self.create_button(str(current_day.day)))
+            day_button = self.create_day_button(
+                str(current_day.day),
+                current_day
+            )
+
+            calendar_grid.add_widget(day_button)
             current_day += timedelta(days=1)
 
-        self.calendar_container.add_widget(calendar_grid)
+        calendar_card.add_widget(calendar_grid)
+
+        # Let card calculate its height
+        calendar_card.bind(
+            minimum_height=calendar_card.setter("height")
+        )
+
+        self.calendar_container.add_widget(calendar_card)
 
     def go_prev_month(self, instance):
         if self.current_month == 1:
