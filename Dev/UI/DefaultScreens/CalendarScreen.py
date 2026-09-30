@@ -227,9 +227,22 @@ class CalendarScreen(Screen):
                 0.35,
                 1
             )
+        workout_dates = self.workout_dates()
+
+        workout = workout_dates.get(current_day)
+
+        if workout:
+            workout_type = workout["type"]
+
+            button_text = (
+                f"{day_date}\n"
+                f"{workout_type}"
+            )
+        else:
+            button_text = str(day_date)
 
         button = Button(
-            text=day_date,
+            text=button_text,
             markup=True,
             font_size=dp(12),
             background_normal="",
