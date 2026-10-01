@@ -32,6 +32,7 @@ class CalendarGenerator:
             border=(0, 0, 0, 0)
         )
         return btn
+
     def create_day_button(self, day_date, current_day):
         # Normal background
         background = (
