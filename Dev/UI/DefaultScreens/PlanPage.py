@@ -15,6 +15,9 @@ class PlanPage(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)  # setup Kivy screen
 
+        self.root = BoxLayout(
+            orientation="vertical"
+        )
         # Scroll area
         self.scroll = ScrollView()
 
@@ -30,7 +33,9 @@ class PlanPage(Screen):
         )
         self.scroll.add_widget(self.content)
 
-        self.add_widget(self.scroll)
+        self.root.add_widget(self.scroll)
+
+        self.add_widget(self.root)
 
     def on_enter(self):
 
@@ -279,7 +284,8 @@ class PlanPage(Screen):
         btn_box = BoxLayout(
             size_hint=(1, None),
             height=dp(52),
-            spacing=dp(15)
+            spacing=dp(15),
+            padding=(dp(10), dp(5))
         )
         back_btn = Button(
             text="Previous",
@@ -307,7 +313,7 @@ class PlanPage(Screen):
         )
         btn_box.add_widget(back_btn)
         btn_box.add_widget(next_btn)
-        self.content.add_widget(btn_box)
+        self.root.add_widget(btn_box)
 
     def go_next(self, instance):
 
