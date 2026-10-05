@@ -330,7 +330,7 @@ class CalendarGenerator:
         # Workout information
         info = Label(
             text=f"Workout details:\n"
-                 f"Distance: {workout["distance"]}\n",
+                 f"Distance: {workout['distance']}\n",
             font_size=dp(16),
             color=TEXT,
             halign="left",
