@@ -7,6 +7,7 @@ from kivy.uix.label import Label
 from kivy.uix.button import Button
 from Dev.UI.Theme import TEXT, CARD, SUBTEXT
 from datetime import date, timedelta
+from kivy.uix.popup import Popup
 
 
 class CalendarGenerator:
@@ -214,6 +215,8 @@ class CalendarGenerator:
                 current_day
             )
 
+            day_button.bind(on_press=lambda instance, cd=current_day: self.show_workout(cd))
+
             calendar_grid.add_widget(day_button)
             current_day += timedelta(days=1)
 
@@ -288,6 +291,91 @@ class CalendarGenerator:
                     workout_dates[workout_date] = workout
 
         return workout_dates
+
+    def show_workout(self, workout_date):
+
+        workout = self.workout_dates().get(workout_date)
+
+        if not workout:
+            return
+
+        content = BoxLayout(
+            orientation="vertical",
+            padding=dp(20),
+            spacing=dp(12)
+        )
+
+        # Workout type
+        workout_title = Label(
+            text=workout["type"],
+            font_size=dp(24),
+            bold=True,
+            color=TEXT,
+            size_hint_y=None,
+            height=dp(45)
+        )
+
+        # Date
+        workout_date_label = Label(
+            text=workout_date.strftime("%A, %d %B %Y"),
+            font_size=dp(14),
+            color=SUBTEXT,
+            size_hint_y=None,
+            height=dp(30)
+        )
+
+        content.add_widget(workout_title)
+        content.add_widget(workout_date_label)
+
+        # Workout information
+        info = Label(
+            text=f"Workout details:\n",
+            font_size=dp(16),
+            color=TEXT,
+            halign="left",
+            valign="top"
+        )
+        content.add_widget(info)
+
+        # Push everything below this down
+        content.add_widget(
+            Label(
+                size_hint_y=1
+            )
+        )
+
+        # Close button
+        close_btn = Button(
+            text="Close",
+            size_hint_y=None,
+            height=dp(48),
+            background_normal="",
+            background_color=(0.18, 0.24, 0.35, 1),
+            color=TEXT,
+            bold=True,
+            border=(0, 0, 0, 0)
+        )
+
+        content.add_widget(close_btn)
+
+        # Create the actual popup
+        popup = Popup(
+            title="Workout",
+            content=content,
+            size_hint=(0.85, 0.65),
+            auto_dismiss=True,
+            separator_color=CARD,
+            title_color=TEXT,
+            title_size=dp(18)
+        )
+
+        # Close button closes popup
+        close_btn.bind(
+            on_press=popup.dismiss
+        )
+
+        # Show popup
+        popup.open()
 
     def update_background(self, instance, value):
 
