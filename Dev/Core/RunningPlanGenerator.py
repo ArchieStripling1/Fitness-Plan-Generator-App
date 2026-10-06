@@ -672,7 +672,7 @@ class RunningPlanGenerator:
                                 "session": session,
                                 "distance": session_info["Distance"],
                                 "pace": workout_pace,
-                                "description" : description
+                                "description": description
                             }
                             plan[week_name]["workouts"][day] \
                                 = workout
@@ -705,7 +705,7 @@ class RunningPlanGenerator:
                                 "type": "Easy Run",
                                 "distance": int(easy_distance),
                                 "pace": easy_pace,
-                                "description" : description
+                                "description": description
                             }
 
                             plan[week_name]["workouts"][day] \
@@ -844,7 +844,7 @@ class RunningPlanGenerator:
         # Format the run Description.
 
     def formatHardRunDescription(self, warmup, reps,
-                             recovery, pace, interval, cooldown):
+                                 recovery, pace, interval, cooldown):
 
         if interval is not list:
             return f"""\
@@ -861,18 +861,19 @@ class RunningPlanGenerator:
         else:
             return "-"
     def formatEasyRunDescription(self, distance):
+
         return f"""\
             • Run {distance}km's at a conversational pace.
             """
 
     def formatEasyLongRunDescription(self, desc, warmup, quality, distance):
+
         return f"""\
             • Run {distance} at a conversational pace.
-            
             """
 
     def formatHardLongRunDescription(self, desc, splits, quality_type, distance):
+
         return f"""\
             • Run {distance} at a conversational pace.
-
             """
