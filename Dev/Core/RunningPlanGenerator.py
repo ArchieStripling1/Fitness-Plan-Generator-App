@@ -343,7 +343,7 @@ class RunningPlanGenerator:
                                 long_run_distance = starting_distance
 
                                 # Picks one base long run at random
-                                session, session_info = random.choice(
+                                long_run_session, long_run_session_info = random.choice(
                                     list(base_runs.items())
                                 )
 
@@ -351,7 +351,7 @@ class RunningPlanGenerator:
                             elif week == peak_week:
                                 long_run_distance = race_settings[race]["max_long_run"]
 
-                                session, session_info = random.choice(
+                                long_run_session, long_run_session_info = random.choice(
                                     list(peak_runs.items())
                                 )
 
@@ -362,7 +362,7 @@ class RunningPlanGenerator:
                                 )
 
                                 # Picks one base long run at random
-                                session, session_info = random.choice(
+                                long_run_session, long_run_session_info = random.choice(
                                     list(base_runs.items())
                                 )
 
@@ -371,7 +371,7 @@ class RunningPlanGenerator:
                                         starting_distance + long_run_progress
                                 )
 
-                                session, session_info = random.choice(
+                                long_run_session, long_run_session_info = random.choice(
                                     list(build_runs.items())
                                 )
 
@@ -380,7 +380,7 @@ class RunningPlanGenerator:
                                         starting_distance + long_run_progress
                                 )
 
-                                session, session_info = random.choice(
+                                long_run_session, long_run_session_info = random.choice(
                                     list(peak_runs.items())
                                 )
 
@@ -390,7 +390,7 @@ class RunningPlanGenerator:
                                     round(long_run_decrease)
                                 )
 
-                                session, session_info = random.choice(
+                                long_run_session, long_run_session_info = random.choice(
                                     list(taper_runs.items())
                                 )
 
@@ -417,7 +417,7 @@ class RunningPlanGenerator:
                             if week == base_phase[0]:
                                 long_run_distance = race_settings[race]["min_long_run"]
 
-                                session, session_info = random.choice(
+                                long_run_session, long_run_session_info = random.choice(
                                     list(base_runs.items())
                                 )
 
@@ -425,7 +425,7 @@ class RunningPlanGenerator:
                             elif week == peak_week:
                                 long_run_distance = race_settings[race]["max_long_run"]
 
-                                session, session_info = random.choice(
+                                long_run_session, long_run_session_info = random.choice(
                                     list(peak_runs.items())
                                 )
 
@@ -435,7 +435,7 @@ class RunningPlanGenerator:
                                     race_settings[race]["min_long_run"] + long_run_progress
                                 )
 
-                                session, session_info = random.choice(
+                                long_run_session, long_run_session_info = random.choice(
                                     list(base_runs.items())
                                 )
 
@@ -444,7 +444,7 @@ class RunningPlanGenerator:
                                         race_settings[race]["min_long_run"] + long_run_progress
                                 )
 
-                                session, session_info = random.choice(
+                                long_run_session, long_run_session_info = random.choice(
                                     list(build_runs.items())
                                 )
 
@@ -453,7 +453,7 @@ class RunningPlanGenerator:
                                     race_settings[race]["min_long_run"] + long_run_progress
                                 )
 
-                                session, session_info = random.choice(
+                                long_run_session, long_run_session_info = random.choice(
                                     list(peak_runs.items())
                                 )
 
@@ -463,7 +463,7 @@ class RunningPlanGenerator:
                                     round(long_run_decrease)
                                 )
 
-                                session, session_info = random.choice(
+                                long_run_session, long_run_session_info = random.choice(
                                     list(taper_runs.items())
                                 )
 
@@ -479,10 +479,36 @@ class RunningPlanGenerator:
                             else:
                                 long_run_distance *= 0.9
 
+                        stages = long_run_session_info.get("stages")
+                        splits = []
+
+                        desc = long_run_session_info["description"]
+                        if not stages:
+                            warmup = round(long_run_session_info["easy_portion"] * int(long_run_distance))
+                            quality = round(long_run_session_info["quality_portion"] * int(long_run_distance))
+                            print(warmup, quality)
+
+                            description = self.formatEasyLongRunDescription(desc, warmup, quality, int(long_run_distance))
+
+                        else:
+                            for stage in stages:
+                                portion = round(stage["portion"] * int(long_run_distance))
+                                pace = stage["pace"]
+                                splits.append(f"portion: {portion} pace: {pace}")
+
+                            quality_type = long_run_session_info["quality_type"]
+                            print(splits)
+                            print(quality_type)
+
+                            description = self.formatHardLongRunDescription(desc, splits, quality_type, int(long_run_distance))
+
+                        print(description)
+
                         workout = {
                             "type": "Long Run",
-                            "session": session,
+                            "session": long_run_session,
                             "distance": int(long_run_distance),
+                            "description": description,
                         }
                         plan[week_name]["workouts"][day] = workout
 
@@ -570,15 +596,13 @@ class RunningPlanGenerator:
                                 interval = session_info["Interval"]
 
                                 # Format them using function into Description.
-                                description = self.formatRunDescription(
+                                description = self.formatHardRunDescription(
                                     warmup,
                                     reps,
                                     recovery,
                                     workout_pace,
                                     interval,
                                     cooldown)
-
-                                print(description)
 
                             else:
                                 # Session type is tempo run.
@@ -631,7 +655,7 @@ class RunningPlanGenerator:
                                 reps = session_info["Reps"]
                                 interval = session_info["Interval"]
 
-                                description = self.formatRunDescription(
+                                description = self.formatHardRunDescription(
                                     warmup,
                                     reps,
                                     recovery,
@@ -647,7 +671,8 @@ class RunningPlanGenerator:
                                 "type": hard_type,
                                 "session": session,
                                 "distance": session_info["Distance"],
-                                "pace": workout_pace
+                                "pace": workout_pace,
+                                "description" : description
                             }
                             plan[week_name]["workouts"][day] \
                                 = workout
@@ -670,13 +695,19 @@ class RunningPlanGenerator:
                             if recovery_week:
                                 easy_distance *= 0.8
 
+                            description = self.formatEasyRunDescription(int(easy_distance))
+
+                            print(description)
+
                             # Create nested dict to store
                             # everything for the run
                             workout = {
                                 "type": "Easy Run",
                                 "distance": int(easy_distance),
-                                "pace": easy_pace
+                                "pace": easy_pace,
+                                "description" : description
                             }
+
                             plan[week_name]["workouts"][day] \
                                 = workout
                             current_weekly_distance \
@@ -812,7 +843,7 @@ class RunningPlanGenerator:
 
         # Format the run Description.
 
-    def formatRunDescription(self, warmup, reps,
+    def formatHardRunDescription(self, warmup, reps,
                              recovery, pace, interval, cooldown):
 
         if interval is not list:
@@ -829,3 +860,19 @@ class RunningPlanGenerator:
                 """
         else:
             return "-"
+    def formatEasyRunDescription(self, distance):
+        return f"""\
+            • Run {distance}km's at a conversational pace.
+            """
+
+    def formatEasyLongRunDescription(self, desc, warmup, quality, distance):
+        return f"""\
+            • Run {distance} at a conversational pace.
+            
+            """
+
+    def formatHardLongRunDescription(self, desc, splits, quality_type, distance):
+        return f"""\
+            • Run {distance} at a conversational pace.
+
+            """
