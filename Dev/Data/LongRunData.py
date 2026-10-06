@@ -176,19 +176,6 @@ class LongRunData:
             "phase": "peak"
         },
 
-        "race_pace_blocks": {
-            "description": "Easy long run containing repeated race-pace blocks.",
-            "easy_portion": 0.70,
-            "quality_portion": 0.30,
-            "quality_type": "race_pace_blocks",
-            "blocks": {
-                "block_count": 3,
-                "block_portion": 0.10,
-                "recovery_between": "easy",
-            },
-            "phase": "peak"
-        },
-
         "tempo_blocks": {
             "description": "Long run with controlled tempo blocks separated by easy running.",
             "stages": [
