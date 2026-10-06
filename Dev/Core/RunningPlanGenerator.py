@@ -860,6 +860,7 @@ class RunningPlanGenerator:
                 """
         else:
             return "-"
+
     def formatEasyRunDescription(self, distance):
 
         return f"""\
