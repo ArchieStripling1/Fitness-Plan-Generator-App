@@ -1,8 +1,4 @@
 import random
-from cmath import atan
-
-from docutils.nodes import description
-
 from Dev.Data.LongRunData import LongRunData
 from Dev.Data.SpeedWorkoutData import SpeedWorkoutData
 from Dev.Data.RaceSettingsData import RaceSettingsData
@@ -839,7 +835,7 @@ class RunningPlanGenerator:
 
         return f"{hours:02d}:{minutes:02d}:00"
 
-     # Format the run Description.
+    # Format the run Description.
     def formatHardRunDescription(self, warmup, reps,
                                  recovery, pace, interval, cooldown):
 
@@ -866,9 +862,9 @@ Focus on running the faster sections consistently rather than starting too hard.
 • Run {distance}km at an easy, conversational pace.
 
 • Keep the effort relaxed and comfortable. You should be able to speak in full sentences while running.
-            
+
 • Do not worry about running fast today. The goal is to build aerobic fitness while allowing your body to recover.
-            
+
 • Finish feeling like you could have continued for longer.
 """
 
@@ -877,19 +873,19 @@ Focus on running the faster sections consistently rather than starting too hard.
         if warmup == distance:
             return f"""
 • This Workout is a {distance}km Long run.
-                
+
 • Run {warmup}km at an easy, conversational pace.
-                
+
 • The goal is to build aerobic fitness while running.
 """
         else:
             return f"""
 • This Workout is a {distance}km Long run.
-                
+
 • Run {warmup}km at an easy, conversational pace.
-                
+
 • Run {quality}km at {quality_type}.
-                
+
 • The goal is to train your body and mind to handle the exact demands of race day.
 """
 
@@ -909,9 +905,9 @@ Focus on running the faster sections consistently rather than starting too hard.
 
             stage_distance = round(portion * distance)
 
-            description += (
-f" - Run {stage_distance}km at {pace} effort.\n"
-            )
+            description += f"""
+- Run {stage_distance}km at {pace} effort.\n"
+"""
 
         description += """
 • Follow the stages in order and avoid running the early sections too hard.
