@@ -1,4 +1,7 @@
 import random
+from cmath import atan
+
+from docutils.nodes import description
 
 from Dev.Data.LongRunData import LongRunData
 from Dev.Data.SpeedWorkoutData import SpeedWorkoutData
@@ -480,27 +483,22 @@ class RunningPlanGenerator:
                                 long_run_distance *= 0.9
 
                         stages = long_run_session_info.get("stages")
-                        splits = []
 
                         desc = long_run_session_info["description"]
                         if not stages:
                             warmup = round(long_run_session_info["easy_portion"] * int(long_run_distance))
                             quality = round(long_run_session_info["quality_portion"] * int(long_run_distance))
+                            quality_type = long_run_session_info["quality_type"]
                             print(warmup, quality)
 
-                            description = self.formatEasyLongRunDescription(desc, warmup, quality, int(long_run_distance))
+                            description = self.formatEasyLongRunDescription(desc, warmup, quality, quality_type, int(long_run_distance))
 
                         else:
-                            for stage in stages:
-                                portion = round(stage["portion"] * int(long_run_distance))
-                                pace = stage["pace"]
-                                splits.append(f"portion: {portion} pace: {pace}")
 
                             quality_type = long_run_session_info["quality_type"]
-                            print(splits)
                             print(quality_type)
 
-                            description = self.formatHardLongRunDescription(desc, splits, quality_type, int(long_run_distance))
+                            description = self.formatHardLongRunDescription(desc, stages, quality_type, int(long_run_distance))
 
                         print(description)
 
@@ -841,40 +839,84 @@ class RunningPlanGenerator:
 
         return f"{hours:02d}:{minutes:02d}:00"
 
-        # Format the run Description.
-
+     # Format the run Description.
     def formatHardRunDescription(self, warmup, reps,
                                  recovery, pace, interval, cooldown):
 
         if interval is not list:
             return f"""\
-                • Warm up with {warmup} at a conversational pace.
+• Warm up with {warmup} at a conversational pace.
 
-                • Run {interval} at {pace}.
+• Run {interval} at {pace}.
 
-                • {recovery} for recovery.
+• {recovery} for recovery.
 
-                • Repeat {reps} times.
+• Repeat {reps} times.
 
-                • Cool down with {cooldown} at a conversational pace.
-                """
+• Cool down with {cooldown} at a conversational pace.
+
+Focus on running the faster sections consistently rather than starting too hard.
+"""
         else:
             return "-"
 
     def formatEasyRunDescription(self, distance):
 
         return f"""\
-            • Run {distance}km's at a conversational pace.
-            """
+• Run {distance}km at an easy, conversational pace.
 
-    def formatEasyLongRunDescription(self, desc, warmup, quality, distance):
+• Keep the effort relaxed and comfortable. You should be able to speak in full sentences while running.
+            
+• Do not worry about running fast today. The goal is to build aerobic fitness while allowing your body to recover.
+            
+• Finish feeling like you could have continued for longer.
+"""
 
-        return f"""\
-            • Run {distance} at a conversational pace.
-            """
+    def formatEasyLongRunDescription(self, desc, warmup, quality, quality_type, distance):
 
-    def formatHardLongRunDescription(self, desc, splits, quality_type, distance):
+        if warmup == distance:
+            return f"""
+• This Workout is a {distance}km Long run.
+                
+• Run {warmup}km at an easy, conversational pace.
+                
+• The goal is to build aerobic fitness while running.
+"""
+        else:
+            return f"""
+• This Workout is a {distance}km Long run.
+                
+• Run {warmup}km at an easy, conversational pace.
+                
+• Run {quality}km at {quality_type}.
+                
+• The goal is to train your body and mind to handle the exact demands of race day.
+"""
 
-        return f"""\
-            • Run {distance} at a conversational pace.
-            """
+    def formatHardLongRunDescription(self, desc, stages, quality_type, distance):
+
+        description = f"""\
+• Long run: {distance}km.
+
+• {desc}
+
+• Workout structure:
+"""
+
+        for stage in stages:
+            portion = stage["portion"]
+            pace = stage["pace"]
+
+            stage_distance = round(portion * distance)
+
+            description += (
+f" - Run {stage_distance}km at {pace} effort.\n"
+            )
+
+        description += """
+• Follow the stages in order and avoid running the early sections too hard.
+
+• The goal is to complete the full workout with controlled effort and good running form.
+"""
+
+        return description
