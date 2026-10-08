@@ -330,12 +330,20 @@ class CalendarGenerator:
         # Workout information
         info = Label(
             text=f"Workout details:\n"
-                 f"Distance: {workout['distance']}\n",
+                 f"{workout['description']}",
             font_size=dp(16),
             color=TEXT,
             halign="left",
-            valign="top"
+            valign="top",
+            size_hint_y=None,
+            text_size=(dp(440), None),
         )
+
+        info.bind(
+            texture_size=lambda instance, value:
+            setattr(instance, "height", value[1])
+        )
+
         content.add_widget(info)
 
         # Push everything below this down
